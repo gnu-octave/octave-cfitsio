@@ -145,6 +145,8 @@ endif
 ## pre-building something for the release (e.g. documentation).
 	cd "$@/src" && ./configure && $(MAKE) prebuild && \
 	  $(MAKE) distclean && $(RM) Makefile
+	$(MAKE) -C "$@" docs
+	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" && $(RM) -f doc/mkfuncdocs.py
 ##
 	${FIX_PERMISSIONS} "$@"
 
@@ -235,6 +237,24 @@ octave_test_commands = \
 check: $(install_stamp)
 	$(run_in_place) --eval $(octave_test_commands)
 
+## 
+## Docs
+##
+.PHONY: docs
+docs: doc/$(package).pdf
+
+clean-docs:
+	$(RM) -f doc/$(package).info
+	$(RM) -f doc/$(package).pdf
+	$(RM) -f doc/functions.texi
+
+doc/$(package).pdf: doc/$(package).texi doc/functions.texi
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(package).texi
+	# remove temp files
+	cd doc && $(RM) -f $(package).aux  $(package).cp  $(package).cps  $(package).fn  $(package).fns  $(package).log  $(package).toc
+
+doc/functions.texi:
+	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
 ##
 ## CLEAN
@@ -242,7 +262,7 @@ check: $(install_stamp)
 
 .PHONY: clean
 
-clean: clean-tarballs clean-unpacked-release clean-install
+clean: clean-tarballs clean-unpacked-release clean-install clean-docs
 	test -e inst/test && rmdir inst/test || true
 	test -e $(target_dir)/fntests.log && rm -f $(target_dir)/fntests.log || true
 	@echo "## Removing target directory (if empty)..."

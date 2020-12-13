@@ -7,7 +7,7 @@ FITSIO_INCPATH := @FITSIO_INCPATH@
 LIBS      := @LIBS@ @FITSIO_LIBS@
 LDFLAGS   := @LDFLAGS@
 
-OCT_FILES =__fits__.oct fitsinfo.oct
+OCT_FILES =__fits__.oct
 
 ARCHTESTS = archtests
 ARCHDIR   := "$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)-$(shell $(OCTAVE_CONFIG) -p API_VERSION)"
@@ -69,7 +69,7 @@ fits_constants.h: $(FITSIO_INCPATH)/fitsio.h
 
 
 .PHONY: prebuild
-prebuild:
+prebuild: ../inst/import_fits.m
 
 .PHONY: clean
 .PHONY: distclean

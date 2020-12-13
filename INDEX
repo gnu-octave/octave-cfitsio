@@ -10,7 +10,7 @@ Low Level File Functions
 Low Level HDU Functions
  fits_getHDUnum
  fits_getHDUtype
- fits_getHDUAddr
+ fits_getHDUaddr
  fits_getNumHDUs
  fits_movAbsHDU
  fits_movRelHDU
@@ -36,7 +36,7 @@ Low Level Utility Functions
  fits_getConstantNames
  fits_getVersion
 Low Level Commpression Functions
- fis_isCompressedImg
+ fits_isCompressedImg
 Low Level Binary and ASCII Tables
  fits_getAColParms
  fits_getBColParms
