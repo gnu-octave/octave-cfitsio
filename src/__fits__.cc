@@ -790,7 +790,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 // PKG_ADD: autoload ("fits_movRelHDU", "__fits__.oct");
 DEFUN_DLD(fits_movRelHDU, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{num}]} = fits_moveRelHDU(@var{file}, @var{hdunum})\n \
+@deftypefn {Function File} {[@var{num}]} = fits_movRelHDU(@var{file}, @var{hdunum})\n \
 Go to relative HDU index @var{hdunum}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -854,6 +854,95 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
     name = "UNKNOWN";
 
   return octave_value (name);
+}
+
+// PKG_ADD: autoload ("fits_movNamHDU", "__fits__.oct");
+DEFUN_DLD(fits_movNamHDU, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{type}]} = fits_movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
+Got to HDU matching @var{hdutype}, @var{extname}, @var{extver}\n \
+\n \
+Returns the newly current HDU type as a string.\n \
+\n \
+Valid hdytype values are 'IMAGE_HDU', 'ASCII_TBL', 'BINARY_TBL', 'ANY_HDU'.\n \
+\n \
+This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
+@end deftypefn")
+{
+
+  if ( args.length() != 4)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_movNamHDU: expected hdu type string");
+      return octave_value ();  
+    }
+  if (! args (2).is_string ())
+    {
+      error ("fits_movNamHDU: expected extname string");
+      return octave_value ();  
+    }
+
+  if (! args (3).isnumeric ())
+    {
+      error ("fits_movNamHDU: expected extver number");
+      return octave_value ();  
+    }
+
+  std::string hdutype = args(1).string_value();
+  std::string extname = args(2).string_value();
+  int extver = args(3).int_value();
+  int hdu;
+
+  if (hdutype == "IMAGE_HDU") hdu = IMAGE_HDU;
+  else if(hdutype == "ASCII_TBL") hdu = ASCII_TBL;
+  else if(hdutype == "BINARY_TBL") hdu = BINARY_TBL;
+  else if(hdutype == "ANY_HDU") hdu = 0;
+  else
+  {
+    error ("Expected hdutype of IMAGE_HDU, ASCII_TBL, BINARY_TBL, ANY_HDU");
+    return octave_value();
+  }
+
+  int slen = extname.length()+1;
+  char extname_c[slen];
+  strcpy(extname_c, extname.c_str());
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error("fits_movAbsHDU: file not open");
+      return octave_value ();
+    }
+  int status = 0;
+
+  if(fits_movnam_hdu(fp, hdu, extname_c, extver, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("fits_movNamHDU: couldnt move hdus");
+      return octave_value ();
+    }
+
+  return octave_value ();
 }
 
 // PKG_ADD: autoload ("fits_deleteHDU", "__fits__.oct");
@@ -1444,6 +1533,71 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
   return ret;
 }
 
+// PKG_ADD: autoload ("fits_readKeyLongStr", "__fits__.oct");
+DEFUN_DLD(fits_readKeyLongStr, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyLongStr(@var{file}, @var{recname})\n \
+Read the key value @var{recname} as a long\n \
+\n \
+This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+  if (! args (1).is_string ())
+    {
+      error ("fits_readKeyLongLong: key should be a string");
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if (!fp)
+    {
+      error ("fits_readKeyLongLong: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  char cbuffer[FLEN_VALUE];
+  char * val;
+  std::string key = args (1).string_value ();
+
+  if (fits_read_key_longstr(fp, key.c_str(), &val, cbuffer, &status) > 0)
+    {
+      fits_report_error (stderr, status);
+      error ("fits_readKeyLongStr: couldnt read key units");
+      return octave_value ();
+    }
+
+  ret(0) = octave_value(val);
+  ret(1) = octave_value(cbuffer);
+
+  // free the key mem
+  fits_free_memory(val, &status);
+
+  return ret;
+}
+
 // PKG_ADD: autoload ("fits_getConstantValue", "__fits__.oct");
 DEFUN_DLD(fits_getConstantValue, args, nargout,
 "-*- texinfo -*-\n \
@@ -1530,10 +1684,10 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
   return octave_value(ver);
 }
 
-// PKG_ADD: autoload ("fits_getHDUAddr", "__fits__.oct");
-DEFUN_DLD(fits_getHDUAddr, args, nargout,
+// PKG_ADD: autoload ("fits_getHDUaddr", "__fits__.oct");
+DEFUN_DLD(fits_getHDUaddr, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUAddr(@var{file})\n \
+@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUaddr(@var{file})\n \
 Return offsets of the current HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_get_hduaddrll function.\n \
@@ -1585,6 +1739,212 @@ This is the equivalent of the cfitsio fits_get_hduaddrll function.\n \
   ret(2) = octave_value(dataend);
 
   return ret;
+}
+
+// PKG_ADD: autoload ("fits_getImgSize", "__fits__.oct");
+DEFUN_DLD(fits_getImgSize, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{size}} = fits_getImgSize(@var{file})\n \
+Return size of a Image HDU\n \
+\n \
+This is the equivalent of the cfitsio fits_get_img_size function.\n \
+@end deftypefn")
+{
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1 
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getImgSize: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  long axis[2];
+
+  if(fits_get_img_size(fp, 2, &axis[0], &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get size");
+      return octave_value ();
+    }
+
+  Matrix dv(2, 1);
+  dv(0,1) = axis[0];
+  dv(1,1) = axis[1];
+
+  return octave_value(dv);
+}
+
+// PKG_ADD: autoload ("fits_getImgType", "__fits__.oct");
+DEFUN_DLD(fits_getImgType, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{type}} = fits_getImgType(@var{file})\n \
+Return size of a Image HDU\n \
+\n \
+This is the equivalent of the cfitsio fits_get_img_type function.\n \
+@end deftypefn")
+{
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1 
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getImgType: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int type;
+
+  if(fits_get_img_type(fp, &type, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get type");
+      return octave_value ();
+    }
+  octave_value ret;
+
+  switch (type)
+    {
+      case BYTE_IMG:
+        ret = octave_value("BYTE_IMG");
+        break;
+      case SHORT_IMG:
+        ret = octave_value("SHORT_IMG");
+        break;
+      case LONG_IMG:
+        ret = octave_value("LONG_IMG");
+        break;
+      case LONGLONG_IMG:
+        ret = octave_value("LONGLONG_IMG");
+        break;
+      case FLOAT_IMG:
+        ret = octave_value("FLOAT_IMG");
+        break;
+      case DOUBLE_IMG:
+        ret = octave_value("DOUBLE_IMG");
+        break;
+      default:
+        ret = octave_value("UNKNOWN");
+        break;
+    }
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_readImg", "__fits__.oct");
+DEFUN_DLD(fits_readImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{data}} = fits_readImg(@var{file})\n \
+@deftypefnx {Function File} {@var{data}} = fits_readImg(@var{file}, @var{fisrtpix}, @var{lastpix})\n \
+@deftypefnx {Function File} {@var{data}} = fits_readImg(@var{file}, @var{fisrtpix}, @var{lastpix}, @var{inc})\n \
+Read Image data\n \
+\n \
+This is the equivalent of the cfitsio fits_read_subset function.\n \
+@end deftypefn")
+{
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_readImage: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  int num_axis;
+  long axis[100];
+  if( fits_get_img_param( fp, 100, 0, &num_axis, axis, &status) > 0 )
+  {
+      fits_report_error( stderr, status );
+      error ("firs_readImage: could not get image paramters");
+      return octave_value();
+  }
+
+  int type;
+  dim_vector dv(num_axis, 1);
+  for(int i=0; i<num_axis;i++)
+    dv(i) = axis[i];
+
+  NDArray arr(dv);
+
+  int datatype = TDOUBLE;
+  long fpixel = 0;
+  long lpixel = 0;
+  double nulval = 0;
+  long inc = 0;
+
+  if(fits_read_subset(fp, datatype, &fpixel, &lpixel, &inc, &nulval, arr.fortran_vec(), 0, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get data");
+      return octave_value ();
+    }
+
+  return octave_value(arr);
 }
 
 #if 0

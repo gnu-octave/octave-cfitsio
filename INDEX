@@ -14,6 +14,7 @@ Low Level HDU Functions
  fits_getNumHDUs
  fits_movAbsHDU
  fits_movRelHDU
+ fits_movNamHDU
  fits_deleteHDU
  fits_writeChecksum
 Low Level Keyword Functions
@@ -25,6 +26,11 @@ Low Level Keyword Functions
  fits_readKeyDbl
  fits_readKeyCmplx
  fits_readKeyLongLong
+ fits_readKeyLongStr
+Low Level Image Manipulation
+ fits_getImgSize
+ fits_getImgType
+ fits_readImg
 Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames

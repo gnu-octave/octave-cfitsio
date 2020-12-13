@@ -34,9 +34,10 @@ fits.getConstantNames = @fits_getConstantNames;
 # HDU Access
 fits.getHDUnum = @fits_getHDUnum;
 fits.getHDUtype = @fits_getHDUtype;
-fits.getHDUAddr = @fits_getHDUAddr;
+fits.getHDUaddr = @fits_getHDUaddr;
 fits.getNumHDUs = @fits_getNumHDUs;
 fits.movAbsHDU = @fits_movAbsHDU;
+fits.movNamHDU = @fits_movNamHDU;
 fits.movRelHDU = @fits_movRelHDU;
 fits.writeChecksum = @fits_writeChecksum;
 fits.deleteHDU = @fits_deleteHDU;
@@ -46,9 +47,14 @@ fits.readKey = @fits_readKey;
 fits.readKeyCmplx = @fits_readKeyCmplx;
 fits.readKeyDbl = @fits_readKeyDbl;
 fits.readKeyLongLong = @fits_readKeyLongLong;
+fits.readKeyLongStr = @fits_readKeyLongStr;
 fits.readKeyUnit = @fits_readKeyUnit;
 fits.readRecord = @fits_readRecord;
 fits.getHdrSpace = @fits_getHdrSpace;
+# image
+fits.getImgSize = @fits_getImgSize;
+fits.getImgType = @fits_getImgType;
+fits.readImg = @fits_readImg;
 
 %!test
 %! import_fits;
