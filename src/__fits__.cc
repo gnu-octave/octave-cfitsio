@@ -27,6 +27,46 @@ extern "C"
 
 #include "fits_constants.h"
 
+std::string coltype_to_string (int ct)
+{
+  switch(ct)
+  {
+   case TBIT: return "TBIT";
+   case TBYTE: return "TBYTE";
+   case TSBYTE: return "TSBYTE";
+   case TLOGICAL: return "TLOGICAL";
+   case TSTRING: return "TSTRING";
+   case TUSHORT: return "TUSHORT";
+   case TSHORT: return "TSHORT";
+   case TUINT: return "TUINT";
+   case TINT: return "TINT";
+   case TULONG: return "TULONG";
+   case TLONG: return "TLONG";
+   //case TINT32BIT: return "TINT32BIT"; // same as TULONG
+   case TFLOAT: return "TFLOAT";
+   case TULONGLONG: return "TULONGLONG";
+   case TLONGLONG: return "TLONGLONG";
+   case TDOUBLE: return "TDOUBLE";
+   case TCOMPLEX: return "TCOMPLEX";
+   case TDBLCOMPLEX: return "TDBLCOMPLEX";
+  }
+  return "TSTRING";
+}
+
+int string_to_coltype (const std::string &s)
+{
+  std::string name = s;
+  std::transform (name.begin(), name.end(), name.begin(), ::toupper);
+  for (int i=i;i<sizeof(fits_constants)/sizeof(fits_constants_type);i++)
+    {
+      if(name == fits_constants[i].name)
+        {
+          return fits_constants[i].value.int_value();
+        }
+    }
+  return TSTRING;
+}
+
 // class type to hold the file const
 class
 octave_fits_file : public octave_base_value
