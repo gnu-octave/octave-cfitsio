@@ -1724,13 +1724,13 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
   return octave_value(ver);
 }
 
-// PKG_ADD: autoload ("fits_getHDUaddr", "__fits__.oct");
-DEFUN_DLD(fits_getHDUaddr, args, nargout,
+// PKG_ADD: autoload ("fits_getHDUoff", "__fits__.oct");
+DEFUN_DLD(fits_getHDUoff, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUaddr(@var{file})\n \
+@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUoff(@var{file})\n \
 Return offsets of the current HDU\n \
 \n \
-This is the equivalent of the cfitsio fits_get_hduaddrll function.\n \
+This is the equivalent of the cfitsio fits_get_hduoff function.\n \
 @end deftypefn")
 {
   octave_value_list ret;
@@ -1760,17 +1760,17 @@ This is the equivalent of the cfitsio fits_get_hduaddrll function.\n \
 
   if(!fp)
     {
-      error ("fits_getHDUAddr: file not open");
+      error ("fits_getHDUoff: file not open");
       return octave_value ();
     }
 
   int status = 0;
-  LONGLONG headstart, datastart, dataend;
+  OFF_T headstart, datastart, dataend;
 
-  if(fits_get_hduaddrll(fp, &headstart, &datastart, &dataend, &status) > 0)
+  if(fits_get_hduoff(fp, &headstart, &datastart, &dataend, &status) > 0)
     {
       fits_report_error( stderr, status );
-      error ("couldnt get addr");
+      error ("couldnt get offsets");
       return octave_value ();
     }
 
