@@ -1530,6 +1530,63 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
   return octave_value(ver);
 }
 
+// PKG_ADD: autoload ("fits_getHDUAddr", "__fits__.oct");
+DEFUN_DLD(fits_getHDUAddr, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUAddr(@var{file})\n \
+Return offsets of the current HDU\n \
+\n \
+This is the equivalent of the cfitsio fits_get_hduaddrll function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1 
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getHDUAddr: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  LONGLONG headstart, datastart, dataend;
+
+  if(fits_get_hduaddrll(fp, &headstart, &datastart, &dataend, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get addr");
+      return octave_value ();
+    }
+
+  ret(0) = octave_value(headstart);
+  ret(1) = octave_value(datastart);
+  ret(2) = octave_value(dataend);
+
+  return ret;
+}
+
 #if 0
 %!shared testfile
 %! testfile = urlwrite ( ...

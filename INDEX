@@ -10,6 +10,7 @@ Low Level File Functions
 Low Level HDU Functions
  fits_getHDUnum
  fits_getHDUtype
+ fits_getHDUAddr
  fits_getNumHDUs
  fits_movAbsHDU
  fits_movRelHDU

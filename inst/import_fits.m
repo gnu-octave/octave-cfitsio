@@ -34,6 +34,7 @@ fits.getConstantNames = @fits_getConstantNames;
 # HDU Access
 fits.getHDUnum = @fits_getHDUnum;
 fits.getHDUtype = @fits_getHDUtype;
+fits.getHDUAddr = @fits_getHDUAddr;
 fits.getNumHDUs = @fits_getNumHDUs;
 fits.movAbsHDU = @fits_movAbsHDU;
 fits.movRelHDU = @fits_movRelHDU;
