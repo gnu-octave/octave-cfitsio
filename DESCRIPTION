@@ -1,0 +1,13 @@
+Name: octave-cfitsio
+Version: 0.0.1
+Date: 2020-12-06
+Author: John Donoghue
+Maintainer: John Donoghue <john.donoghue@ieee.org>
+Title: File I/O for FITS files.
+Description: octave-fitsio provides I/O routines to read and
+ write FITS (Flexible Image Transport System) files.
+Depends: octave (>= 4.0.0)
+BuildRequires: libcfitsio-dev
+SystemRequirements: libcfitsio
+License: GPLv3+
+Url: http://octave.sf.net

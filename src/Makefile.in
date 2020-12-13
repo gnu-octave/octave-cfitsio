@@ -1,0 +1,71 @@
+MKOCTFILE := @MKOCTFILE@
+OCTAVE_CONFIG := @OCTAVE_CONFIG@
+GREP ?= @GREP@
+SED ?= @SED@
+CXXFLAGS  := @CXXFLAGS@ @FITSIO_CXXFLAGS@ @DEFS@
+FITSIO_INCPATH := @FITSIO_INCPATH@
+LIBS      := @LIBS@ @FITSIO_LIBS@
+LDFLAGS   := @LDFLAGS@
+
+OCT_FILES =__fits__.oct fitsinfo.oct
+
+ARCHTESTS = archtests
+ARCHDIR   := "$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)-$(shell $(OCTAVE_CONFIG) -p API_VERSION)"
+
+CC_SOURCES  := $(patsubst %.oct,%.cc,$(OCT_FILES))
+CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
+TST_SOURCES := $(patsubst %.cc,../inst/$(ARCHDIR)/%.cc-tst,$(CC_TST_SOURCES))
+
+.PHONY: all
+all: $(OCT_FILES) $(ARCHTESTS)
+	
+%.o: %.cc fits_constants.h
+	$(MKOCTFILE) -c $< $(CXXFLAGS)
+
+%.oct: %.o
+	$(MKOCTFILE) -o $@ $(LDFLAGS) $(LIBS) $<
+
+.PHONY: archtests
+archtests: $(TST_SOURCES)
+
+../inst/$(ARCHDIR):
+	@mkdir -p "$@"
+
+../inst/$(ARCHDIR)/%.cc-tst: %.cc | ../inst/$(ARCHDIR)
+	@echo "Extracting tests from $< ..."
+	@$(RM) -f "$@" "$@-t"
+	@(      echo "## Generated from $<"; \
+	        $(GREP) '^%!' "$<") > "$@"
+
+fits_constants.h: $(FITSIO_INCPATH)/fitsio.h
+	@echo "Generating $@"
+	@(      echo "// Generated from $<"; \
+		echo "typedef struct { const char *name; octave_value value; }  fits_constants_type;"; \
+		echo "fits_constants_type fits_constants [] = {"; \
+	        $(SED) -n 's|^#define \([A-Z_][A-Z0-9_]*\)[ ]\+\([-0-9][0-9\.]*\).*$$| { "\1", \1 },|p' "$<"; \
+		echo ' { "", 0 }'; \
+		echo "};"; \
+	) > "$@"
+
+.PHONY: prebuild
+prebuild:
+
+.PHONY: clean
+.PHONY: distclean
+.PHONY: extraclean
+clean:
+	$(RM) -f *.o
+	$(RM) -f *.oct
+	$(RM) -f fits_constants.h
+	test -e ../inst/$(ARCHDIR) && rm -f $(TST_SOURCES) || true
+	test -e ../inst/$(ARCHDIR) && rmdir ../inst/$(ARCHDIR) || true
+
+distclean: clean
+	$(RM) -rf autom4te.cache
+	$(RM) -f Makefile config.status config.log config.h
+	$(RM) -r oct-alt-includes.h
+
+extraclean: distclean
+	$(RM) -r config.h.in
+	$(RM) -r aclocal.m4
+	$(RM) -r configure

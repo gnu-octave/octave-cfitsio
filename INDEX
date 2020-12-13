@@ -1,0 +1,32 @@
+FITS >>I/O for FITS files
+Low Level File Functions
+ fits_createFile
+ fits_openFile
+ fits_openDiskFile
+ fits_fileMode
+ fits_fileName
+ fits_closeFile
+ fits_deleteFile
+Low Level HDU Functions
+ fits_getHDUnum
+ fits_getHDUtype
+ fits_getNumHDUs
+ fits_movAbsHDU
+ fits_movRelHDU
+ fits_deleteHDU
+ fits_writeChecksum
+Low Level Keyword Functions
+ fits_getHdrSpace
+ fits_readRecord
+ fits_readCard
+ fits_readKey
+ fits_readKeyUnit
+ fits_readKeyDbl
+ fits_readKeyDblCmplx
+ fits_readKeyLongLong
+Low Level Utility Functions
+ fits_getConstantValue
+ fits_getConstantNames
+ fits_getVersion
+Import functions
+ import_fits
