@@ -1999,6 +1999,877 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
   return octave_value(c);
 }
 
+// PKG_ADD: autoload ("fits_getAColParms", "__fits__.oct");
+DEFUN_DLD(fits_getAColParms, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = fits_getAColParms(@var{file}, @var{colnum})\n \
+Get ASCII table paramaters\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (args.length () < 2
+    || !args (1).isnumeric())
+    {
+      error ("Expected numeric col number");
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int colnum = args (1).int_value();
+  double scale, zero;
+  long tbcol;
+  char ttype[FLEN_CARD];
+  char tunit[FLEN_CARD];
+  char tform[FLEN_CARD];
+  char nullstr[FLEN_CARD];
+  char tdisp[FLEN_CARD];
+
+  if(fits_get_acolparms(fp, colnum, ttype, &tbcol, tunit, tform, &scale, &zero, nullstr, tdisp, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  ret(0) = octave_value(ttype);
+  ret(1) = octave_value(tbcol);
+  ret(2) = octave_value(tunit);
+  ret(3) = octave_value(tform);
+  ret(4) = octave_value(scale);
+  ret(5) = octave_value(zero);
+  ret(6) = octave_value(nullstr);
+  ret(7) = octave_value(tdisp);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_getBColParms", "__fits__.oct");
+DEFUN_DLD(fits_getBColParms, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{ttype},@var{tunit},@var{typechar}@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = fits_getBColParms(@var{file}, @var{colnum})\n \
+Get binary table paramaters\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (args.length () < 2
+    || !args (1).isnumeric())
+    {
+      error ("Expected numeric col number");
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int colnum = args (1).int_value();
+  double scale, zero;
+  long repeat, nullval;
+  char ttype[FLEN_CARD];
+  char tunit[FLEN_CARD];
+  char typechar[FLEN_CARD];
+  char tdisp[FLEN_CARD];
+
+  if(fits_get_bcolparms(fp, colnum, ttype, tunit, typechar, &repeat, &scale, &zero, &nullval, tdisp, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  ret(0) = octave_value(ttype);
+  ret(1) = octave_value(tunit);
+  ret(2) = octave_value(typechar);
+  ret(3) = octave_value(repeat);
+  ret(4) = octave_value(scale);
+  ret(5) = octave_value(zero);
+  ret(6) = octave_value(nullval);
+  ret(7) = octave_value(tdisp);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_getColName", "__fits__.oct");
+DEFUN_DLD(fits_getColName, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{colnum},@var{colname}]} = fits_getColName(@var{file}, @var{template}, @var{casesens})\n \
+Get column type\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_colname function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (args.length () < 2
+    || !args (1).is_string())
+    {
+      error ("Expected string template");
+      return octave_value ();  
+    }
+
+  std::string t = args(1).string_value ();
+  int tlen = t.length()+1;
+  char templatestr[tlen];
+  strcpy(templatestr, t.c_str());
+
+  int casesense = 0;
+  if (args.length () > 2)
+  {
+    if( !args (2).islogical() && !args (2).isnumeric())
+    {
+      error ("Expected logical case sense");
+      return octave_value ();  
+    }
+  else {
+    casesense = args (2).int_value();
+    }
+  }
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  int colnum;
+  char colname[FLEN_CARD];
+
+  if(fits_get_colname(fp, casesense, templatestr, colname, &colnum, &status) > 0 && status != COL_NOT_UNIQUE)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get column match");
+      return octave_value ();
+    }
+
+  ret(0) = octave_value(colnum);
+  ret(1) = octave_value(colname);
+
+  return ret;
+}
+
+
+// PKG_ADD: autoload ("fits_getColType", "__fits__.oct");
+DEFUN_DLD(fits_getColType, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = fits_getColType(@var{file}, @var{colnum})\n \
+Get column type\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (args.length () < 2
+    || !args (1).isnumeric())
+    {
+      error ("Expected numeric col number");
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int colnum = args (1).int_value();
+  LONGLONG repeat, width;
+  int dtype;
+
+  if(fits_get_coltypell(fp, colnum, &dtype, &repeat, &width, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  // TODO: should dtype be a string 
+  ret(0) = octave_value(dtype);
+
+  ret(1) = octave_value(repeat);
+  ret(2) = octave_value(width);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_getEqColType", "__fits__.oct");
+DEFUN_DLD(fits_getEqColType, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = fits_getEqColType(@var{file}, @var{colnum})\n \
+Get column type\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (args.length () < 2
+    || !args (1).isnumeric())
+    {
+      error ("Expected numeric col number");
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int colnum = args (1).int_value();
+  LONGLONG repeat, width;
+  int dtype;
+
+  if(fits_get_eqcoltypell(fp, colnum, &dtype, &repeat, &width, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  // TODO: should dtype be a string 
+  ret(0) = octave_value(dtype);
+
+  ret(1) = octave_value(repeat);
+  ret(2) = octave_value(width);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_getNumCols", "__fits__.oct");
+DEFUN_DLD(fits_getNumCols, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{ncols}} = fits_getNumCols(@var{file})\n \
+Get number of columns\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
+@end deftypefn")
+{
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int ncols;
+
+  if(fits_get_num_cols(fp, &ncols, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  return octave_value(ncols);
+}
+
+// PKG_ADD: autoload ("fits_getNumRows", "__fits__.oct");
+DEFUN_DLD(fits_getNumRows, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{nrows}} = fits_getNumRows(@var{file})\n \
+Get number of rows\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
+@end deftypefn")
+{
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  LONGLONG nrows;
+
+  if(fits_get_num_rowsll(fp, &nrows, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  return octave_value(nrows);
+}
+
+// PKG_ADD: autoload ("fits_readATblHdr", "__fits__.oct");
+DEFUN_DLD(fits_readATblHdr, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{rowlen}, @var{nrows}, @var{ttype},@var{tbcol},@var{tform},@var{tunit},@var{extname}]} = fits_readATblHdr(@var{file})\n \
+Get ASCII table parameters\n \
+\n \
+This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getATblHdr: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int ncols;
+  if(fits_get_num_cols(fp, &ncols, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get cols");
+      return octave_value ();
+    }
+
+  char ttypebuf[(ncols*FLEN_CARD)+1];
+  char tformbuf[(ncols*FLEN_CARD)+1];
+  char tunitbuf[(ncols*FLEN_CARD)+1];
+
+  char extname[FLEN_CARD];
+  int tfields = 0;
+  char * ttype[ncols];
+  char * tform[ncols];
+  char * tunit[ncols];
+  LONGLONG tbcol[ncols];
+  LONGLONG rowlen, nrows;
+
+  for (int i=0; i< ncols; i++)
+  {
+    ttype[i] = &ttypebuf[FLEN_CARD*i];
+    tform[i] = &tformbuf[FLEN_CARD*i];
+    tunit[i] = &tunitbuf[FLEN_CARD*i];
+  }
+
+  if(fits_read_atblhdrll(fp, ncols, &rowlen, &nrows, &tfields, ttype, tbcol, tform, tunit, extname, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  Cell ttypev(1, tfields);
+  Cell tformv(1, tfields);
+  Cell tunitv(1, tfields);
+//  string_vector ttypev;
+//  string_vector tformv;
+//  string_vector tunitv;
+  NDArray tbcolv(dim_vector(tfields, 1));
+
+  for (int i=0; i< tfields; i++)
+  {
+//	  printf("%d - %s\n", i, ttype[i]);
+  //  ttypev.append(std::string(ttype[i]));
+    //tformv.append(std::string(tform[i]));
+  //  tunitv.append(std::string(tunit[i]));
+  ttypev(i) = octave_value(std::string(ttype[i]));
+  tformv(i) = octave_value(std::string(tform[i]));
+  tunitv(i) = octave_value(std::string(tunit[i]));
+    tbcolv(i) = tbcol[i];
+  }
+
+  ret(0) = octave_value(rowlen);
+  ret(1) = octave_value(nrows);
+  ret(2) = octave_value(ttypev);
+  ret(3) = octave_value(tbcolv);
+  ret(4) = octave_value(tformv);
+  ret(5) = octave_value(tunitv);
+  ret(6) = octave_value(extname);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_readBTblHdr", "__fits__.oct");
+DEFUN_DLD(fits_readBTblHdr, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{nrows}, @var{ttype},@var{tform},@var{tunit},@var{extname}, @var{pcount}]} = fits_readBTblHdr(@var{file})\n \
+Get Binary table parameters\n \
+\n \
+This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getATblHdr: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  int ncols;
+  if(fits_get_num_cols(fp, &ncols, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get cols");
+      return octave_value ();
+    }
+
+  char ttypebuf[(ncols*FLEN_CARD)+1];
+  char tformbuf[(ncols*FLEN_CARD)+1];
+  char tunitbuf[(ncols*FLEN_CARD)+1];
+
+  char extname[FLEN_CARD];
+  int tfields = 0;
+  char * ttype[ncols];
+  char * tform[ncols];
+  char * tunit[ncols];
+  LONGLONG nrows, pcount;
+
+  for (int i=0; i< ncols; i++)
+  {
+    ttype[i] = &ttypebuf[FLEN_CARD*i];
+    tform[i] = &tformbuf[FLEN_CARD*i];
+    tunit[i] = &tunitbuf[FLEN_CARD*i];
+  }
+
+  if(fits_read_btblhdrll(fp, ncols, &nrows, &tfields, ttype, tform, tunit, extname, &pcount, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  Cell ttypev(1, tfields);
+  Cell tformv(1, tfields);
+  Cell tunitv(1, tfields);
+  //string_vector ttypev;
+  //string_vector tformv;
+  //string_vector tunitv;
+
+  for (int i=0; i< tfields; i++)
+  {
+  //  ttypev.append(std::string(ttype[i]));
+ //   tformv.append(std::string(tform[i]));
+   // tunitv.append(std::string(tunit[i]));
+  ttypev(i) = octave_value(std::string(ttype[i]));
+  tformv(i) = octave_value(std::string(tform[i]));
+  tunitv(i) = octave_value(std::string(tunit[i]));
+  }
+
+  ret(0) = octave_value(nrows);
+  ret(1) = octave_value(ttypev);
+  ret(2) = octave_value(tformv);
+  ret(3) = octave_value(tunitv);
+  ret(4) = octave_value(extname);
+  ret(5) = octave_value(pcount);
+
+  return ret;
+}
+
+// PKG_ADD: autoload ("fits_readCol", "__fits__.oct");
+DEFUN_DLD(fits_readCol, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum})\n \
+@deftypefnx {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum}i, @var{firstrow}, @var{numrows})\n \
+Get table row data\n \
+\n \
+This is the equivalent of the cfitsio  fits_read_col function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 2
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  if (!args (1).isnumeric())
+    {
+      error ("expected numeric col value");
+      return octave_value ();  
+    }
+
+  int col = args(1).int_value();
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_readCol: file not open");
+      return octave_value ();
+    }
+
+  // we need
+  // // data type want to convert to
+  // number of axis ? and sxiis to work out size ??? or do we not need ? as only getting one row ?
+  // num rows we have
+  // width of row for ascii
+
+  int status;
+
+  int hdutype;
+
+  if(fits_get_hdu_type(fp, &hdutype, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("fits_getHDUtype: couldnt get hdu type");
+      return octave_value ();
+    }
+
+  LONGLONG nrows;
+
+  if(fits_get_num_rowsll(fp, &nrows, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+/*
+  std::string name = "";
+  if(hdutype == IMAGE_HDU) 
+    name = "IMAGE_HDU";
+  else if(hdutype == ASCII_TBL)
+    name = "ASCII_TBL";
+  else if(hdutype == BINARY_TBL)
+    name = "BINARY_TBL";
+  else
+    name = "UNKNOWN";
+*/
+
+  int dtype;
+  LONGLONG repeat, width;
+  // get data type to use
+  if(fits_get_eqcoltypell(fp, col, &dtype, &repeat, &width, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get parms");
+      return octave_value ();
+    }
+
+  // if will read as string, get width
+  int charwidth;
+  if (fits_get_col_display_width (fp, col, &charwidth, &status) > 0)
+  {
+      fits_report_error( stderr, status );
+      error ("couldnt get col width");
+      return octave_value ();
+  }
+
+
+/*
+ { "TBYTE", TBYTE },
+ { "TSBYTE", TSBYTE },
+ { "TLOGICAL", TLOGICAL },
+ { "TSTRING", TSTRING },
+ { "TUSHORT", TUSHORT },
+ { "TSHORT", TSHORT },
+ { "TUINT", TUINT },
+ { "TINT", TINT },
+ { "TULONG", TULONG },
+ { "TLONG", TLONG },
+ { "TINT32BIT", TINT32BIT },
+ { "TFLOAT", TFLOAT },
+ { "TULONGLONG", TULONGLONG },
+ { "TLONGLONG", TLONGLONG },
+ { "TDOUBLE", TDOUBLE },
+ { "TCOMPLEX", TCOMPLEX },
+ { "TDBLCOMPLEX", TDBLCOMPLEX },
+    int fits_read_col / ffgcv
+      (fitsfile *fptr, int datatype, int colnum, LONGLONG firstrow, LONGLONG firstelem,
+       LONGLONG nelements, DTYPE *nulval, DTYPE *array, int *anynul, int *status)
+*/
+  
+  LONGLONG firstrow = 1;
+  LONGLONG firstel = 1;
+  LONGLONG nels = nrows;
+
+  char nulval[1] = { '\0' };
+  char cdata[charwidth+1];
+  char ndata[charwidth+1];
+
+  string_vector strdata;
+  string_vector nuldata;
+
+  int anynul;
+  // for strings lets just read line by line
+  for(LONGLONG i = firstrow;i<nels;i++)
+  {
+    anynul = 0;
+    if(fits_read_col(fp, TSTRING, col, i, firstel, 1, &nulval, cdata, &anynul, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get data");
+      return octave_value ();
+    }
+    strdata.append(std::string(cdata));
+    //nuldata.append(std::string(ndata));
+    //TODO: if anynull - add this index val to null position list
+  }
+  ret(0) = strdata;
+  ret(1) = nuldata;
+/*
+  if(fits_read_col(fp, datatype, col, firstrow, firstel, &nels, &nulval, data, &anynull , &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get data");
+      return octave_value ();
+    }
+
+  string_vector ttypev;
+  string_vector tformv;
+  string_vector tunitv;
+
+  for (int i=0; i< tfields; i++)
+  {
+    ttypev.append(std::string(ttype[i]));
+    tformv.append(std::string(tform[i]));
+    tunitv.append(std::string(tunit[i]));
+  }
+
+  ret(0) = octave_value(nrows);
+  ret(1) = octave_value(ttypev);
+  ret(2) = octave_value(tformv);
+  ret(3) = octave_value(tunitv);
+  ret(4) = octave_value(extname);
+  ret(5) = octave_value(pcount);
+ */
+
+  return ret;
+}
+
+
+
 
 #if 0
 %!shared testfile

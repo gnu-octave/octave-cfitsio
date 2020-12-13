@@ -36,6 +36,17 @@ Low Level Utility Functions
  fits_getConstantNames
  fits_getVersion
 Low Level Commpression Functions
-  fis_isCompressedImg
+ fis_isCompressedImg
+Low Level Binary and ASCII Tables
+ fits_getAColParms
+ fits_getBColParms
+ fits_getColName
+ fits_getColType
+ fits_getEqColType
+ fits_getNumCols
+ fits_getNumRows
+ fits_readATblHdr
+ fits_readBTblHdr
+ fits_readCol
 Import functions
  import_fits

@@ -19,6 +19,8 @@
 ## Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
 ## @end deftypefn
 
+fits = {};
+
 #file access
 fits.createFile = @fits_createFile;
 fits.openFile = @fits_openFile;
@@ -56,7 +58,18 @@ fits.getImgSize = @fits_getImgSize;
 fits.getImgType = @fits_getImgType;
 fits.readImg = @fits_readImg;
 # compression
-fits.isCompressedImg = @firs_isCompressedImg
+fits.isCompressedImg = @fits_isCompressedImg;
+# table
+fits.getAColParms = @fits_getAColParms;
+fits.getBColParms = @fits_getBColParms;
+fits.getColName = @fits_getColName;
+fits.getColType = @fits_getColType;
+fits.getEqColType = @fits_getEqColType;
+fits.getNumCols = @fits_getNumCols;
+fits.getNumRows = @fits_getNumRows;
+fits.readATblHdr = @fits_readATblHdr;
+fits.readBTblHdr = @fits_readBTblHdr;
+fits.readCol = @fits_readCol;
 
 %!test
 %! import_fits;
