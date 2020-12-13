@@ -35,5 +35,7 @@ Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames
  fits_getVersion
+Low Level Commpression Functions
+  fis_isCompressedImg
 Import functions
  import_fits

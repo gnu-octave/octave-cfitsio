@@ -55,6 +55,8 @@ fits.getHdrSpace = @fits_getHdrSpace;
 fits.getImgSize = @fits_getImgSize;
 fits.getImgType = @fits_getImgType;
 fits.readImg = @fits_readImg;
+# compression
+fits.isCompressedImg = @firs_isCompressedImg
 
 %!test
 %! import_fits;

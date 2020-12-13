@@ -1947,6 +1947,59 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
   return octave_value(arr);
 }
 
+// PKG_ADD: autoload ("fits_isCompressedImg", "__fits__.oct");
+DEFUN_DLD(fits_isCompressedImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{data}} = fits_isCompressedImg(@var{file})\n \
+Check if Image data is compressed and return true if it is\n \
+\n \
+This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
+@end deftypefn")
+{
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () < 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_isCompressedImg: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  int c = fits_is_compressed_image(fp, &status);
+
+  if(status)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get compression");
+      return octave_value ();
+    }
+
+  return octave_value(c);
+}
+
+
 #if 0
 %!shared testfile
 %! testfile = urlwrite ( ...
