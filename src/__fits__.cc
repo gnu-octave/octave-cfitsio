@@ -859,7 +859,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 // PKG_ADD: autoload ("fits_movNamHDU", "__fits__.oct");
 DEFUN_DLD(fits_movNamHDU, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
+@deftypefn {Function File} fits_movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
 Got to HDU matching @var{hdutype}, @var{extname}, @var{extver}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
