@@ -23,7 +23,7 @@ Low Level Keyword Functions
  fits_readKey
  fits_readKeyUnit
  fits_readKeyDbl
- fits_readKeyDblCmplx
+ fits_readKeyCmplx
  fits_readKeyLongLong
 Low Level Utility Functions
  fits_getConstantValue

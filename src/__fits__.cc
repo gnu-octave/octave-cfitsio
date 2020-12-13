@@ -1320,10 +1320,10 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("fits_readKeyDblCmplx", "__fits__.oct");
-DEFUN_DLD(fits_readKeyDblCmplx, args, nargout,
+// PKG_ADD: autoload ("fits_readKeyCmplx", "__fits__.oct");
+DEFUN_DLD(fits_readKeyCmplx, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyDblCmplx(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyCmplx(@var{file}, @var{recname})\n \
 Read the key value @var{recname} as a complex double\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \

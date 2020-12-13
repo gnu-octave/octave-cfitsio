@@ -43,7 +43,7 @@ fits.deleteHDU = @fits_deleteHDU;
 # keywords
 fits.readCard = @fits_readCard;
 fits.readKey = @fits_readKey;
-fits.readKeyDblCmplx = @fits_readKeyDblCmplx;
+fits.readKeyCmplx = @fits_readKeyCmplx;
 fits.readKeyDbl = @fits_readKeyDbl;
 fits.readKeyLongLong = @fits_readKeyLongLong;
 fits.readKeyUnit = @fits_readKeyUnit;
