@@ -1820,20 +1820,42 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
     }
 
   int status = 0;
-  long axis[2];
+  long axis[100];
+  int naxis;
 
-  if(fits_get_img_size(fp, 2, &axis[0], &status) > 0)
+  if (fits_get_img_dim(fp, &naxis, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get dims");
+      return octave_value ();
+    }
+
+  if (naxis > 100)
+    naxis = 100;
+
+  if(fits_get_img_size(fp, naxis, axis, &status) > 0)
     {
       fits_report_error( stderr, status );
       error ("couldnt get size");
       return octave_value ();
     }
 
-  Matrix dv(2, 1);
-  dv(0,1) = axis[0];
-  dv(1,1) = axis[1];
+  // need swap first 2 axis 
+  if (naxis > 1)
+    {
+      long tmp = axis[0];
+      axis[0] = axis[1];
+      axis[1] = tmp;
+    }
 
-  return octave_value(dv);
+  Matrix size(1, naxis);
+
+  for (int i=0;i<naxis; i++)
+    {
+      size(0, i) = axis[i];
+    }
+
+  return octave_value(size);
 }
 
 // PKG_ADD: autoload ("fits_getImgType", "__fits__.oct");
