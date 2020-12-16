@@ -1,4 +1,6 @@
 FITS >>I/O for FITS files
+High Level File Functions
+ fitsinfo
 Low Level File Functions
  fits_createFile
  fits_openFile
@@ -10,7 +12,7 @@ Low Level File Functions
 Low Level HDU Functions
  fits_getHDUnum
  fits_getHDUtype
- fits_getHDUaddr
+ fits_getHDUoff
  fits_getNumHDUs
  fits_movAbsHDU
  fits_movRelHDU
@@ -45,6 +47,7 @@ Low Level Binary and ASCII Tables
  fits_getEqColType
  fits_getNumCols
  fits_getNumRows
+ fits_getRowSize
  fits_readATblHdr
  fits_readBTblHdr
  fits_readCol

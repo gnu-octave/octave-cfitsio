@@ -22,7 +22,7 @@
 
 extern "C"
 {
-#include <fitsio.h>
+#include <fitsio2.h>
 }
 
 #include "fits_constants.h"
@@ -2206,7 +2206,10 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
   ret(3) = octave_value(repeat);
   ret(4) = octave_value(scale);
   ret(5) = octave_value(zero);
-  ret(6) = octave_value(nullval);
+  if (nullval == NULL_UNDEFINED)
+    ret(6) = Matrix(0,0);
+  else
+    ret(6) = octave_value(nullval);
   ret(7) = octave_value(tdisp);
 
   return ret;
@@ -2533,6 +2536,58 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
     }
 
   return octave_value(nrows);
+}
+
+// PKG_ADD: autoload ("fits_getRowSize", "__fits__.oct");
+DEFUN_DLD(fits_getRowSize, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {@var{nrows}} = fits_getRowSize(@var{file})\n \
+Get size of a row\n \
+\n \
+This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
+@end deftypefn")
+{
+
+  if ( args.length() == 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  init_types ();
+
+  if (args.length () != 1
+    || args (0).type_id () != octave_fits_file::static_type_id ())
+    {
+      print_usage ();
+      return octave_value ();  
+    }
+
+  octave_fits_file * file = NULL;
+
+  const octave_base_value& rep = args (0).get_rep ();
+
+  file = &((octave_fits_file &)rep);
+
+  fitsfile *fp = file->get_fp();
+
+  if(!fp)
+    {
+      error ("fits_getRowSize: file not open");
+      return octave_value ();
+    }
+
+  int status = 0;
+  long rowsize;
+
+  if(fits_get_rowsize(fp, &rowsize, &status) > 0)
+    {
+      fits_report_error( stderr, status );
+      error ("couldnt get rowsize");
+      return octave_value ();
+    }
+
+  return octave_value(rowsize);
 }
 
 // PKG_ADD: autoload ("fits_readATblHdr", "__fits__.oct");
