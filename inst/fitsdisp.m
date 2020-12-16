@@ -18,7 +18,7 @@
 ## @deftypefnx {Function File} {[@var{info}]} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
 ## Display information about fits format file
 ##
-## Known propertie names are:
+## Known property names are:
 ## @table @asis
 ## @item 'Index'
 ## Value is a scalar or vector of hdu numbers to display
@@ -35,9 +35,16 @@ function out = fitsdisp (filename, varargin)
 
   output = "";
 
-  if nargin < 1
-    error ("expected input filename");
-  end
+  if nargin < 1 || !ischar(filename) || isempty(filename)
+    error ("fitsdisp: expected input filename");
+  endif
+
+  if mod (nargin + 1, 2) != 0
+    error ("fitsdisp: expected property name, value pairs");
+  endif
+  if !iscellstr (varargin (1:2:nargin-1))
+    error ("fitsdisp: expected property names to be strings");
+  endif
 
   # get the options if any
   hduindex = [];
@@ -50,22 +57,22 @@ function out = fitsdisp (filename, varargin)
     switch (name)
       case "index"
        if !isnumeric(value)
-         error ("Expected index to be numeric");
+         error ("fitsdisp: Expected index to be numeric");
        endif
        if ismatrix(value)
          hduindex = value;
        elseif isscalar(value)
          hdrindex = [value];
        else
-         error("Expected matrix or scalar");
+         error("fitsdisp: Expected matrix or scalar");
        endif
       case "mode"
         mode = value;
         if !strcmp(mode, 'min') && !strcmp(mode, 'standard') && !strcmp(mode, 'full')
-          error ("Expected mode to be min, standard or full");
+          error ("fitsdisp: Expected mode to be min, standard or full");
         endif
       otherwise
-        error ("Unknown property name");
+        error ("fitsdisp: Unknown property name");
     endswitch
   endfor
 
@@ -161,3 +168,53 @@ function out = fitsdisp (filename, varargin)
     fits.closeFile(fd);
   end_unwind_protect
 endfunction
+
+%!shared testfile
+%! testfile = urlwrite ( ...
+%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
+%!   tempname() );
+
+%!test
+%! a = fitsdisp(testfile);
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 177);
+%!
+%! b = fitsdisp(testfile, 'Mode', 'standard');
+%! assert(a, b)
+
+%!test
+%! a = fitsdisp(testfile, 'Mode', 'min');
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 6);
+
+%!test
+%! a = fitsdisp(testfile, 'Index', 1);
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 20);
+%!
+%! b = fitsdisp(testfile, 'Index', 1, 'Mode', 'standard');
+%! assert(a, b)
+
+%!test
+%! a = fitsdisp(testfile, 'Index', 1, 'Mode', 'full');
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 25);
+
+%!test
+%! a = fitsdisp(testfile, 'Index', 1, 'Mode', 'min');
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 2);
+
+%!test
+%! if exist (testfile, 'file')
+%!   delete (testfile);
+%! endif
+
+%!error fitsdisp
+%!error fitsdisp(1)
+%!error fitsdisp([])

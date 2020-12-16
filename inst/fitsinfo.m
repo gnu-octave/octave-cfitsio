@@ -21,9 +21,10 @@ function info = fitsinfo (filename)
   import_fits;
 
   info = {};
-  if nargin < 1
-    error ("expected input filename");
-  end
+
+  if nargin < 1 || !ischar(filename) || isempty(filename)
+    error ("fitsinfo: xpected input filename");
+  endif
 
   fd = fits.openFile(filename);
   unwind_protect
@@ -100,8 +101,8 @@ function info = fitsinfo (filename)
       hdu.DataSize = (dataend - datastart);
 
       if strcmp(type, "IMAGE_HDU")
-        hdu.Intercept = slope;
-        hdu.Slope = intercept;
+        hdu.Intercept = intercept;
+        hdu.Slope = slope;
         [bits_per_pixel, ~] = fits.readKeyDbl(fd, "BITPIX");
         if bits_per_pixel < 0
           datasize = -bits_per_pixel;
@@ -159,6 +160,7 @@ function info = fitsinfo (filename)
           [rowlen, rows, ttype, tbcol, tform, tunit, extname] = fits_readATblHdr(fd);
           hdu.Rows = rows;
           hdu.RowSize = rowlen;
+          hdu.DataSize = rows * rowlen;
 
           hdu.FieldFormat = {};
           hdu.FieldPrecision = {};
@@ -209,7 +211,7 @@ function info = fitsinfo (filename)
           hdu.FieldSize=[];
           hdu.MissingDataValue = {};
           for i=1:cols
-            [ttype,tunit,tform,repeat,scale,zero,nulstr,tdisp] = fits.getBColParms(fd,i)
+            [ttype,tunit,tform,repeat,scale,zero,nulstr,tdisp] = fits.getBColParms(fd,i);
             [tformx, ~] = fits.readKey(fd, sprintf("TFORM%d", i));
             hdu.FieldFormat{end+1} = tformx;
             hdu.Intercept{end+1} = zero;
@@ -312,3 +314,44 @@ function info = fitsinfo (filename)
     fits.closeFile(fd);
   end_unwind_protect
 endfunction
+
+%!shared testfile
+%! testfile = urlwrite ( ...
+%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
+%!   tempname() );
+
+%!test
+%! a = fitsinfo(testfile);
+%! assert(!isempty(a))
+%! assert(a.FileSize, 109440);
+%! assert(length(a.Contents), 5);
+%!
+%! assert(a.PrimaryData.DataType, 'single');
+%! assert(a.PrimaryData.Size, [109 102]);
+%! assert(a.PrimaryData.DataSize, 44472);
+%! assert(a.PrimaryData.Intercept, 0);
+%! assert(a.PrimaryData.Slope, 1);
+%! assert(a.PrimaryData.Offset, 2880);
+%!
+%! assert(a.Image.DataType, 'int16');
+%! assert(a.Image.Size, [31 73 5]);
+%! assert(a.Image.DataSize, 22630);
+%! assert(a.Image.Intercept, 0);
+%! assert(a.Image.Slope, 1);
+%! assert(a.Image.Offset, 74880);
+%!
+%! assert(a.AsciiTable.Rows, 53);
+%! assert(a.AsciiTable.RowSize, 59);
+%! assert(a.AsciiTable.DataSize, 3127);
+%! assert(a.AsciiTable.NFields, 8);
+%! assert(a.AsciiTable.Offset, 103680);
+
+%!test
+%! if exist (testfile, 'file')
+%!   delete (testfile);
+%! endif
+
+%!error fitsinfo
+%!error fitsinfo(1)
+%!error fitsinfo([])
+%!error fitsinfo('')
