@@ -67,6 +67,14 @@ int string_to_coltype (const std::string &s)
   return TSTRING;
 }
 
+#if 0
+// NOTE: using this for all tess of this file, so needs be at top of tests
+%!shared testfile
+%! testfile = urlwrite ( ...
+%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
+%!   tempname() );
+#endif
+
 // class type to hold the file const
 class
 octave_fits_file : public octave_base_value
@@ -86,15 +94,19 @@ public:
   bool is_constant (void) const { return true; }
   bool is_defined (void) const { return true; }
 
+  dim_vector dims (void) const { static dim_vector dv(1, 1); return dv; }
+
   octave_base_value * clone (void) const { return new octave_fits_file(*this); };
   octave_base_value * empty_clone (void) const { return new octave_fits_file(); }
-  octave_base_value * unique_clone (void) { return this; }
-
+  octave_base_value * unique_clone (void) { count++; return this;}
 
   void print_raw (std::ostream& os, bool pr_as_read_syntax = false) const
   {
     indent (os);
-    os << "<fits_file>";
+    if (this->fp)
+      os << "<fits_file>";
+    else
+      os << "<closed fits_file>";
     newline (os);
   }
 
@@ -118,6 +130,7 @@ public:
 
   // get the fits file ptr
   fitsfile * get_fp() { return fp; };
+
 private:
   fitsfile *fp;
 
@@ -358,13 +371,31 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
 
   return octave_value (fitsfile);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! fits_closeFile(fd);
+
+%!test
+%! fd = fits_openFile(testfile, "readonly");
+%! assert(!isempty(fd));
+%! fits_closeFile(fd);
+
+%!error <expected filename as a string> fits_openFile(1);
+%!error <expected filename as a string> fits_openFile([]);
+
+%!error <expected mode as a string> fits_openFile(testfile, 1);
+%!error <unknown file mode> fits_openFile(testfile, "badmode");
+#endif
+
 
 // PKG_ADD: autoload ("fits_openDiskFile", "__fits__.oct");
 DEFUN_DLD(fits_openDiskFile, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename})\n \
 @deftypefnx {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename}, @var{mode})\n \
-Attempt to open a a file of the given input name, ignoring and special processing of the filename.\n \
+Attempt to open a a file of the given input name, ignoring any special processing of the filename.\n \
 \n \
 If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
@@ -420,7 +451,6 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
   return octave_value (fitsfile);
 }
 
-
 // PKG_ADD: autoload ("fits_fileMode", "__fits__.oct");
 DEFUN_DLD(fits_fileMode, args, nargout,
 "-*- texinfo -*-\n \
@@ -458,7 +488,7 @@ The is the eqivalent of the fits_file_mode function.\n \
   if(!fp)
     {
       error("fits_fileMode: file not open");
-    return octave_value ();
+      return octave_value ();
     }
 
   int mode, status = 0;
@@ -476,6 +506,16 @@ The is the eqivalent of the fits_file_mode function.\n \
 
   return octave_value (modestr);
 }
+#if 0
+%! fd = fits_openFile(testfile, "readonly");
+%! assert(!isempty(fd));
+%! assert(fits_fileMode(fd), "READONLY")
+%! fits_closeFile(fd);
+
+%!error fits_fileMode(1);
+%!error fits_fileMode([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_fileName", "__fits__.oct");
 DEFUN_DLD(fits_fileName, args, nargout,
@@ -527,6 +567,15 @@ The is the eqivalent of the fits_file_name function.\n \
 
   return octave_value (filename);
 }
+#if 0
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_fileName(fd), testfile)
+%! fits_closeFile(fd);
+
+%!error fits_fileName(1);
+%!error fits_fileName([]);
+#endif
 
 // PKG_ADD: autoload ("fits_closeFile", "__fits__.oct");
 DEFUN_DLD(fits_closeFile, args, nargout,
@@ -548,7 +597,7 @@ The is the eqivalent of the fits_close_file function.\n \
   if (args.length () != 1 
     || args (0).type_id () != octave_fits_file::static_type_id ())
     {
-      print_usage ();
+      error ("Expected fitsfile");
       return octave_value ();  
     }
 
@@ -562,6 +611,15 @@ The is the eqivalent of the fits_close_file function.\n \
 
   return octave_value();
 }
+#if 0
+%! fd = fits_openFile(testfile);
+%! fits_closeFile(fd);
+
+%!error fits_closeFile();
+%!error fits_closeFile(1);
+%!error fits_closeFile([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_deleteFile", "__fits__.oct");
 DEFUN_DLD(fits_deleteFile, args, nargout,
@@ -1646,12 +1704,11 @@ Return the value of a known fits constant.\n \
 @seealso {fits_getConstantNames}\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if (args.length() != 1)
     {
-      print_usage ();
+      error( "fits_getConstantName: expected constant name" );
       return octave_value();
     }
-
   if (args.length () != 1  || !args(0).is_string() )
     {
       error( "fits_getConstantName: constant name should be a string" );
@@ -1675,6 +1732,18 @@ Return the value of a known fits constant.\n \
     }
   return value;
 }
+#if 0
+%!test
+%! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e-07);
+%! assert(fits_getConstantValue("IMAGE_HDU"), 0);
+%! assert(fits_getConstantValue("ASCII_TBL"), 1);
+%! assert(fits_getConstantValue("BINARY_TBL"), 2);
+%! assert(fits_getConstantValue("ANY_HDU"), -1);
+
+%!error <Couldnt find constant> fits_getConstantValue("UnkownVarName");
+%!error <expected constant name> fits_getConstantValue();
+%!error <constant name should be a string> fits_getConstantValue(1);
+#endif
 
 // PKG_ADD: autoload ("fits_getConstantNames", "__fits__.oct");
 DEFUN_DLD(fits_getConstantNames, args, nargout,
@@ -1723,6 +1792,11 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
 
   return octave_value(ver);
 }
+#if 0
+%!test
+%! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e-5);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getHDUoff", "__fits__.oct");
 DEFUN_DLD(fits_getHDUoff, args, nargout,
@@ -2989,11 +3063,6 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
 
 #if 0
-%!shared testfile
-%! testfile = urlwrite ( ...
-%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
-%!   tempname() );
-
 %!test
 %! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e8);
 %! fd = fits_openFile(testfile);
@@ -3004,10 +3073,12 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 %1 assert(fits_getHdrSpace(fd), [31 0]);
 %!
 %! fits_closeFile(fd);
+#endif
 
+#if 0
+// NOTE: delete file shared at top of tests
 %!test
 %! if exist (testfile, 'file')
 %!   delete (testfile);
 %! endif
-
 #endif
