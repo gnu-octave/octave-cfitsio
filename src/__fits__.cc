@@ -76,6 +76,85 @@ int string_to_coltype (const std::string &s)
   return TSTRING;
 }
 
+#define MAX_OPEN_FITS_FILES 20
+#define FITS_FD_MASK ( (((int64_t)'F') << 32) | (((int64_t)'I') << 24) | (((int64_t)'T') << 16) )
+fitsfile * fits_files[MAX_OPEN_FITS_FILES] = {0};
+
+static void close_all_fits_files()
+{
+  fprintf(stderr, "closing all files\n");
+  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+    {
+      if(fits_files[i] != 0)
+        {
+          int status = 0;
+  fprintf(stderr, "closing %d\n", i);
+
+          if ( fits_close_file(fits_files[i], &status ) > 0 )
+            {
+              fits_report_error( stderr, status );
+            }
+
+          fits_files[i] = 0;
+	}
+    }
+}
+
+static int get_free_fits_index()
+{
+  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+    {
+      if(fits_files[i] == 0)
+        {
+          return i;
+	}
+    }
+
+  return -1;
+}
+
+static int64_t add_fits_file(fitsfile *fd)
+{
+  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+    {
+      if(fits_files[i] == 0)
+        {
+          fits_files[i] = fd;
+	  return FITS_FD_MASK | i;
+	}
+    }
+
+  return -1;
+}
+
+static int64_t remove_fits_file(int64_t fd)
+{
+  if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
+    return -1;
+
+  int64_t idx = (fd & ~FITS_FD_MASK);
+  if (idx < 0 || idx >= MAX_OPEN_FITS_FILES)
+    return -1;
+
+  fits_files[idx] = 0;
+  return fd;
+}
+
+static fitsfile * get_fits_file(int64_t fd)
+{
+fprintf(stderr, "get %lld\n", fd);
+  if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
+    return 0;
+
+  int64_t idx = (fd & ~FITS_FD_MASK);
+fprintf(stderr, "get %lld - %lld\n", fd, idx);
+  if (idx < 0 || idx >= MAX_OPEN_FITS_FILES)
+    return 0;
+fprintf(stderr, "get %lld - %lld - %p\n", fd, idx, fits_files[idx]);
+  return fits_files[idx];
+}
+
+
 #if 0
 // NOTE: using this for all tess of this file, so needs be at top of tests
 %!shared testfile
@@ -83,202 +162,6 @@ int string_to_coltype (const std::string &s)
 %!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
 %!   tempname() );
 #endif
-
-// class type to hold the file const
-class
-octave_fits_file : public octave_base_value
-{
-public:
-
-  octave_fits_file ()
-    : fp (0) { }
-
-  ~octave_fits_file (void)
-  {
-    if(fp != NULL)
-      this->close();
-  }
-
-  // Octave internal stuff
-  bool is_constant (void) const { return true; }
-  bool is_defined (void) const { return true; }
-
-  dim_vector dims (void) const { static dim_vector dv(1, 1); return dv; }
-
-  octave_base_value * clone (void) const { return new octave_fits_file(*this); };
-  octave_base_value * empty_clone (void) const { return new octave_fits_file(); }
-  octave_base_value * unique_clone (void) { count++; return this;}
-
-  void print_raw (std::ostream& os, bool pr_as_read_syntax = false) const
-  {
-    indent (os);
-    if (this->fp)
-      os << "<fits_file>";
-    else
-      os << "<closed fits_file>";
-    newline (os);
-  }
-
-  void print (std::ostream& os, bool pr_as_read_syntax = false) const
-  {
-    print_raw (os);
-  }
-
-  void print (std::ostream& os, bool pr_as_read_syntax = false)
-  {
-    print_raw (os);
-  }
-
-  // internal functions
-  bool open (const std::string &name, int mode); 
-  bool open_diskfile (const std::string &name, int mode); 
-  bool create (const std::string &name);
-
-  void deletefile (void);
-  void close (void);
-
-  // get the fits file ptr
-  fitsfile * get_fp() { return fp; };
-
-private:
-  fitsfile *fp;
-
-  // needed by Octave for register_type()
-  octave_fits_file (const octave_fits_file &f);
-
-  DECLARE_OV_TYPEID_FUNCTIONS_AND_DATA
-};
-
-DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_fits_file, "fits_file", "fits_file")
-
-
-/*
- * get the fits file
- */
-octave_fits_file::octave_fits_file(const octave_fits_file &file)
-: fp(NULL)
-{
-  fprintf(stderr, "warning: Called fits_file copy\n");
-}
-
-/*
- * attempt to open file
- */
-bool
-octave_fits_file::open (const std::string &name, int mode)
-{
-  int status = 0;
-  fitsfile *fp;
-
-  if ( fits_open_file( &fp, name.c_str(), mode, &status) > 0 )
-    {
-      fits_report_error( stderr, status );
-      return false;
-    }
-
-  this->fp = fp;
-  
-  return true;
-}
-
-/*
- * open disk file
- */
-bool
-octave_fits_file::open_diskfile (const std::string &name, int mode)
-{
-  int status = 0;
-  fitsfile *fp;
-
-  if ( fits_open_diskfile( &fp, name.c_str(), mode, &status) > 0 )
-    {
-      fits_report_error( stderr, status );
-      return false;
-    }
-
-  this->fp = fp;
-  
-  return true;
-}
-
-/*
- * create a file
- */
-bool
-octave_fits_file::create (const std::string &name)
-{
-  int status = 0;
-  fitsfile *fp;
-
-  if ( fits_create_file( &fp, name.c_str(), &status) > 0 )
-    {
-      fits_report_error( stderr, status );
-      return false;
-    }
-
-  this->fp = fp;
-  
-  return true;
-}
-
-/*
- * close fits file
- */
-void
-octave_fits_file::close (void)
-{
-  int status = 0;
-
-  if (! this->fp)
-  {
-    error ("fits file not open");
-    return;
-  }
-
-  if ( fits_close_file(this->fp, &status ) > 0 )
-    {
-      fits_report_error( stderr, status );
-    }
-
-  this->fp = 0;
-}
-
-/*
- * close and delete file 
- */
-void
-octave_fits_file::deletefile (void)
-{
-  int status=0;
-
-  if (! this->fp)
-  {
-    error ("fits file not open");
-    return;
-  }
-
-  if ( fits_delete_file(this->fp, &status ) > 0 )
-    {
-      fits_report_error( stderr, status );
-    }
-
-  this->fp = 0;
-}
-
-/*
- * register the fitfile class 
- */
-void init_types ()
-{
-  static bool type_registered = false;
-
-  if (! type_registered)
-    {
-      type_registered = true;
-
-      octave_fits_file::register_type ();
-    }
-}
 
 // PKG_ADD: autoload ("__cfitsio_pkg_lock__", "__fits__.oct");
 // PKG_ADD: __cfitsio_pkg_lock__(1);
@@ -292,7 +175,10 @@ DEFMETHOD_DLD (__cfitsio_pkg_lock__, interp, args, , "internal function")
       if (args(0).int_value () == 1)
         interp.mlock();
       else if (args(0).int_value () == 0 &&  interp.mislocked("__cfitsio_pkg_lock__"))
-        interp.munlock("__cfitsio_pkg_lock__");
+        {
+          close_all_fits_files();
+          interp.munlock("__cfitsio_pkg_lock__");
+	}
     }
   return retval;
 }
@@ -300,6 +186,15 @@ DEFMETHOD_DLD (__cfitsio_pkg_lock__, interp, args, , "internal function")
 DEFUN_DLD(__cfitsio_pkg_lock__, args, ,  "internal function")
 {
   octave_value retval;
+
+  if (args.length () >= 1)
+    {
+      if (args(0).int_value () == 0)
+        {
+          close_all_fits_files();
+	}
+    }
+
   return retval;
 }
 #endif
@@ -330,16 +225,25 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 
   std::string infile = args(0).string_value ();
 
-  init_types ();
-
-  octave_fits_file *fitsfile = new octave_fits_file ();
-  if (! fitsfile->create (infile))
+  if (get_free_fits_index () < 0)
     {
-      error ("fits_createFile: Cant create fits file '%s'", infile.c_str ());
-      delete fitsfile;
+      error ("Out of space for new open file");
       return octave_value ();
     }
-  return octave_value (fitsfile);
+
+  int status = 0;
+  fitsfile *fp;
+
+  if ( fits_create_file( &fp, infile.c_str(), &status) > 0 )
+    {
+      fits_report_error( stderr, status );
+      error ("Couldnt create file");
+      return octave_value ();
+    }
+
+  int64_t fd = add_fits_file(fp);
+
+  return octave_value(octave_int64 (fd));
 }
 
 // PKG_ADD: autoload ("fits_openFile", "__fits__.oct");
@@ -391,18 +295,24 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
 
   std::string infile = args(0).string_value ();
 
-  init_types ();
-
-  octave_fits_file *fitsfile = new octave_fits_file ();
-  
-  if (! fitsfile->open (infile, mode))
+  if (get_free_fits_index () < 0)
     {
-      error ("fits_openFile: error opening fits file '%s'", infile.c_str());
-      delete fitsfile;
+      error ("Out of space for new open file");
       return octave_value ();
     }
 
-  return octave_value (fitsfile);
+  fitsfile *fp;
+  int status = 0;
+  if ( fits_open_file( &fp, infile.c_str(), mode, &status) > 0 )
+    {
+      fits_report_error( stderr, status );
+      error ("Could not open file");
+    }
+
+  int64_t fd = add_fits_file(fp);
+
+  //return octave_value (fitsfile);
+  return octave_value(octave_int64 (fd));
 }
 #if 0
 %!test
@@ -472,16 +382,24 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
 
   std::string infile = args(0).string_value ();
 
-  init_types ();
-
-  octave_fits_file *fitsfile = new octave_fits_file ();
-  if (! fitsfile->open_diskfile (infile, mode))
+  if (get_free_fits_index () < 0)
     {
-      error ("fits_openDiskFile: error opening fits diskfile '%s'", infile.c_str());
-      delete fitsfile;
+      error ("Out of space for new open file");
       return octave_value ();
     }
-  return octave_value (fitsfile);
+
+  fitsfile *fp;
+  int status = 0;
+  if ( fits_open_diskfile( &fp, infile.c_str(), mode, &status) > 0 )
+    {
+      fits_report_error( stderr, status );
+      error ("Couldnt open file");
+      return octave_value ();
+    }
+
+  int64_t fd = add_fits_file(fp);
+
+  return octave_value(octave_int64 (fd));
 }
 
 // PKG_ADD: autoload ("fits_fileMode", "__fits__.oct");
@@ -501,26 +419,17 @@ The is the eqivalent of the fits_file_mode function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_fileMode: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -566,26 +475,17 @@ The is the eqivalent of the fits_file_name function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_fileName: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -621,28 +521,36 @@ Close the opened fits file\n \
 The is the eqivalent of the fits_close_file function.\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      error ("Expected fitsfile");
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
+  int64_t fidx = args(0).int64_value();
+  fitsfile * fp = get_fits_file (fidx);
 
-  const octave_base_value& rep = args (0).get_rep ();
+  if (!fp)
+    {
+      error ("Not a fits file");
+    }
+  else
+    {
+      remove_fits_file(fidx);
 
-  file = &((octave_fits_file &)rep);
-
-  file->close ();
+      int status = 0;
+      if ( fits_close_file(fp, &status ) > 0 )
+        {
+          fits_report_error( stderr, status );
+        }
+      
+    }
 
   return octave_value();
 }
@@ -668,29 +576,36 @@ The is the eqivalent of the fits_delete_file function.\n \
 {
   octave_value retval;  // create object to store return values
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
+  int64_t fidx = args(0).int64_value();
+  fitsfile * fp = get_fits_file (fidx);
 
-  const octave_base_value& rep = args (0).get_rep ();
+  if (!fp)
+    {
+      error ("Not a fits file");
+    }
+  else
+    {
+      remove_fits_file(fidx);
 
-  file = &((octave_fits_file &)rep);
+      int status = 0;
 
-  file->deletefile ();
-
+      if ( fits_delete_file(fp, &status ) > 0 )
+        {
+          fits_report_error( stderr, status );
+        }
+    }
   return octave_value();
 }
 #if 0
@@ -720,32 +635,23 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_getHDUnum: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -781,32 +687,23 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_getHDUtype: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -855,32 +752,23 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getNumHDUs: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -924,12 +812,18 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).isnumeric () || args (1).isempty())
@@ -940,19 +834,6 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 
   int hdu = args(1).int_value();
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error("fits_movAbsHDU: file not open");
-      return octave_value ();
-    }
   int status = 0, hdutype;
 
   if(fits_movabs_hdu(fp, hdu, &hdutype,&status) > 0)
@@ -1012,12 +893,18 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).isnumeric () || args (1).isempty())
@@ -1027,20 +914,6 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
     }
 
   int hdu = args(1).int_value();
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_movRelHDU: file not open");
-      return octave_value ();
-    }
 
   int status = 0, hdutype;
 
@@ -1103,12 +976,18 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).is_string ())
@@ -1147,19 +1026,6 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
   char extname_c[slen];
   strcpy(extname_c, extname.c_str());
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error("fits_movNamHDU: file not open");
-      return octave_value ();
-    }
   int status = 0;
 
   if(fits_movnam_hdu(fp, hdu, extname_c, extver, &status) > 0)
@@ -1208,25 +1074,17 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_deleteHDU: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -1269,25 +1127,17 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_writeChecksum: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -1320,25 +1170,17 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error("fits_getHdrSpace: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -1386,12 +1228,18 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).isnumeric () || args (1).isempty())
@@ -1400,20 +1248,6 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value ();  
     }
   int idx = args (1).int_value();
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_readRecord: file not open");
-      return octave_value ();
-    }
 
   int status = 0;
   char buffer[FLEN_CARD];
@@ -1458,31 +1292,24 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
   if (! args (1).is_string ())
     {
       error ("fits_readCard: key should be a string");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readCard: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -1531,31 +1358,24 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
   if (! args (1).is_string ())
     {
       error ("fits_readKey: key should be a string");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readKey: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -1607,31 +1427,24 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
   if (! args (1).is_string ())
     {
       error ("fits_readKeyUnit: key should be a string");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readKeyUnit: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -1669,12 +1482,18 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).is_string ())
@@ -1683,19 +1502,6 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-  {
-    error("file not open");
-    return octave_value ();
-  }
   int status = 0;
 
   char cbuffer[FLEN_VALUE];
@@ -1749,31 +1555,24 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
   if (! args (1).is_string ())
     {
       error ("key should be a string");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readKeyDblCpmlx: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -1811,31 +1610,24 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
   if (! args (1).is_string ())
     {
       error ("fits_readKeyLongLong: key should be a string");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readKeyLongLong: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -1891,31 +1683,24 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
       return octave_value();
     }
 
-  init_types ();
-
-  if ( args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (! args (1).is_string ())
     {
       error ("fits_readKeyLongStr: key should be a string");
       return octave_value ();  
-    }
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if (!fp)
-    {
-      error ("fits_readKeyLongStr: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -2076,32 +1861,23 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getHDUoff: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2148,32 +1924,23 @@ Return size of a Image HDU\n \
 This is the equivalent of the cfitsio fits_get_img_size function.\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getImgSize: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2242,32 +2009,23 @@ Return size of a Image HDU\n \
 This is the equivalent of the cfitsio fits_get_img_type function.\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1 
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getImgType: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2336,32 +2094,23 @@ Read Image data\n \
 This is the equivalent of the cfitsio fits_read_subset function.\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if ( args.length() < 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_readImage: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2408,32 +2157,23 @@ Check if Image data is compressed and return true if it is\n \
 This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
 @end deftypefn")
 {
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_isCompressedImg: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2462,19 +2202,24 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (args.length () < 2
@@ -2482,20 +2227,6 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
     {
       error ("Expected numeric col number");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_isCompressedImg: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -2538,19 +2269,24 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (args.length () < 2
@@ -2558,20 +2294,6 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
     {
       error ("Expected numeric col number");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_isCompressedImg: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -2616,19 +2338,24 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() < 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (args.length () < 2
@@ -2655,19 +2382,6 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
     casesense = args (2).int_value();
     }
   }
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_isCompressedImg: file not open");
-      return octave_value ();
-    }
 
   int status = 0;
 
@@ -2699,19 +2413,24 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (args.length () < 2
@@ -2719,20 +2438,6 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
     {
       error ("Expected numeric col number");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_isCompressedImg: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -2767,19 +2472,24 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (args.length () < 2
@@ -2787,20 +2497,6 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
     {
       error ("Expected numeric col number");
       return octave_value ();  
-    }
-
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_isCompressedImg: file not open");
-      return octave_value ();
     }
 
   int status = 0;
@@ -2834,32 +2530,23 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_isCompressedImg: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2886,32 +2573,23 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_isCompressedImg: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2938,32 +2616,23 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
 @end deftypefn")
 {
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getRowSize: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -2991,32 +2660,23 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getATblHdr: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -3091,32 +2751,23 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() != 1)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () != 1
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
     }
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
+  fitsfile * fp = get_fits_file (args(0).int64_value());
 
   if(!fp)
     {
-      error ("fits_getATblHdr: file not open");
+      error("Not a fits file");
       return octave_value ();
     }
 
@@ -3187,19 +2838,24 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 {
   octave_value_list ret;
 
-  if ( args.length() == 0)
+  if ( args.length() < 2)
     {
       print_usage ();
       return octave_value();
     }
 
-  init_types ();
-
-  if (args.length () < 2
-    || args (0).type_id () != octave_fits_file::static_type_id ())
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      print_usage ();
+      error ("Not a fits file");
       return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).int64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
     }
 
   if (!args (1).isnumeric() || args (1).isempty())
@@ -3210,27 +2866,13 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   int col = args(1).int_value();
 
-  octave_fits_file * file = NULL;
-
-  const octave_base_value& rep = args (0).get_rep ();
-
-  file = &((octave_fits_file &)rep);
-
-  fitsfile *fp = file->get_fp();
-
-  if(!fp)
-    {
-      error ("fits_readCol: file not open");
-      return octave_value ();
-    }
-
   // we need
   // // data type want to convert to
   // number of axis ? and sxiis to work out size ??? or do we not need ? as only getting one row ?
   // num rows we have
   // width of row for ascii
 
-  int status;
+  int status = 0;
 
   int hdutype;
 
