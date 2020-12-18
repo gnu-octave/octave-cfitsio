@@ -19,6 +19,15 @@
 #include <octave/oct.h>
 #include <octave/version.h>
 #include <octave/file-info.h>
+#include <octave/defun-dld.h>
+
+#ifdef HAVE_CONFIG_H
+#  include "./config.h"
+#endif
+
+#ifdef HAVE_OCTAVE_INTERPRETER_H
+# include <octave/interpreter.h>
+#endif
 
 extern "C"
 {
@@ -270,6 +279,30 @@ void init_types ()
       octave_fits_file::register_type ();
     }
 }
+
+// PKG_ADD: autoload ("__cfitsio_pkg_lock__", "__fits__.oct");
+// PKG_ADD: __cfitsio_pkg_lock__(1);
+// PKG_DEL: __cfitsio_pkg_lock__(0);
+#ifdef DEFMETHOD_DLD
+DEFMETHOD_DLD (__cfitsio_pkg_lock__, interp, args, , "internal function")
+{
+  octave_value retval;
+  if (args.length () >= 1)
+    {
+      if (args(0).int_value () == 1)
+        interp.mlock();
+      else if (args(0).int_value () == 0 &&  interp.mislocked("__cfitsio_pkg_lock__"))
+        interp.munlock("__cfitsio_pkg_lock__");
+    }
+  return retval;
+}
+#else
+DEFUN_DLD(__cfitsio_pkg_lock__, args, ,  "internal function")
+{
+  octave_value retval;
+  return retval;
+}
+#endif
 
 // PKG_ADD: autoload ("fits_createFile", "__fits__.oct");
 DEFUN_DLD(fits_createFile, args, nargout,
