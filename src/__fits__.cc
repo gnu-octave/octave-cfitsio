@@ -149,7 +149,7 @@ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_fits_file, "fits_file", "fits_file")
 octave_fits_file::octave_fits_file(const octave_fits_file &file)
 : fp(NULL)
 {
-  fprintf(stderr, "Called fits_file copy\n");
+  fprintf(stderr, "warning: Called fits_file copy\n");
 }
 
 /*
@@ -507,6 +507,7 @@ The is the eqivalent of the fits_file_mode function.\n \
   return octave_value (modestr);
 }
 #if 0
+%!test
 %! fd = fits_openFile(testfile, "readonly");
 %! assert(!isempty(fd));
 %! assert(fits_fileMode(fd), "READONLY")
@@ -568,6 +569,7 @@ The is the eqivalent of the fits_file_name function.\n \
   return octave_value (filename);
 }
 #if 0
+%!test
 %! fd = fits_openFile(testfile);
 %! assert(!isempty(fd));
 %! assert(fits_fileName(fd), testfile)
@@ -612,6 +614,7 @@ The is the eqivalent of the fits_close_file function.\n \
   return octave_value();
 }
 #if 0
+%!test
 %! fd = fits_openFile(testfile);
 %! fits_closeFile(fd);
 
@@ -657,6 +660,22 @@ The is the eqivalent of the fits_delete_file function.\n \
 
   return octave_value();
 }
+#if 0
+%!test
+%! tmp = tempname();
+%! copyfile(testfile,tmp);
+%! assert(exist(tmp, "file"), 2);
+%!
+%! fd = fits_openFile(tmp);
+%! fits_deleteFile(fd);
+%! assert(exist(tmp, "file"), 0);
+
+%!error fits_deleteFile();
+%!error fits_deleteFile(1);
+%!error fits_deleteFile("");
+%!error fits_deleteFile([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getHDUnum", "__fits__.oct");
 DEFUN_DLD(fits_getHDUnum, args, nargout,
@@ -703,6 +722,21 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
 
   return octave_value (hdunum);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_getHDUnum(fd), 1);
+%! fits_movAbsHDU(fd, 1);
+%! assert(fits_getHDUnum(fd), 1);
+%! fits_movAbsHDU(fd, 2);
+%! assert(fits_getHDUnum(fd), 2);
+%! fits_closeFile(fd);
+
+%!error fits_getHDUnum(1);
+%!error fits_getHDUnum([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getHDUtype", "__fits__.oct");
 DEFUN_DLD(fits_getHDUtype, args, nargout,
@@ -764,11 +798,24 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 
   return octave_value (name);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_getHDUtype(fd), "IMAGE_HDU");
+%! type = fits_movAbsHDU(fd, 2);
+%! assert(fits_getHDUtype(fd), type);
+%! fits_closeFile(fd);
+
+%!error fits_getHDUtype(1);
+%!error fits_getHDUtype([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getNumHDUs", "__fits__.oct");
 DEFUN_DLD(fits_getNumHDUs, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{num}]} = fits_getNumHDUts(@var{file})\n \
+@deftypefn {Function File} {[@var{num}]} = fits_getNumHDUs(@var{file})\n \
 Return the count of HDUs in the file\n \
 \n \
 This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
@@ -815,6 +862,16 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 
   return octave_value(cnt);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_getNumHDUs(fd), 5);
+%! fits_closeFile(fd);
+
+%!error fits_getNumHDUs(1);
+%!error fits_getNumHDUs([]);
+#endif
 
 // PKG_ADD: autoload ("fits_movAbsHDU", "__fits__.oct");
 DEFUN_DLD(fits_movAbsHDU, args, nargout,
@@ -842,7 +899,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
       return octave_value ();  
     }
 
-  if (! args (1).isnumeric ())
+  if (! args (1).isnumeric () || args (1).isempty())
     {
       error ("fits_movAbsHDU: expected hdu number");
       return octave_value ();  
@@ -884,11 +941,30 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 
   return octave_value (name);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! type = fits_movAbsHDU(fd, 1);
+%! assert(fits_getHDUtype(fd), type);
+%! assert(fits_getHDUnum(fd), 1);
+%! type = fits_movAbsHDU(fd, 2);
+%! assert(fits_getHDUtype(fd), type);
+%! assert(fits_getHDUnum(fd), 2);
+%! type = fits_movAbsHDU(fd, 3);
+%! assert(fits_getHDUtype(fd), type);
+%! assert(fits_getHDUnum(fd), 3);
+%! fits_closeFile(fd);
+
+%!error fits_movAbsHDU(1);
+%!error fits_movAbsHDU([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_movRelHDU", "__fits__.oct");
 DEFUN_DLD(fits_movRelHDU, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{num}]} = fits_movRelHDU(@var{file}, @var{hdunum})\n \
+@deftypefn {Function File} {[@var{type}]} = fits_movRelHDU(@var{file}, @var{hdunum})\n \
 Go to relative HDU index @var{hdunum}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -910,9 +986,10 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
       print_usage ();
       return octave_value ();  
     }
-  if (! args (1).isnumeric ())
+
+  if (! args (1).isnumeric () || args (1).isempty())
     {
-      error ("fits_moveRelHDU: expected hdu number");
+      error ("fits_movRelHDU: expected hdu number");
       return octave_value ();  
     }
 
@@ -928,7 +1005,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 
   if(!fp)
     {
-      error ("fits_moveRelHDU: file not open");
+      error ("fits_movRelHDU: file not open");
       return octave_value ();
     }
 
@@ -937,7 +1014,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
   if(fits_movrel_hdu(fp, hdu, &hdutype,&status) > 0)
     {
       fits_report_error( stderr, status );
-      error ("fits_moveRelHDU: couldnt move hdus");
+      error ("fits_movRelHDU: couldnt move hdus");
       return octave_value ();
     }
 
@@ -953,6 +1030,25 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 
   return octave_value (name);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! type = fits_movAbsHDU(fd, 1);
+%! assert(fits_getHDUnum(fd), 1);
+%! type = fits_movRelHDU(fd, 1);
+%! assert(fits_getHDUtype(fd), type);
+%! assert(fits_getHDUnum(fd), 2);
+%! type = fits_movRelHDU(fd, -1);
+%! assert(fits_getHDUtype(fd), type);
+%! assert(fits_getHDUnum(fd), 1);
+%! fail ("fits_movRelHDU(fd, [])");
+%! fits_closeFile(fd);
+
+%!error fits_movRelHDU(1);
+%!error fits_movRelHDU([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_movNamHDU", "__fits__.oct");
 DEFUN_DLD(fits_movNamHDU, args, nargout,
@@ -993,7 +1089,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
       return octave_value ();  
     }
 
-  if (! args (3).isnumeric ())
+  if (! args (3).isnumeric () || args (3).isempty())
     {
       error ("fits_movNamHDU: expected extver number");
       return octave_value ();  
@@ -1028,7 +1124,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 
   if(!fp)
     {
-      error("fits_movAbsHDU: file not open");
+      error("fits_movNamHDU: file not open");
       return octave_value ();
     }
   int status = 0;
@@ -1042,12 +1138,31 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 
   return octave_value ();
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! fits_movNamHDU(fd, 'IMAGE_HDU', 'quality', 1);
+%! assert(fits_getHDUnum(fd), 4);
+%! assert(fits_getHDUtype(fd), 'IMAGE_HDU');
+%! fits_movNamHDU(fd, 'BINARY_TBL', 'BinTest', 0);
+%! assert(fits_getHDUnum(fd), 2);
+%! assert(fits_getHDUtype(fd), 'BINARY_TBL');
+%! fits_movNamHDU(fd, 'ANY_HDU', 'Unknown', 1);
+%! assert(fits_getHDUnum(fd), 3);
+%! fail ("fits_movNamHDU(fd, 'INVALID_HDU', '', 0);");
+%! fits_closeFile(fd);
+
+%!error fits_movNamHDU(1);
+%!error fits_movNamHDU([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_deleteHDU", "__fits__.oct");
 DEFUN_DLD(fits_deleteHDU, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{type}]} = fits_deleteHDU(@var{file})\n \
-Delete the currenlt HDU and go to enxt HDU\n \
+Delete the current HDU and go to next HDU\n \
 \n \
 Returns the newly current HDU type as a string.\n \
 \n \
@@ -1209,6 +1324,19 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
 
   return retval;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! [numkeys, freekeys] = fits_getHdrSpace(fd);
+%! assert(numkeys, 23);
+%! assert(freekeys, 12);
+%! fits_closeFile(fd);
+
+%!error fits_getHdrSpace(1);
+%!error fits_getHdrSpace([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_readRecord", "__fits__.oct");
 DEFUN_DLD(fits_readRecord, args, nargout,
@@ -1233,7 +1361,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value ();  
     }
 
-  if (! args (1).isnumeric ())
+  if (! args (1).isnumeric () || args (1).isempty())
     {
       error ("fits_readRecord: idx should be a value");
       return octave_value ();  
@@ -1266,6 +1394,21 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 
   return octave_value(buffer);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! rec = fits_readRecord(fd, 1);
+%! assert(length(rec), 51);
+%! rec = fits_readRecord(fd, 2);
+%! assert(length(rec), 54);
+%! fail ("fits_readRecord(fd);");
+%! fits_closeFile(fd);
+
+%!error fits_readRecord(1);
+%!error fits_readRecord([]);
+%!error fits_readRecord("");
+#endif
 
 // PKG_ADD: autoload ("fits_readCard", "__fits__.oct");
 DEFUN_DLD(fits_readCard, args, nargout,
@@ -1322,6 +1465,21 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 
   return octave_value(buffer);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! rec = fits_readCard(fd, 'NAXIS');
+%! assert(length(rec), 54);
+%! fail ("fits_readCard(fd);");
+%! fail ("fits_readCard(fd, 1);");
+%! fits_closeFile(fd);
+
+%!error fits_readCard(1);
+%!error fits_readCard(1, "NAXIS");
+%!error fits_readCard([]);
+%!error fits_readCard("");
+#endif
 
 // PKG_ADD: autoload ("fits_readKey", "__fits__.oct");
 DEFUN_DLD(fits_readKey, args, nargout,
@@ -1383,6 +1541,23 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
   ret(1) = octave_value(cbuffer);
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! [val, com] = fits_readKey(fd, 'NAXIS');
+%! assert(val, "2");
+%! assert(!isempty(com));
+%! fail ("fits_readKey(fd);");
+%! fail ("fits_readKey(fd, 1);");
+%! fits_closeFile(fd);
+
+%!error fits_readKey(1);
+%!error fits_readKey(1, "NAXIS");
+%!error fits_readKey([]);
+%!error fits_readKey("");
+#endif
+
 
 // PKG_ADD: autoload ("fits_readKeyUnit", "__fits__.oct");
 DEFUN_DLD(fits_readKeyUnit, args, nargout,
@@ -1506,6 +1681,23 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! [val, com] = fits_readKeyDbl(fd, 'NAXIS');
+%! assert(val, 2);
+%! assert(!isempty(com));
+%! assert(class(val), 'double');
+%! fail ("fits_readKeyDbl(fd);");
+%! fail ("fits_readKeyDbl(fd, 1);");
+%! fits_closeFile(fd);
+
+%!error fits_readKeyDbl(1);
+%!error fits_readKeyDbl(1, "NAXIS");
+%!error fits_readKeyDbl([]);
+%!error fits_readKeyDbl("");
+#endif
 
 // PKG_ADD: autoload ("fits_readKeyCmplx", "__fits__.oct");
 DEFUN_DLD(fits_readKeyCmplx, args, nargout,
@@ -1625,11 +1817,29 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
       return octave_value ();
     }
 
-  ret(0) = octave_value(val);
+  ret(0) = octave_value(octave_int64(val));
   ret(1) = octave_value(cbuffer);
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! [val, com] = fits_readKeyLongLong(fd, 'NAXIS');
+%! assert(class(val), 'int64');
+%! assert(val, int64(2));
+%! assert(!isempty(com));
+%! fail ("fits_readKeyLongLong(fd);");
+%! fail ("fits_readKeyLongLong(fd, 1);");
+%! fits_closeFile(fd);
+
+%!error fits_readKeyLongLong(1);
+%!error fits_readKeyLongLong(1, "NAXIS");
+%!error fits_readKeyLongLong([]);
+%!error fits_readKeyLongLong("");
+#endif
+
 
 // PKG_ADD: autoload ("fits_readKeyLongStr", "__fits__.oct");
 DEFUN_DLD(fits_readKeyLongStr, args, nargout,
@@ -1655,12 +1865,12 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
       print_usage ();
       return octave_value ();  
     }
+
   if (! args (1).is_string ())
     {
-      error ("fits_readKeyLongLong: key should be a string");
+      error ("fits_readKeyLongStr: key should be a string");
       return octave_value ();  
     }
-
   octave_fits_file * file = NULL;
 
   const octave_base_value& rep = args (0).get_rep ();
@@ -1671,7 +1881,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   if (!fp)
     {
-      error ("fits_readKeyLongLong: file not open");
+      error ("fits_readKeyLongStr: file not open");
       return octave_value ();
     }
 
@@ -1682,8 +1892,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   if (fits_read_key_longstr(fp, key.c_str(), &val, cbuffer, &status) > 0)
     {
-      fits_report_error (stderr, status);
-      error ("fits_readKeyLongStr: couldnt read key units");
+      error ("fits_readKeyLongStr: couldnt read key");
       return octave_value ();
     }
 
@@ -1695,6 +1904,25 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! [val, com] = fits_readKeyLongStr(fd, 'NAXIS');
+%! assert(class(val), 'char');
+%! assert(val, '2');
+%! assert(!isempty(com));
+%! fail ("fits_readKeyLongStr(fd);");
+%! fail ("fits_readKeyLongStr(fd, 1);");
+%! fail ("fits_readKeyLongStr(fd, 'NOTKEY');");
+%! fits_closeFile(fd);
+
+%!error fits_readKeyLongStr(1);
+%!error fits_readKeyLongStr(1, "NAXIS");
+%!error fits_readKeyLongStr([]);
+%!error fits_readKeyLongStr("");
+#endif
+
 
 // PKG_ADD: autoload ("fits_getConstantValue", "__fits__.oct");
 DEFUN_DLD(fits_getConstantValue, args, nargout,
@@ -1770,6 +1998,12 @@ Return the names of all known fits constants\n \
 
   return octave_value (namelist);
 }
+#if 0
+%!test
+%! names = fits_getConstantNames();
+%! assert(length(names) > 20);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getVersion", "__fits__.oct");
 DEFUN_DLD(fits_getVersion, args, nargout,
@@ -1854,6 +2088,23 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_getHDUoff(fd), 0);
+%! fits_movAbsHDU(fd,1);
+%! assert(fits_getHDUoff(fd), 0);
+%! fits_movAbsHDU(fd,2);
+%! assert(fits_getHDUoff(fd), 48960);
+%! fits_movAbsHDU(fd,4);
+%! assert(fits_getHDUoff(fd), 72000);
+%! fits_closeFile(fd);
+
+%!error fits_getHDUoff(1);
+%!error fits_getHDUoff([]);
+%!error fits_getHDUoff("");
+#endif
 
 // PKG_ADD: autoload ("fits_getImgSize", "__fits__.oct");
 DEFUN_DLD(fits_getImgSize, args, nargout,
@@ -1931,6 +2182,23 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
 
   return octave_value(size);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! type = fits_movAbsHDU(fd, 4);
+%! assert(type, 'IMAGE_HDU');
+%! assert (fits_getImgSize(fd), [31 73 5]);
+%! assert(fits_movAbsHDU(fd, 3), "IMAGE_HDU");
+%! assert (fits_getImgSize(fd), [41 17 1 1 1 1 1 1 1 1 1 1 2]);
+%! fits_closeFile(fd);
+
+%!error fits_getImgSize();
+%!error fits_getImgSize(1);
+%!error fits_getImgSize("");
+%!error fits_getImgSize([]);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getImgType", "__fits__.oct");
 DEFUN_DLD(fits_getImgType, args, nargout,
@@ -2008,6 +2276,21 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_movAbsHDU(fd, 4), "IMAGE_HDU");
+%! assert (fits_getImgType(fd), "SHORT_IMG");
+%! assert(fits_movAbsHDU(fd, 3), "IMAGE_HDU");
+%! assert (fits_getImgType(fd), "BYTE_IMG");
+%! fits_closeFile(fd);
+
+%!error fits_getImgType();
+%!error fits_getImgType(1);
+%!error fits_getImgType("");
+%!error fits_getImgType([]);
+#endif
 
 // PKG_ADD: autoload ("fits_readImg", "__fits__.oct");
 DEFUN_DLD(fits_readImg, args, nargout,
@@ -2162,7 +2445,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric())
+    || !args (1).isnumeric() || args (1).isempty())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -2238,7 +2521,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric())
+    || !args (1).isnumeric() || args (1).isempty())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -2726,11 +3009,11 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
   LONGLONG rowlen, nrows;
 
   for (int i=0; i< ncols; i++)
-  {
-    ttype[i] = &ttypebuf[FLEN_CARD*i];
-    tform[i] = &tformbuf[FLEN_CARD*i];
-    tunit[i] = &tunitbuf[FLEN_CARD*i];
-  }
+    {
+      ttype[i] = &ttypebuf[FLEN_CARD*i];
+      tform[i] = &tformbuf[FLEN_CARD*i];
+      tunit[i] = &tunitbuf[FLEN_CARD*i];
+    }
 
   if(fits_read_atblhdrll(fp, ncols, &rowlen, &nrows, &tfields, ttype, tbcol, tform, tunit, extname, &status) > 0)
     {
@@ -2742,22 +3025,16 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
   Cell ttypev(1, tfields);
   Cell tformv(1, tfields);
   Cell tunitv(1, tfields);
-//  string_vector ttypev;
-//  string_vector tformv;
-//  string_vector tunitv;
+
   NDArray tbcolv(dim_vector(tfields, 1));
 
   for (int i=0; i< tfields; i++)
-  {
-//	  printf("%d - %s\n", i, ttype[i]);
-  //  ttypev.append(std::string(ttype[i]));
-    //tformv.append(std::string(tform[i]));
-  //  tunitv.append(std::string(tunit[i]));
-  ttypev(i) = octave_value(std::string(ttype[i]));
-  tformv(i) = octave_value(std::string(tform[i]));
-  tunitv(i) = octave_value(std::string(tunit[i]));
-    tbcolv(i) = tbcol[i];
-  }
+    {
+      ttypev(i) = octave_value(std::string(ttype[i]));
+      tformv(i) = octave_value(std::string(tform[i]));
+      tunitv(i) = octave_value(std::string(tunit[i]));
+      tbcolv(i) = tbcol[i];
+    }
 
   ret(0) = octave_value(rowlen);
   ret(1) = octave_value(nrows);
@@ -2831,11 +3108,11 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   LONGLONG nrows, pcount;
 
   for (int i=0; i< ncols; i++)
-  {
-    ttype[i] = &ttypebuf[FLEN_CARD*i];
-    tform[i] = &tformbuf[FLEN_CARD*i];
-    tunit[i] = &tunitbuf[FLEN_CARD*i];
-  }
+    {
+      ttype[i] = &ttypebuf[FLEN_CARD*i];
+      tform[i] = &tformbuf[FLEN_CARD*i];
+      tunit[i] = &tunitbuf[FLEN_CARD*i];
+    }
 
   if(fits_read_btblhdrll(fp, ncols, &nrows, &tfields, ttype, tform, tunit, extname, &pcount, &status) > 0)
     {
@@ -2847,19 +3124,13 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   Cell ttypev(1, tfields);
   Cell tformv(1, tfields);
   Cell tunitv(1, tfields);
-  //string_vector ttypev;
-  //string_vector tformv;
-  //string_vector tunitv;
 
   for (int i=0; i< tfields; i++)
-  {
-  //  ttypev.append(std::string(ttype[i]));
- //   tformv.append(std::string(tform[i]));
-   // tunitv.append(std::string(tunit[i]));
-  ttypev(i) = octave_value(std::string(ttype[i]));
-  tformv(i) = octave_value(std::string(tform[i]));
-  tunitv(i) = octave_value(std::string(tunit[i]));
-  }
+    {
+      ttypev(i) = octave_value(std::string(ttype[i]));
+      tformv(i) = octave_value(std::string(tform[i]));
+      tunitv(i) = octave_value(std::string(tunit[i]));
+    }
 
   ret(0) = octave_value(nrows);
   ret(1) = octave_value(ttypev);
@@ -2898,7 +3169,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
       return octave_value ();  
     }
 
-  if (!args (1).isnumeric())
+  if (!args (1).isnumeric() || args (1).isempty())
     {
       error ("expected numeric col value");
       return octave_value ();  
@@ -3058,22 +3329,6 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   return ret;
 }
-
-
-
-
-#if 0
-%!test
-%! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e8);
-%! fd = fits_openFile(testfile);
-%! assert(fits_getNumHDUs(fd), 5);
-%! assert(fits_movAbsHDU(fd, 1), "IMAGE_HDU");
-%1 assert(fits_readKeyDbl(fd, "NAXIS"), 2)
-%! assert(fits_movRelHDU(fd, 1), "BINARY_TBL");
-%1 assert(fits_getHdrSpace(fd), [31 0]);
-%!
-%! fits_closeFile(fd);
-#endif
 
 #if 0
 // NOTE: delete file shared at top of tests
