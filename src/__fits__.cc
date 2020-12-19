@@ -205,6 +205,61 @@ DEFUN_DLD(__cfitsio_pkg_lock__, args, ,  "internal function")
 }
 #endif
 
+// PKG_ADD: autoload ("fits_getOpenFiles", "__fits__.oct");
+DEFUN_DLD(fits_getOpenFiles, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {[@var{files}]} = fits_getOpenFiles()\n \
+Attempt to create  a file of the gien input name.\n \
+\n \
+Get the file handles of all open fits files\n \
+\n \
+@seealso {fits_openFile}\n \
+@end deftypefn")
+{
+  if ( args.length() != 0)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  int count = 0;
+  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+    {
+      if(fits_files[i] != 0)
+        {
+          count ++;
+	}
+    }
+
+  int64NDArray fds(dim_vector(count, 1));
+
+  count = 0;
+  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+    {
+      if(fits_files[i] != 0)
+        {
+	  fds(count, 0) = octave_int64(FITS_FD_MASK | i);
+	  count ++;
+	}
+    }
+
+  return octave_value(fds);
+}
+#if 0
+%!test
+%! assert(isempty(fits_getOpenFiles()));
+%! fd = fits_openFile(testfile);
+%! of = fits_getOpenFiles();
+%! assert(!isempty(of));
+%! assert(fd, of);
+%! fits_closeFile(fd);
+%! of = fits_getOpenFiles();
+%! assert(isempty(of));
+
+%!error fits_getOpenFiles(1);
+#endif
+
+
 // PKG_ADD: autoload ("fits_createFile", "__fits__.oct");
 DEFUN_DLD(fits_createFile, args, nargout,
 "-*- texinfo -*-\n \
