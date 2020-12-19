@@ -38,6 +38,7 @@ Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames
  fits_getVersion
+ fits_getOpenFiles
 Low Level Commpression Functions
  fits_isCompressedImg
 Low Level Binary and ASCII Tables
