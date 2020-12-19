@@ -77,7 +77,7 @@ int string_to_coltype (const std::string &s)
 }
 
 #define MAX_OPEN_FITS_FILES 20
-#define FITS_FD_MASK ( (((int64_t)'F') << 32) | (((int64_t)'I') << 24) | (((int64_t)'T') << 16) )
+#define FITS_FD_MASK ( (((uint64_t)'F') << 32) | (((uint64_t)'I') << 24) | (((uint64_t)'T') << 16) )
 fitsfile * fits_files[MAX_OPEN_FITS_FILES] = {0};
 
 static void close_all_fits_files()
@@ -111,42 +111,40 @@ static int get_free_fits_index()
   return -1;
 }
 
-static int64_t add_fits_file(fitsfile *fd)
+static uint64_t add_fits_file(fitsfile *fd)
 {
-  for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
+  int idx = get_free_fits_index();
+  if(idx >= 0)
     {
-      if(fits_files[i] == 0)
-        {
-          fits_files[i] = fd;
-	  return FITS_FD_MASK | i;
-	}
+      fits_files[idx] = fd;
+      return FITS_FD_MASK | (idx+1);
     }
 
-  return -1;
+  return 0;
 }
 
-static int64_t remove_fits_file(int64_t fd)
+static uint64_t remove_fits_file(uint64_t fd)
 {
   if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
-    return -1;
+    return 0;
 
-  int64_t idx = (fd & ~FITS_FD_MASK);
-  if (idx < 0 || idx >= MAX_OPEN_FITS_FILES)
-    return -1;
+  uint64_t idx = (fd & ~FITS_FD_MASK);
+  if (idx < 1 || idx > MAX_OPEN_FITS_FILES)
+    return 0;
 
-  fits_files[idx] = 0;
+  fits_files[idx-1] = 0;
   return fd;
 }
 
-static fitsfile * get_fits_file(int64_t fd)
+static fitsfile * get_fits_file(uint64_t fd)
 {
   if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
     return 0;
 
-  int64_t idx = (fd & ~FITS_FD_MASK);
-  if (idx < 0 || idx >= MAX_OPEN_FITS_FILES)
+  uint64_t idx = (fd & ~FITS_FD_MASK);
+  if (idx < 1 || idx > MAX_OPEN_FITS_FILES)
     return 0;
-  return fits_files[idx];
+  return fits_files[idx-1];
 }
 
 static std::string get_fits_error (int status)
@@ -231,14 +229,14 @@ Get the file handles of all open fits files\n \
 	}
     }
 
-  int64NDArray fds(dim_vector(count, 1));
+  uint64NDArray fds(dim_vector(count, 1));
 
   count = 0;
   for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
     {
       if(fits_files[i] != 0)
         {
-	  fds(count, 0) = octave_int64(FITS_FD_MASK | i);
+	  fds(count, 0) = octave_uint64(FITS_FD_MASK | (i+1));
 	  count ++;
 	}
     }
@@ -301,9 +299,9 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
       return octave_value ();
     }
 
-  int64_t fd = add_fits_file(fp);
+  uint64_t fd = add_fits_file(fp);
 
-  return octave_value(octave_int64 (fd));
+  return octave_value(octave_uint64 (fd));
 }
 
 // PKG_ADD: autoload ("fits_openFile", "__fits__.oct");
@@ -368,10 +366,9 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
       error ("Could not open file: %s", get_fits_error(status).c_str());
     }
 
-  int64_t fd = add_fits_file(fp);
+  uint64_t fd = add_fits_file(fp);
 
-  //return octave_value (fitsfile);
-  return octave_value(octave_int64 (fd));
+  return octave_value(octave_uint64 (fd));
 }
 #if 0
 %!test
@@ -455,9 +452,9 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
       return octave_value ();
     }
 
-  int64_t fd = add_fits_file(fp);
+  uint64_t fd = add_fits_file(fp);
 
-  return octave_value(octave_int64 (fd));
+  return octave_value(octave_uint64 (fd));
 }
 
 // PKG_ADD: autoload ("fits_fileMode", "__fits__.oct");
@@ -483,7 +480,7 @@ The is the eqivalent of the fits_file_mode function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -538,7 +535,7 @@ The is the eqivalent of the fits_file_name function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -589,7 +586,7 @@ The is the eqivalent of the fits_close_file function.\n \
       return octave_value ();  
     }
 
-  int64_t fidx = args(0).int64_value();
+  uint64_t fidx = args(0).uint64_value();
   fitsfile * fp = get_fits_file (fidx);
 
   if (!fp)
@@ -644,7 +641,7 @@ The is the eqivalent of the fits_delete_file function.\n \
       return octave_value ();  
     }
 
-  int64_t fidx = args(0).int64_value();
+  uint64_t fidx = args(0).uint64_value();
   fitsfile * fp = get_fits_file (fidx);
 
   if (!fp)
@@ -703,7 +700,7 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -755,7 +752,7 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -819,7 +816,7 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -872,7 +869,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -952,7 +949,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1034,7 +1031,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1131,7 +1128,7 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1183,7 +1180,7 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1225,7 +1222,7 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1282,7 +1279,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1345,7 +1342,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1410,7 +1407,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1478,7 +1475,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1532,7 +1529,7 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1604,7 +1601,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1658,7 +1655,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1730,7 +1727,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1914,7 +1911,7 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -1977,7 +1974,7 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2060,7 +2057,7 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2144,7 +2141,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2206,7 +2203,7 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2250,7 +2247,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2316,7 +2313,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2384,7 +2381,7 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2459,7 +2456,7 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2517,7 +2514,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2574,7 +2571,7 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2616,7 +2613,7 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2658,7 +2655,7 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2701,7 +2698,7 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2790,7 +2787,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
@@ -2875,7 +2872,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
       return octave_value ();  
     }
 
-  fitsfile * fp = get_fits_file (args(0).int64_value());
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
 
   if(!fp)
     {
