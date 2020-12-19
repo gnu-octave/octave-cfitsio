@@ -82,13 +82,11 @@ fitsfile * fits_files[MAX_OPEN_FITS_FILES] = {0};
 
 static void close_all_fits_files()
 {
-  fprintf(stderr, "closing all files\n");
   for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
     {
       if(fits_files[i] != 0)
         {
           int status = 0;
-  fprintf(stderr, "closing %d\n", i);
 
           if ( fits_close_file(fits_files[i], &status ) > 0 )
             {
@@ -142,18 +140,26 @@ static int64_t remove_fits_file(int64_t fd)
 
 static fitsfile * get_fits_file(int64_t fd)
 {
-fprintf(stderr, "get %lld\n", fd);
   if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
     return 0;
 
   int64_t idx = (fd & ~FITS_FD_MASK);
-fprintf(stderr, "get %lld - %lld\n", fd, idx);
   if (idx < 0 || idx >= MAX_OPEN_FITS_FILES)
     return 0;
-fprintf(stderr, "get %lld - %lld - %p\n", fd, idx, fits_files[idx]);
   return fits_files[idx];
 }
 
+static std::string get_fits_error (int status)
+{
+  char err[32];
+
+  if(status == 0)
+  {
+    return "";
+  }
+  ffgerr(status, err);
+  return err;
+}
 
 #if 0
 // NOTE: using this for all tess of this file, so needs be at top of tests
@@ -236,8 +242,7 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 
   if ( fits_create_file( &fp, infile.c_str(), &status) > 0 )
     {
-      fits_report_error( stderr, status );
-      error ("Couldnt create file");
+      error ("Couldnt create file: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -305,8 +310,7 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
   int status = 0;
   if ( fits_open_file( &fp, infile.c_str(), mode, &status) > 0 )
     {
-      fits_report_error( stderr, status );
-      error ("Could not open file");
+      error ("Could not open file: %s", get_fits_error(status).c_str());
     }
 
   int64_t fd = add_fits_file(fp);
@@ -392,8 +396,7 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
   int status = 0;
   if ( fits_open_diskfile( &fp, infile.c_str(), mode, &status) > 0 )
     {
-      fits_report_error( stderr, status );
-      error ("Couldnt open file");
+      error ("Couldnt open file: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -437,8 +440,7 @@ The is the eqivalent of the fits_file_mode function.\n \
 
   if (fits_file_mode(fp, &mode, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_fileMode: couldnt read file mode");
+      error ("fits_fileMode: couldnt read file mode: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -494,8 +496,7 @@ The is the eqivalent of the fits_file_name function.\n \
 
   if( fits_file_name(fp, filename, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_fileName: couldnt read file name");
+      error ("fits_fileName: couldnt read file name: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -603,7 +604,7 @@ The is the eqivalent of the fits_delete_file function.\n \
 
       if ( fits_delete_file(fp, &status ) > 0 )
         {
-          fits_report_error( stderr, status );
+          error ("Couldnt force close file: %s", get_fits_error(status).c_str());
         }
     }
   return octave_value();
@@ -711,8 +712,7 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 
   if(fits_get_hdu_type(fp, &hdutype, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_getHDUtype: couldnt get hdu type");
+      error ("fits_getHDUtype: couldnt get hdu type : %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -776,8 +776,7 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 
   if(fits_get_num_hdus(fp, &cnt, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get num hdus");
+      error ("couldnt get num hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -838,8 +837,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 
   if(fits_movabs_hdu(fp, hdu, &hdutype,&status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_movAbsHDU: couldnt move hdus");
+      error ("fits_movAbsHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -919,8 +917,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 
   if(fits_movrel_hdu(fp, hdu, &hdutype,&status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_movRelHDU: couldnt move hdus");
+      error ("fits_movRelHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1030,8 +1027,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 
   if(fits_movnam_hdu(fp, hdu, extname_c, extver, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_movNamHDU: couldnt move hdus");
+      error ("fits_movNamHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1092,8 +1088,7 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
 
   if(fits_delete_hdu(fp, &hdutype,&status) > 0)
     {
-      fits_report_error ( stderr, status );
-      error ("fits_deleteHDU: couldnt delete hdu");
+      error ("fits_deleteHDU: couldnt delete hdu: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1145,8 +1140,7 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
 
   if (fits_write_chksum(fp, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_writeChecksum: couldnt write checksum");
+      error ("fits_writeChecksum: couldnt write checksum: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1189,8 +1183,7 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
 
   if (fits_get_hdrspace(fp, &nexist, &nmore, &status) > 0)
     {
-      fits_report_error ( stderr, status );
-      error ("fits_getHdrSpace: couldnt write checksum");
+      error ("fits_getHdrSpace: couldnt write checksum: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1254,8 +1247,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 
   if (fits_read_record(fp, idx, buffer, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_readRecord: couldnt read record");
+      error ("fits_readRecord: couldnt read record: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1318,8 +1310,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 
   if (fits_read_card(fp, key.c_str(), buffer, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_readCard: couldnt read card");
+      error ("fits_readCard: couldnt read card: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1385,8 +1376,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
 
   if (fits_read_key_str(fp, key.c_str(), vbuffer, cbuffer, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_readKey: couldnt read key");
+      error ("fits_readKey: couldnt read key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1453,8 +1443,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
 
   if (fits_read_key_unit(fp, key.c_str(), buffer, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_readKeyUnit: couldnt read key units");
+      error ("fits_readKeyUnit: couldnt read key units: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
   else
@@ -1511,8 +1500,7 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 
   if(fits_read_key_dbl(fp, key.c_str(), &val, cbuffer, &status) > 0)
   {
-      fits_report_error( stderr, status );
-      error ("couldnt read key units");
+      error ("couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
   }
   ret(0) = octave_value(val);
@@ -1582,8 +1570,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
 
   if (fits_read_key_dblcmp(fp, key.c_str(), val, cbuffer, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_readKeyDblCpmlx: couldnt read key units");
+      error ("fits_readKeyDblCpmlx: couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1637,8 +1624,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
 
   if (fits_read_key_lnglng(fp, key.c_str(), &val, cbuffer, &status) > 0)
     {
-      fits_report_error (stderr, status);
-      error ("fits_readKeyLongLong: couldnt read key units");
+      error ("fits_readKeyLongLong: couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1710,7 +1696,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   if (fits_read_key_longstr(fp, key.c_str(), &val, cbuffer, &status) > 0)
     {
-      error ("fits_readKeyLongStr: couldnt read key");
+      error ("fits_readKeyLongStr: couldnt read key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1887,7 +1873,7 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
   if(fits_get_hduoff(fp, &headstart, &datastart, &dataend, &status) > 0)
     {
       fits_report_error( stderr, status );
-      error ("couldnt get offsets");
+      error ("couldnt get offsets: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1950,8 +1936,7 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
 
   if (fits_get_img_dim(fp, &naxis, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get dims");
+      error ("couldnt get dims: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1960,8 +1945,7 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
 
   if(fits_get_img_size(fp, naxis, axis, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get size");
+      error ("couldnt get size: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2034,8 +2018,7 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
 
   if(fits_get_img_type(fp, &type, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get type");
+      error ("couldnt get type: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
   octave_value ret;
@@ -2121,7 +2104,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
   if( fits_get_img_param( fp, 100, 0, &num_axis, axis, &status) > 0 )
   {
       fits_report_error( stderr, status );
-      error ("firs_readImage: could not get image paramters");
+      error ("fits_readImage: could not get image parameters: %s", get_fits_error(status).c_str());
       return octave_value();
   }
 
@@ -2140,8 +2123,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
 
   if(fits_read_subset(fp, datatype, &fpixel, &lpixel, &inc, &nulval, arr.fortran_vec(), 0, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get data");
+      error ("couldnt get data: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2183,8 +2165,7 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
 
   if(status)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get compression");
+      error ("couldnt get compression: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2241,8 +2222,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 
   if(fits_get_acolparms(fp, colnum, ttype, &tbcol, tunit, tform, &scale, &zero, nullstr, tdisp, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2307,8 +2287,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
 
   if(fits_get_bcolparms(fp, colnum, ttype, tunit, typechar, &repeat, &scale, &zero, &nullval, tdisp, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2391,7 +2370,7 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
   if(fits_get_colname(fp, casesense, templatestr, colname, &colnum, &status) > 0 && status != COL_NOT_UNIQUE)
     {
       fits_report_error( stderr, status );
-      error ("couldnt get column match");
+      error ("couldnt get column match: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2447,8 +2426,7 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
 
   if(fits_get_coltypell(fp, colnum, &dtype, &repeat, &width, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2506,8 +2484,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
 
   if(fits_get_eqcoltypell(fp, colnum, &dtype, &repeat, &width, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2555,8 +2532,7 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
 
   if(fits_get_num_cols(fp, &ncols, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2598,8 +2574,7 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
 
   if(fits_get_num_rowsll(fp, &nrows, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2641,8 +2616,7 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
 
   if(fits_get_rowsize(fp, &rowsize, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get rowsize");
+      error ("couldnt get rowsize: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2684,8 +2658,7 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
   int ncols;
   if(fits_get_num_cols(fp, &ncols, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get cols");
+      error ("couldnt get cols: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2710,8 +2683,7 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
 
   if(fits_read_atblhdrll(fp, ncols, &rowlen, &nrows, &tfields, ttype, tbcol, tform, tunit, extname, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2775,8 +2747,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   int ncols;
   if(fits_get_num_cols(fp, &ncols, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get cols");
+      error ("couldnt get cols: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2800,8 +2771,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
 
   if(fits_read_btblhdrll(fp, ncols, &nrows, &tfields, ttype, tform, tunit, extname, &pcount, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2878,8 +2848,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   if(fits_get_hdu_type(fp, &hdutype, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("fits_getHDUtype: couldnt get hdu type");
+      error ("fits_getHDUtype: couldnt get hdu type: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2887,8 +2856,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   if(fits_get_num_rowsll(fp, &nrows, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2909,8 +2877,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
   // get data type to use
   if(fits_get_eqcoltypell(fp, col, &dtype, &repeat, &width, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get parms");
+      error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2918,8 +2885,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
   int charwidth;
   if (fits_get_col_display_width (fp, col, &charwidth, &status) > 0)
   {
-      fits_report_error( stderr, status );
-      error ("couldnt get col width");
+      error ("couldnt get col width: %s", get_fits_error(status).c_str());
       return octave_value ();
   }
 
@@ -2965,8 +2931,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
     anynul = 0;
     if(fits_read_col(fp, TSTRING, col, i, firstel, 1, &nulval, cdata, &anynul, &status) > 0)
     {
-      fits_report_error( stderr, status );
-      error ("couldnt get data");
+      error ("couldnt get data: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
     strdata.append(std::string(cdata));
