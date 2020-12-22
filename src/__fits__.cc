@@ -76,6 +76,58 @@ int string_to_coltype (const std::string &s)
   return TSTRING;
 }
 
+static std::string get_fits_error (int status)
+{
+  char err[32];
+
+  if(status == 0)
+  {
+    return "";
+  }
+  ffgerr(status, err);
+  return err;
+}
+
+template <class ATYPE, typename DTYPE>
+octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat)
+{
+  ATYPE arr(dim_vector(nrows,repeat));
+  DTYPE val;
+  DTYPE nulval = 1;
+  int anynul;
+  int status = 0;
+
+  boolNDArray nuldata(dim_vector(nrows, repeat));
+
+  octave_value_list ret;
+
+  for(LONGLONG i = 0; i<nrows; i++)
+    {
+      for(LONGLONG r = 0;r<repeat; r++)
+        {
+          anynul = 0;
+          if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
+            {
+              error ("couldnt get data: %s", get_fits_error(status).c_str());
+              return ret;
+            }
+
+          if(anynul)
+            arr(i, r) = 0;
+          else
+            arr(i, r) = val;
+
+          nuldata(i, r) = (anynul != 0);
+	}
+    }
+
+  ret(0) = arr;
+  ret(1) = nuldata;
+
+  return ret;
+}
+
+
 #define MAX_OPEN_FITS_FILES 20
 #define FITS_FD_MASK ( (((uint64_t)'F') << 32) | (((uint64_t)'I') << 24) | (((uint64_t)'T') << 16) )
 fitsfile * fits_files[MAX_OPEN_FITS_FILES] = {0};
@@ -145,18 +197,6 @@ static fitsfile * get_fits_file(uint64_t fd)
   if (idx < 1 || idx > MAX_OPEN_FITS_FILES)
     return 0;
   return fits_files[idx-1];
-}
-
-static std::string get_fits_error (int status)
-{
-  char err[32];
-
-  if(status == 0)
-  {
-    return "";
-  }
-  ffgerr(status, err);
-  return err;
 }
 
 #if 0
@@ -2852,7 +2892,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
 DEFUN_DLD(fits_readCol, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum})\n \
-@deftypefnx {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum}i, @var{firstrow}, @var{numrows})\n \
+@deftypefnx {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum}, @var{firstrow}, @var{numrows})\n \
 Get table row data\n \
 \n \
 This is the equivalent of the cfitsio  fits_read_col function.\n \
@@ -2888,139 +2928,175 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   int col = args(1).int_value();
 
-  // we need
-  // // data type want to convert to
-  // number of axis ? and sxiis to work out size ??? or do we not need ? as only getting one row ?
-  // num rows we have
-  // width of row for ascii
-
+  LONGLONG firstrow = 1;
   int status = 0;
 
-  int hdutype;
-
-  if(fits_get_hdu_type(fp, &hdutype, &status) > 0)
-    {
-      error ("fits_getHDUtype: couldnt get hdu type: %s", get_fits_error(status).c_str());
-      return octave_value ();
-    }
-
   LONGLONG nrows;
-
   if(fits_get_num_rowsll(fp, &nrows, &status) > 0)
     {
       error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
-/*
-  std::string name = "";
-  if(hdutype == IMAGE_HDU) 
-    name = "IMAGE_HDU";
-  else if(hdutype == ASCII_TBL)
-    name = "ASCII_TBL";
-  else if(hdutype == BINARY_TBL)
-    name = "BINARY_TBL";
-  else
-    name = "UNKNOWN";
-*/
+  if (args.length () > 2)
+    {
+      if (!args (2).isnumeric() || args (2).isempty())
+        {
+          error ("expected numeric startrow value");
+          return octave_value ();  
+        }
+      firstrow = args(2).int64_value();
+      if (firstrow < 1 || firstrow > nrows)
+        {
+          error ("start row is outside range of 1 .. %lld", nrows);
+	  return octave_value ();
+	}
+      nrows = nrows - firstrow + 1;
+    }
 
+  if (args.length () > 3)
+    {
+      if (!args (3).isnumeric() || args (3).isempty())
+        {
+          error ("expected numeric numrows value");
+          return octave_value ();  
+        }
+      LONGLONG rows = args(3).int64_value();
+      if (rows < 1)
+        {
+          error ("numrow sis outside less than 1");
+	  return octave_value ();
+	}
+      if (rows < nrows) nrows = rows;
+    }
+
+  // get data type to use,  width etc
   int dtype;
   LONGLONG repeat, width;
-  // get data type to use
   if(fits_get_eqcoltypell(fp, col, &dtype, &repeat, &width, &status) > 0)
     {
       error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
-  // if will read as string, get width
-  int charwidth;
-  if (fits_get_col_display_width (fp, col, &charwidth, &status) > 0)
-  {
-      error ("couldnt get col width: %s", get_fits_error(status).c_str());
-      return octave_value ();
-  }
+  if(dtype == TBYTE)
+    {
+      ret = read_numeric_row<uint8NDArray,uint8_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TSBYTE)
+    {
+      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TSHORT)
+    {
+      ret = read_numeric_row<int16NDArray,int16_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TUSHORT)
+    {
+      ret = read_numeric_row<uint16NDArray,uint16_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TLONG)
+    {
+      ret = read_numeric_row<int32NDArray,int32_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TULONG)
+    {
+      ret = read_numeric_row<uint32NDArray,uint32_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TUINT)
+    {
+      ret = read_numeric_row<uint32NDArray,unsigned int>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TINT)
+    {
+      ret = read_numeric_row<int32NDArray,int>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TULONGLONG)
+    {
+      ret = read_numeric_row<uint64NDArray,uint64_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TLONGLONG)
+    {
+      ret = read_numeric_row<int64NDArray,int64_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TDOUBLE)
+    {
+      ret = read_numeric_row<NDArray,double>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TFLOAT)
+    {
+      ret = read_numeric_row<FloatNDArray,float>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TBIT)
+    {
+      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else
+    {
+      LONGLONG firstel = 1;
 
-
-/*
- { "TBYTE", TBYTE },
- { "TSBYTE", TSBYTE },
- { "TLOGICAL", TLOGICAL },
- { "TSTRING", TSTRING },
- { "TUSHORT", TUSHORT },
- { "TSHORT", TSHORT },
- { "TUINT", TUINT },
- { "TINT", TINT },
- { "TULONG", TULONG },
- { "TLONG", TLONG },
- { "TINT32BIT", TINT32BIT },
- { "TFLOAT", TFLOAT },
- { "TULONGLONG", TULONGLONG },
- { "TLONGLONG", TLONGLONG },
- { "TDOUBLE", TDOUBLE },
- { "TCOMPLEX", TCOMPLEX },
- { "TDBLCOMPLEX", TDBLCOMPLEX },
-    int fits_read_col / ffgcv
-      (fitsfile *fptr, int datatype, int colnum, LONGLONG firstrow, LONGLONG firstelem,
-       LONGLONG nelements, DTYPE *nulval, DTYPE *array, int *anynul, int *status)
-*/
+      char cdata[FLEN_CARD];
+      char ndata[FLEN_CARD];
+      char nullstr[] = "*";
+      int anynul;
   
-  LONGLONG firstrow = 1;
-  LONGLONG firstel = 1;
-  LONGLONG nels = nrows;
+      string_vector rowdata;
+      boolNDArray nuldata(dim_vector(nrows, repeat));
 
-  char nulval[1] = { '\0' };
-  char cdata[charwidth+1];
-  char ndata[charwidth+1];
+      for(LONGLONG i = 0;i<nrows;i++)
+        {
+          anynul = 0;
+          char * text = cdata;
+          char * nul = nullstr;
+          if (fits_read_col(fp, TSTRING, col, firstrow+i, 1, 1, nul, &text, &anynul, &status) > 0)
+            {
+              error ("couldnt get data: %s", get_fits_error(status).c_str());
+              return octave_value ();
+            }
+          rowdata.append(std::string(cdata));
+	  for(LONGLONG r=0; r<repeat; r++)
+            nuldata(i, r) = (anynul != 0);
+        }
 
-  string_vector strdata;
-  string_vector nuldata;
+      ret(0) = rowdata;
 
-  int anynul;
-  // for strings lets just read line by line
-  for(LONGLONG i = firstrow;i<nels;i++)
-  {
-    anynul = 0;
-    if(fits_read_col(fp, TSTRING, col, i, firstel, 1, &nulval, cdata, &anynul, &status) > 0)
-    {
-      error ("couldnt get data: %s", get_fits_error(status).c_str());
-      return octave_value ();
+      if (repeat == 1)
+        ret(1) = nuldata.transpose();
+      else
+        ret(1) = nuldata;
     }
-    strdata.append(std::string(cdata));
-    //nuldata.append(std::string(ndata));
-    //TODO: if anynull - add this index val to null position list
-  }
-  ret(0) = strdata;
-  ret(1) = nuldata;
-/*
-  if(fits_read_col(fp, datatype, col, firstrow, firstel, &nels, &nulval, data, &anynull , &status) > 0)
-    {
-      fits_report_error( stderr, status );
-      error ("couldnt get data");
-      return octave_value ();
-    }
-
-  string_vector ttypev;
-  string_vector tformv;
-  string_vector tunitv;
-
-  for (int i=0; i< tfields; i++)
-  {
-    ttypev.append(std::string(ttype[i]));
-    tformv.append(std::string(tform[i]));
-    tunitv.append(std::string(tunit[i]));
-  }
-
-  ret(0) = octave_value(nrows);
-  ret(1) = octave_value(ttypev);
-  ret(2) = octave_value(tformv);
-  ret(3) = octave_value(tunitv);
-  ret(4) = octave_value(extname);
-  ret(5) = octave_value(pcount);
- */
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_movAbsHDU(fd, 2), "BINARY_TBL");
+%! [d,n] = fits_readCol(fd, 1);
+%! assert(size(d), [11 9])
+%! assert(size(n), [11 9])
+%! [d,n] = fits_readCol(fd, 1, 11);
+%! assert(size(d), [1 9])
+%! assert(size(n), [1 9])
+%! [d,n] = fits_readCol(fd, 1, 8, 2);
+%! assert(size(d), [2 9])
+%! assert(size(n), [2 9])
+%!
+%! [d,n] = fits_readCol(fd, 2);
+%! assert(size(d), [11 13])
+%! assert(size(n), [11 13])
+%!
+%! assert(fits_movAbsHDU(fd, 5), "ASCII_TBL");
+%! [d,n] = fits_readCol(fd, 1);
+%! assert(size(d), [53 9])
+%! assert(size(n), [1 53])
+%! [d,n] = fits_readCol(fd, 2);
+%! assert(size(d), [53 1])
+%! assert(size(n), [53 1])
+%! fits_closeFile(fd);
+#endif
+
 
 #if 0
 // NOTE: delete file shared at top of tests
