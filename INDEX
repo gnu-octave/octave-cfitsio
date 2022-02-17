@@ -2,6 +2,7 @@ FITS >>I/O for FITS files
 High Level File Functions
  fitsdisp
  fitsinfo
+ fitsread
 Low Level File Functions
  fits_createFile
  fits_openFile
