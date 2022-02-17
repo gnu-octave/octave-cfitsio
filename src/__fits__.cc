@@ -2192,31 +2192,52 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
   int status = 0;
 
   int num_axis;
+  int bpp;
   long axis[100];
-  if( fits_get_img_param( fp, 100, 0, &num_axis, axis, &status) > 0 )
+  if( fits_get_img_param( fp, 100, &bpp, &num_axis, axis, &status) > 0 )
   {
       fits_report_error( stderr, status );
       error ("fits_readImage: could not get image parameters: %s", get_fits_error(status).c_str());
       return octave_value();
   }
 
-  int type;
-  dim_vector dv(num_axis, 1);
+  dim_vector dv(1, 1);
+  dv.resize( num_axis );
   for(int i=0; i<num_axis;i++)
-    dv(i) = axis[i];
+    {
+      dv(i) = axis[i];
+    }
 
-  NDArray arr(dv);
+  MArray<double> arr(dv); // a octave double-type array
 
   int datatype = TDOUBLE;
-  long fpixel = 0;
-  long lpixel = 0;
+  std::vector<long> fpixel(num_axis,1);
+  std::vector<long> inc(num_axis,1);
+  std::vector<long> lpixel(num_axis,1);
   double nulval = 0;
-  long inc = 0;
 
-  if(fits_read_subset(fp, datatype, &fpixel, &lpixel, &inc, &nulval, arr.fortran_vec(), 0, &status) > 0)
+  // read all image
+  for(int i=0;i<num_axis;i++)
+    lpixel[i] = axis[i];
+
+  int  anynul;
+  if(fits_read_subset(fp, datatype, fpixel.data(), lpixel.data(), inc.data(), NULL, arr.fortran_vec(), &anynul, &status) > 0)
     {
       error ("couldnt get data: %s", get_fits_error(status).c_str());
       return octave_value ();
+    }
+
+  if (num_axis >=2 )
+    {
+      // need swap first 2 dimensions, to match what matlab would return
+      Array<int> dims(dim_vector(num_axis,1));;
+      for (int i = 0; i < num_axis; i++)
+        {
+          if(i == 0) dims(i) = 1;
+          else if(i == 1) dims(i) = 0;
+          else dims(i) = i;
+        }
+      arr = arr.permute(dims);
     }
 
   return octave_value(arr);
