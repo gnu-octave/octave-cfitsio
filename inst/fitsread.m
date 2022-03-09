@@ -129,7 +129,6 @@ function out = fitsread (filename, varargin)
       ncols = fits_getNumCols(fd)
       out = {};
       for idx = 1:ncols
-        idx
         # error reading col 10 - coz PI(144)
         [x,n] = fits_readCol(fd, idx);
         # TODO: need scale ?

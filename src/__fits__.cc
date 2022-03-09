@@ -76,6 +76,70 @@ int string_to_coltype (const std::string &s)
   return TSTRING;
 }
 
+static int octave_to_type(const octave_value &value)
+{
+  if (value.is_string())
+    {
+      return TSTRING;
+    }
+  else if (value.islogical())
+    {
+      return TLOGICAL;
+    }
+  else if (value.is_uint8_type())
+    {
+      return TBYTE;
+    }
+  else if (value.is_int8_type())
+    {
+      return TSBYTE;
+    }
+  else if (value.is_uint16_type())
+    {
+      return TUSHORT;
+    }
+  else if (value.is_int16_type())
+    {
+      return TSHORT;
+    }
+  else if (value.is_uint32_type())
+    {
+      return TULONG;
+    }
+  else if (value.is_int32_type())
+    {
+      return TLONG;
+    }
+  else if (value.is_int64_type())
+    {
+      return  TLONGLONG;
+    }
+  else if (value.is_uint64_type())
+    {
+      return  TULONGLONG;
+    }
+  else if (value.isinteger())
+    {
+      return TINT;
+    }
+  else if (value.is_double_type())
+    {
+      return TDOUBLE;
+    }
+  else if (value.is_single_type())
+    {
+      return TFLOAT;
+    }
+  else
+    {
+       error ("couldnt convert this data type");
+    }
+
+  // unknown
+  return 0;
+}
+
+
 static std::string get_fits_error (int status)
 {
   char err[32];
@@ -302,7 +366,7 @@ Get the file handles of all open fits files\n \
 DEFUN_DLD(fits_createFile, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = fits_createFile(@var{filename})\n \
-Attempt to create  a file of the gien input name.\n \
+Attempt to create  a file of the given input name.\n \
 \n \
 If the filename starts with ! and the file exists, it will create a new file, otherwise, if the\n \
 file exists, the create will fail.\n \
@@ -1819,6 +1883,436 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 %!error fits_readKeyLongStr("");
 #endif
 
+// PKG_ADD: autoload ("fits_writeComment", "__fits__.oct");
+DEFUN_DLD(fits_writeComment, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeComment(@var{file}, @var{comment})\n \
+Append a comment to to the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_comment function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_writeComment: comment should be a string");
+      return octave_value ();  
+    }
+
+  int status = 0;
+  std::string comment = args (1).string_value ();
+
+  if (fits_write_comment(fp, comment.c_str(), &status) > 0)
+    {
+      error ("fits_writeComment: couldnt write comment: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeComment(fd, 'A comment');
+%! fits_closeFile(fd);
+%! delete (filename);
+
+%!error fits_writeComment(1);
+%!error fits_writeComment(1, "comment");
+%!error fits_writeComment([]);
+%!error fits_writeComment("");
+#endif
+
+// PKG_ADD: autoload ("fits_writeHistory", "__fits__.oct");
+DEFUN_DLD(fits_writeHistory, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeHistory(@var{file}, @var{history})\n \
+Append a history to to the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_history function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_writeHistory: history should be a string");
+      return octave_value ();  
+    }
+
+  int status = 0;
+  std::string history = args (1).string_value ();
+
+  if (fits_write_history(fp, history.c_str(), &status) > 0)
+    {
+      error ("fits_writeHistory: couldnt write history: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeHistory(fd, 'history');
+%! fits_closeFile(fd);
+%! delete (filename);
+
+%!error fits_writeHistory(1);
+%!error fits_writeHistory(1, "history");
+%!error fits_writeHistory([]);
+%!error fits_writeHistory("");
+#endif
+
+// PKG_ADD: autoload ("fits_writeKeyUnit", "__fits__.oct");
+DEFUN_DLD(fits_writeKeyUnit, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeKeyUnit(@var{file}, @var{key}, @var{unit})\n \
+Write a key unit to the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_key_unit function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_writeKeyUnit: key should be a string");
+      return octave_value ();  
+    }
+
+  if (! args (2).is_string ())
+    {
+      error ("fits_writeKeyUnit: unit should be a string");
+      return octave_value ();  
+    }
+
+  int status = 0;
+  std::string key = args (1).string_value ();
+  std::string unit = args (2).string_value ();
+
+  if (fits_write_key_unit(fp, key.c_str(), unit.c_str(), &status) > 0)
+    {
+      error ("fits_writeKeyUnit: couldnt write key units: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
+%! fits_writeKeyUnit(fd, 'VELOCITY', "m/s");
+%! fits_closeFile(fd);
+%! delete (filename);
+
+%!error fits_writeKeyUnit(1);
+%!error fits_writeKeyUnit(1, "VELOCITY");
+%!error fits_writeKeyUnit(1, "VELOCITY", "m/s");
+#endif
+
+// PKG_ADD: autoload ("fits_writeKey", "__fits__.oct");
+DEFUN_DLD(fits_writeKey, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value})\n \
+@deftypefnx {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value}, @var{comment})\n \
+@deftypefnx {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value}, @var{comment}, @var{decimals})\n \
+Append or replace a key in the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_key and fits_update_key function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() < 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_writeKey: key should be a string");
+      return octave_value ();  
+    }
+
+  std::string key = args (1).string_value ();
+
+  octave_value value = args(2);
+
+  std::string comment = "";
+  const char *commentp = 0;
+  if (args.length () >= 4)
+    {
+      if (! args (3).is_string ())
+        {
+          error ("fits_writeKey: comment should be a string");
+          return octave_value ();  
+        }
+      comment = args (3).string_value ();
+      commentp = comment.c_str();
+    }
+
+  int status = 0;
+
+
+  if (value.is_string())
+    {
+      std::string svalue = value.string_value ();
+      char buffer[FLEN_CARD+1];
+      strncpy(buffer, svalue.c_str(), FLEN_CARD);
+      buffer[FLEN_CARD] = '\0';
+      if (fits_update_key(fp, TSTRING, key.c_str(), &buffer, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.islogical())
+    {
+      int svalue = value.int_value ();
+      if (fits_update_key(fp, TLOGICAL, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_uint8_type())
+    {
+      uint8_t svalue = value.uint_value ();
+      if (fits_update_key(fp, TBYTE, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_uint16_type())
+    {
+      unsigned short svalue = value.ushort_value ();
+      if (fits_update_key(fp, TUSHORT, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_int16_type())
+    {
+      short svalue = value.short_value ();
+      if (fits_update_key(fp, TSHORT, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_uint32_type())
+    {
+      unsigned long svalue = value.long_value ();
+      if (fits_update_key(fp, TULONG, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_int32_type())
+    {
+      long svalue = value.long_value ();
+      if (fits_update_key(fp, TLONG, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_int64_type())
+    {
+      int64_t svalue = value.int64_value ();
+      if (fits_update_key(fp, TLONGLONG, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.isinteger())
+    {
+      int svalue = value.int_value ();
+      if (fits_update_key(fp, TINT, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_double_type())
+    {
+      double svalue = value.double_value ();
+      if (fits_update_key(fp, TDOUBLE, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_scalar_type() && value.is_single_type())
+    {
+      float svalue = value.float_value ();
+      if (fits_update_key(fp, TFLOAT, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else
+    {
+       error ("fits_writeKey: couldnt convert this data type");
+       return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
+%! fits_writeKey(fd, 'VELOCITY', 10.1, "Speed1");
+%! fits_writeKey(fd, 'VELOCITY', 11.0);
+%! fits_writeKey(fd, 'AUTHOR', "me");
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_deleteKey", "__fits__.oct");
+DEFUN_DLD(fits_deleteKey, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_deleyeKey(@var{file}, @var{key})\n \
+Delete a key in the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_delete_key function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_writeKey: key should be a string");
+      return octave_value ();  
+    }
+
+  std::string key = args (1).string_value ();
+
+  int status = 0;
+  if (fits_delete_key(fp, key.c_str(), &status) > 0)
+    {
+      error ("fits_deleteKey: couldnt delete key: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+  return ret;
+}
+
 
 // PKG_ADD: autoload ("fits_getConstantValue", "__fits__.oct");
 DEFUN_DLD(fits_getConstantValue, args, nargout,
@@ -2208,6 +2702,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
       dv(i) = axis[i];
     }
 
+  // TODO: convert to stored type 
   MArray<double> arr(dv); // a octave double-type array
 
   int datatype = TDOUBLE;
@@ -2242,6 +2737,205 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
 
   return octave_value(arr);
 }
+
+// PKG_ADD: autoload ("fits_createImg", "__fits__.oct");
+DEFUN_DLD(fits_createImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_createImg(@var{file}, @var{bitpix}, @var{naxis})\n \
+create a new primary image or image extension\n \
+\n \
+This is the equivalent of the cfitsio fits_create_imgll function.\n \
+@end deftypefn")
+{
+  if ( args.length() < 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int bpp;
+  if (!args (1).is_string())
+    {
+      error("Expected bitpix as a string");
+      return octave_value ();
+    }
+  std::string bitpix = args (1).string_value ();
+
+  // The first two elements of naxes correspond to the NAXIS2 and NAXIS1 keywords
+  
+  if (bitpix == "byte_img" || bitpix == "uint8")
+    bpp = BYTE_IMG;
+  if (bitpix == "sbyte_img" || bitpix == "int8")
+    bpp = SBYTE_IMG;
+  else if (bitpix == "short_img" || bitpix == "int16")
+    bpp = SHORT_IMG;
+  else if (bitpix == "ushort_img" || bitpix == "uint16")
+    bpp = USHORT_IMG;
+  else if (bitpix == "long_img" || bitpix == "int32")
+    bpp = LONG_IMG;
+  else if (bitpix == "longlong_img" || bitpix == "int64")
+    bpp = LONGLONG_IMG;
+  else if (bitpix == "ulonglong_img" || bitpix == "uint64")
+    bpp = ULONGLONG_IMG;
+  else if (bitpix == "float_img" || bitpix == "single")
+    bpp = FLOAT_IMG;
+  else if (bitpix == "double_img" || bitpix == "double")
+    bpp = DOUBLE_IMG;
+  else
+    {
+      error("Unknown bitpix '%s'", bitpix.c_str());
+      return octave_value ();
+    }
+
+  if (!args (2).is_matrix_type())
+    {
+      error("Expected nelem as a dimension vector");
+      return octave_value ();
+    }
+
+  LONGLONG axis[100];
+  Array<double> dv = args (2).vector_value ();
+  int num_axis = dv.numel();
+  for (octave_idx_type i=0;i<num_axis;i++)
+    axis[i] = (int)dv(i);
+  // need swap 1st to dimensions to match matlab
+  if (num_axis >= 2)
+    {
+      LONGLONG tmp = axis[0];
+      axis[0] = axis[1];
+      axis[1] = tmp;
+    }
+
+  int status = 0;
+  if( fits_create_imgll( fp, bpp, num_axis, axis, &status) > 0 )
+    {
+      error ("couldnt create image: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return octave_value();
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_createImg(fd,'int16',[10 20 3]);
+%! fits_closeFile(fd);
+%! delete (filename);
+
+%!error fits_createImg(1);
+%!error fits_createImg(1, 'int16', []);
+%!error fits_createImg([]);
+%!error fits_createImg("");
+#endif
+
+// PKG_ADD: autoload ("fits_writeImg", "__fits__.oct");
+DEFUN_DLD(fits_writeImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeImg(@var{file}, @var{data})\n \
+@deftypefnx {Function File} {} fits_writeImg(@var{file}, @var{data}, @var{fpixel})\n \
+write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc \
+\n \
+This is the equivalent of the cfitsio fits_write_subset function.\n \
+@end deftypefn")
+{
+  if ( args.length() < 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_matrix_type())
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  const NDArray arr = args(1).array_value();
+  int num_axis = arr.dims().length();
+  NDArray imagedata;
+
+  if (num_axis >=2 )
+    {
+      // need swap first 2 dimensions, to match what matlab would save
+      Array<int> pdims(dim_vector(num_axis,1));;
+      for (int i = 0; i < num_axis; i++)
+        {
+          if(i == 0) pdims(i) = 1;
+          else if(i == 1) pdims(i) = 0;
+          else pdims(i) = i;
+        }
+      imagedata = arr.ipermute(pdims);
+    }
+  else
+    imagedata = arr;
+
+  std::vector<long> fpixel(num_axis,1);
+  std::vector<long> inc(num_axis,1);
+  std::vector<long> lpixel(num_axis,1);
+
+  dim_vector dims = imagedata.dims();
+  for( int i=0; i<num_axis; i++ )  
+  {
+    lpixel[i] = dims(i);
+  }
+
+  // TODO: use fpixel from func input if available
+
+  // TODO: convert to class type will be using 
+  int bitperpixel = DOUBLE_IMG;
+  //bitsperpixel = octave_to_type(imagedata);
+  double * datap = const_cast<double*>( imagedata.data() );
+
+  int status = 0;
+  if( fits_write_subset( fp, TDOUBLE, fpixel.data(), lpixel.data(), datap , &status ) > 0 )
+    {
+      error ("fits_writeImg: couldnt write: %s", get_fits_error(status).c_str());
+    }
+
+  return octave_value();
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! data = int16(zeros(10,10));
+%! assert(!isempty(fd));
+%! fits_createImg(fd,class(data), size(data));
+%! fits_writeImg(fd,data);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
 
 // PKG_ADD: autoload ("fits_isCompressedImg", "__fits__.oct");
 DEFUN_DLD(fits_isCompressedImg, args, nargout,

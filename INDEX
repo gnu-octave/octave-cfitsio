@@ -31,10 +31,17 @@ Low Level Keyword Functions
  fits_readKeyCmplx
  fits_readKeyLongLong
  fits_readKeyLongStr
+ fits_writeComment
+ fits_writeHistory
+ fits_writeKey
+ fits_writeKeyUnit
+ fits_deleteKey
 Low Level Image Manipulation
  fits_getImgSize
  fits_getImgType
  fits_readImg
+ fits_createImg
+ fits_writeImg
 Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames
