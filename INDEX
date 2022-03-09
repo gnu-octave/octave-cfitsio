@@ -3,6 +3,7 @@ High Level File Functions
  fitsdisp
  fitsinfo
  fitsread
+ fitswrite
 Low Level File Functions
  fits_createFile
  fits_openFile
