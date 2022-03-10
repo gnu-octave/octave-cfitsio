@@ -413,7 +413,7 @@ DEFUN_DLD(fits_openFile, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = fits_openFile(@var{filename})\n \
 @deftypefnx {Function File} {[@var{file}]} = fits_openFile(@var{filename}, @var{mode})\n \
-Attempt to open a a file of the given input name.\n \
+Attempt to open a file of the given input name.\n \
 \n \
 If the opion mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
@@ -498,7 +498,7 @@ DEFUN_DLD(fits_openDiskFile, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename})\n \
 @deftypefnx {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename}, @var{mode})\n \
-Attempt to open a a file of the given input name, ignoring any special processing of the filename.\n \
+Attempt to open a file of the given input name, ignoring any special processing of the filename.\n \
 \n \
 If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
@@ -726,7 +726,7 @@ The is the eqivalent of the fits_close_file function.\n \
 DEFUN_DLD(fits_deleteFile, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} = fits_deleteFile(@var{file})\n \
-Force a clode and delete of a fits file.\n \
+Force a close and delete of a fits file.\n \
 \n \
 The is the eqivalent of the fits_delete_file function.\n \
 @end deftypefn")
@@ -1260,6 +1260,80 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
 
   return octave_value(name);
 }
+
+// PKG_ADD: autoload ("fits_copyHDU", "__fits__.oct");
+DEFUN_DLD(fits_copyHDU, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_copyHDU(@var{infile}, @var{outfile})\n \
+Copy current HDU from one infile to another.\n \
+\n \
+This is the equivalent of the cfitsio fits_copy_hdu function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp1 = get_fits_file (args(0).uint64_value());
+
+  if(!fp1)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (!args (1).isinteger()  || !args(1).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp2 = get_fits_file (args(1).uint64_value());
+
+  if(!fp2)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  if(fits_copy_hdu(fp1, fp2, 0, &status) > 0)
+    {
+      error ("fits_copyHDU: couldnt copy hdu: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename1 = tempname();
+%! filename2 = tempname();
+%! fd1 = fits_createFile(filename1);
+%! fits_createImg(fd1,'int16',[256 512]);
+%! fits_closeFile(fd1);
+%!
+%! fd1 = fits_openFile(filename1);
+%!
+%! fd2 = fits_createFile(filename2);
+%! fits_copyHDU(fd1,fd2);
+%! fits_closeFile(fd1);
+%! fits_closeFile(fd2);
+%!
+%! delete (filename1);
+%! delete (filename2);
+#endif
 
 // PKG_ADD: autoload ("fits_writeChecksum", "__fits__.oct");
 DEFUN_DLD(fits_writeChecksum, args, nargout,
@@ -1881,6 +1955,57 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 %!error fits_readKeyLongStr(1, "NAXIS");
 %!error fits_readKeyLongStr([]);
 %!error fits_readKeyLongStr("");
+#endif
+
+// PKG_ADD: autoload ("fits_writeDate", "__fits__.oct");
+DEFUN_DLD(fits_writeDate, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeDate(@var{file})\n \
+Write the date keyword.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_date function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 1)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int status = 0;
+  if (fits_write_date(fp, &status) > 0)
+    {
+      error ("fits_writeDate: couldnt write date: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeDate(fd);
+%! fits_closeFile(fd);
+%! delete (filename);
 #endif
 
 // PKG_ADD: autoload ("fits_writeComment", "__fits__.oct");
@@ -2845,6 +2970,110 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
 %!error fits_createImg("");
 #endif
 
+// PKG_ADD: autoload ("fits_insertImg", "__fits__.oct");
+DEFUN_DLD(fits_insertImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_insertImg(@var{file}, @var{bitpix}, @var{naxis})\n \
+insert a new primary image or image extension at current HDU position\n \
+\n \
+This is the equivalent of the cfitsio fits_insert_imgll function.\n \
+@end deftypefn")
+{
+  if ( args.length() < 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int bpp;
+  if (!args (1).is_string())
+    {
+      error("Expected bitpix as a string");
+      return octave_value ();
+    }
+  std::string bitpix = args (1).string_value ();
+
+  // The first two elements of naxes correspond to the NAXIS2 and NAXIS1 keywords
+  
+  if (bitpix == "byte_img" || bitpix == "uint8")
+    bpp = BYTE_IMG;
+  if (bitpix == "sbyte_img" || bitpix == "int8")
+    bpp = SBYTE_IMG;
+  else if (bitpix == "short_img" || bitpix == "int16")
+    bpp = SHORT_IMG;
+  else if (bitpix == "ushort_img" || bitpix == "uint16")
+    bpp = USHORT_IMG;
+  else if (bitpix == "long_img" || bitpix == "int32")
+    bpp = LONG_IMG;
+  else if (bitpix == "longlong_img" || bitpix == "int64")
+    bpp = LONGLONG_IMG;
+  else if (bitpix == "ulonglong_img" || bitpix == "uint64")
+    bpp = ULONGLONG_IMG;
+  else if (bitpix == "float_img" || bitpix == "single")
+    bpp = FLOAT_IMG;
+  else if (bitpix == "double_img" || bitpix == "double")
+    bpp = DOUBLE_IMG;
+  else
+    {
+      error("Unknown bitpix '%s'", bitpix.c_str());
+      return octave_value ();
+    }
+
+  if (!args (2).is_matrix_type())
+    {
+      error("Expected nelem as a dimension vector");
+      return octave_value ();
+    }
+
+  LONGLONG axis[100];
+  Array<double> dv = args (2).vector_value ();
+  int num_axis = dv.numel();
+  for (octave_idx_type i=0;i<num_axis;i++)
+    axis[i] = (int)dv(i);
+  // need swap 1st to dimensions to match matlab
+  if (num_axis >= 2)
+    {
+      LONGLONG tmp = axis[0];
+      axis[0] = axis[1];
+      axis[1] = tmp;
+    }
+
+  int status = 0;
+  if( fits_insert_imgll( fp, bpp, num_axis, axis, &status) > 0 )
+    {
+      error ("couldnt insert image: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return octave_value();
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_insertImg(fd,'int16',[10 20 3]);
+%! fits_movAbsHDU(fd,1);
+%! fits_insertImg(fd,'int16',[20 30]);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
 // PKG_ADD: autoload ("fits_writeImg", "__fits__.oct");
 DEFUN_DLD(fits_writeImg, args, nargout,
 "-*- texinfo -*-\n \
@@ -2937,16 +3166,16 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_isCompressedImg", "__fits__.oct");
-DEFUN_DLD(fits_isCompressedImg, args, nargout,
+// PKG_ADD: autoload ("fits_setBscale", "__fits__.oct");
+DEFUN_DLD(fits_setBscale, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{data}} = fits_isCompressedImg(@var{file})\n \
-Check if Image data is compressed and return true if it is\n \
-\n \
-This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
+@deftypefn {Function File} {} fits_setBscale(@var{file}, @var{bscale}, @var{bzero})\n \
+Set bscale and bzero to be used with reading and writing Images.\n \
 @end deftypefn")
 {
-  if ( args.length() != 1)
+  octave_value_list ret;
+
+  if ( args.length() != 3)
     {
       print_usage ();
       return octave_value();
@@ -2966,18 +3195,49 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
       return octave_value ();
     }
 
+  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+    {
+      error ("fits_setBscale: bscale should be numeric");
+      return octave_value ();  
+    }
+
+  if (! args (2).isnumeric () || !args (1).is_scalar_type())
+    {
+      error ("fits_setBscale: bzero should be numeric");
+      return octave_value ();  
+    }
+
+  double scale = args (1).double_value ();
+  double zero = args (2).double_value ();
+
   int status = 0;
 
-  int c = fits_is_compressed_image(fp, &status);
-
-  if(status)
+  if (fits_update_key(fp, TDOUBLE, "BSCALE", &scale, 0, &status) > 0)
     {
-      error ("couldnt get compression: %s", get_fits_error(status).c_str());
+      error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
-  return octave_value(c);
+  if (fits_update_key(fp, TDOUBLE, "BZERO", &zero, 0, &status) > 0)
+    {
+      error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
 }
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! data = uint16([1:3; 4:6; 7:9]);
+%! fits_createImg(fd,class(data), size(data));
+%! fits_setBscale(fd, 1.0, 0.0);
+%! fits_writeImg(fd,data);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
 
 // PKG_ADD: autoload ("fits_getAColParms", "__fits__.oct");
 DEFUN_DLD(fits_getAColParms, args, nargout,
@@ -3810,6 +4070,408 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 %! assert(size(d), [53 1])
 %! assert(size(n), [53 1])
 %! fits_closeFile(fd);
+#endif
+
+// PKG_ADD: autoload ("fits_setCompressionType", "__fits__.oct");
+DEFUN_DLD(fits_setCompressionType, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_setCompressionType(@var{file}, @var{comptype})\n \
+Set compression type for writing FITS images.\n \
+\n \
+Valid comptype values are: 'GZIP', 'GZIP2', 'RICE', 'PLIO', 'HCOMPRESS' or 'NOCOMPRESS'\n \
+\n \
+This is the equivalent of the cfitsio fits_set_compression_type function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).is_string ())
+    {
+      error ("fits_setCompressionType: comptype should be a string");
+      return octave_value ();  
+    }
+
+  int status = 0;
+  std::string comptype = args (1).string_value ();
+  std::transform (comptype.begin(), comptype.end(), comptype.begin(), ::toupper);
+  int ctype = NOCOMPRESS;
+  if (comptype == "RICE") ctype = RICE_1;
+  else if (comptype == "GZIP") ctype = GZIP_1;
+  else if (comptype == "GZIP2") ctype = GZIP_2;
+  else if (comptype == "PLIO") ctype = PLIO_1;
+  else if (comptype == "HCOMPRESS") ctype = HCOMPRESS_1;
+  else if (comptype == "BZIP2") ctype = BZIP2_1;
+  else if (comptype == "NOCOMPRESS") ctype = NOCOMPRESS;
+  else
+    {
+      error ("fits_setCompressionType: unknown compression type '%s'", comptype.c_str());
+      return octave_value ();
+    }
+
+  if (fits_set_compression_type(fp, ctype, &status) > 0)
+    {
+      error ("fits_setCompressionType couldnt write type: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_setCompressionType(fd, "NOCOMPRESS");
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_setTileDim", "__fits__.oct");
+DEFUN_DLD(fits_setTileDim, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_setTileDim(@var{file}, @var{tiledims})\n \
+Set compression tile dims for writing FITS images.\n \
+\n \
+This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (!args (1).is_matrix_type())
+    {
+      error("Expected tiledims as a dimension vector");
+      return octave_value ();
+    }
+
+  long axis[100];
+  Array<double> dv = args (1).vector_value ();
+  int num_axis = dv.numel();
+  for (octave_idx_type i=0;i<num_axis;i++)
+    axis[i] = (long)dv(i);
+
+  // need swap 1st to dimensions to match matlab ?
+  if (num_axis >= 2)
+    {
+      long tmp = axis[0];
+      axis[0] = axis[1];
+      axis[1] = tmp;
+    }
+
+  int status = 0;
+  if (fits_set_tile_dim(fp, num_axis, axis, &status) > 0)
+    {
+      error ("fits_setTileDim couldnt write tile dims: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! #fits_setCompressionType(fd, "RICE");
+%! fits_setTileDim(fd, [64 128]);
+%! fits_createImg(fd,'int16',[256 512]);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_isCompressedImg", "__fits__.oct");
+DEFUN_DLD(fits_isCompressedImg, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_isCompressedImg(@var{file})\n \
+Return true if image is compressed.\n \
+\n \
+This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 1)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  int compressed = fits_is_compressed_image(fp, &status);
+  if(status != 0)
+    {
+      error ("fits_isCompressedImg: couldnt determine compression: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  ret(0) = (compressed == 1);
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_setCompressionType(fd, "RICE");
+%! fits_createImg(fd,'int16',[256 512]);
+%! assert(fits_isCompressedImg(fd), true);
+%! fits_closeFile(fd);
+%!
+%! fd = fits_createFile(['!' filename]);
+%! fits_createImg(fd,'int16',[256 512]);
+%! assert(fits_isCompressedImg(fd), false);
+%! fits_closeFile(fd);
+%!
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_imgCompress", "__fits__.oct");
+DEFUN_DLD(fits_imgCompress, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_imgCompress(@var{infile}, @var{outfile})\n \
+Copy HDU and image data from one infile to another, using the outfiles compression type\n \
+\n \
+This is the equivalent of the cfitsio fits_img_compress function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp1 = get_fits_file (args(0).uint64_value());
+
+  if(!fp1)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (!args (1).isinteger()  || !args(1).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp2 = get_fits_file (args(1).uint64_value());
+
+  if(!fp2)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  int status = 0;
+
+  if (fits_img_compress(fp1, fp2, &status) > 0)
+    {
+      error ("fits_imgCompress: couldnt copy image: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename1 = tempname();
+%! filename2 = tempname();
+%! fd1 = fits_createFile(filename1);
+%! fits_createImg(fd1,'int16',[256 512]);
+%! fits_closeFile(fd1);
+%!
+%! fd1 = fits_openFile(filename1);
+%!
+%! fd2 = fits_createFile(filename2);
+%! fits_setCompressionType(fd2, "RICE");
+%! fits_imgCompress(fd1,fd2);
+%! fits_closeFile(fd1);
+%! fits_closeFile(fd2);
+%!
+%! delete (filename1);
+%! delete (filename2);
+#endif
+
+// PKG_ADD: autoload ("fits_setHCompScale", "__fits__.oct");
+DEFUN_DLD(fits_setHCompScale, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_setHCompScale(@var{file}, @var{scale})\n \
+Set scale to be used with HCOMPRESS compression.\n \
+\n \
+This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+    {
+      error ("fits_setHCompScale: scale should be numeric");
+      return octave_value ();  
+    }
+
+  float scale = args (1).float_value ();
+
+  int status = 0;
+
+  if (fits_set_hcomp_scale(fp, scale, &status) > 0)
+    {
+      error ("fits_setHCompScale: couldnt write scale: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! fits_setHCompScale(fd, 1.0);
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_setHCompSmooth", "__fits__.oct");
+DEFUN_DLD(fits_setHCompSmooth, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_setHCompSmooth(@var{file}, @var{smooth})\n \
+Set smooth value to be used with HCOMPRESS compression.\n \
+\n \
+This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+    {
+      error ("fits_setHCompSmooth: scale should be numeric");
+      return octave_value ();  
+    }
+
+  int smooth = args (1).int_value ();
+
+  int status = 0;
+
+  if (fits_set_hcomp_smooth(fp, smooth, &status) > 0)
+    {
+      error ("fits_setHCompSmooth: couldnt write smooth: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! fits_setHCompSmooth(fd, 1);
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_closeFile(fd);
+%! delete (filename);
 #endif
 
 

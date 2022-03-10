@@ -83,8 +83,11 @@ function fitswrite (imagedata, filename, varargin)
   endif
 
   unwind_protect
-    
+    if !strcmpi(p.Results.Compression, 'none')
+      fits.setCompressionType(fd, p.Results.Compression);
+    endif
     fits.createImg(fd, class(imagedata), size(imagedata));
+    fits.writeDate(fd);
     fits.writeImg(fd, imagedata);
 
   unwind_protect_cleanup

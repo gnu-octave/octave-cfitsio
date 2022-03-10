@@ -13,6 +13,7 @@ Low Level File Functions
  fits_closeFile
  fits_deleteFile
 Low Level HDU Functions
+ fits_copyHDU
  fits_getHDUnum
  fits_getHDUtype
  fits_getHDUoff
@@ -33,6 +34,7 @@ Low Level Keyword Functions
  fits_readKeyLongLong
  fits_readKeyLongStr
  fits_writeComment
+ fits_writeDate
  fits_writeHistory
  fits_writeKey
  fits_writeKeyUnit
@@ -42,7 +44,9 @@ Low Level Image Manipulation
  fits_getImgType
  fits_readImg
  fits_createImg
+ fits_insertImg
  fits_writeImg
+ fits_setBscale
 Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames
@@ -50,6 +54,11 @@ Low Level Utility Functions
  fits_getOpenFiles
 Low Level Commpression Functions
  fits_isCompressedImg
+ fits_setCompressionType
+ fits_setTileDim
+ fits_imgCompress
+ fits_setHCompScale
+ fits_setHCompSmooth
 Low Level Binary and ASCII Tables
  fits_getAColParms
  fits_getBColParms
