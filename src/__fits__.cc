@@ -393,9 +393,7 @@ static fitsfile * get_fits_file(uint64_t fd)
 #if 0
 // NOTE: using this for all tess of this file, so needs be at top of tests
 %!shared testfile
-%! testfile = urlwrite ( ...
-%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
-%!   tempname() );
+%! testfile = file_in_loadpath("demos/tst0012.fits");
 #endif
 
 // PKG_ADD: autoload ("__cfitsio_pkg_lock__", "__fits__.oct");
@@ -5553,11 +5551,3 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
 %! delete (filename);
 #endif
 
-
-#if 0
-// NOTE: delete file shared at top of tests
-%!test
-%! if exist (testfile, 'file')
-%!   delete (testfile);
-%! endif
-#endif

@@ -316,9 +316,7 @@ function info = fitsinfo (filename)
 endfunction
 
 %!shared testfile
-%! testfile = urlwrite ( ...
-%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
-%!   tempname() );
+%! testfile = file_in_loadpath("demos/tst0012.fits");
 
 %!test
 %! a = fitsinfo(testfile);
@@ -345,11 +343,6 @@ endfunction
 %! assert(a.AsciiTable.DataSize, 3127);
 %! assert(a.AsciiTable.NFields, 8);
 %! assert(a.AsciiTable.Offset, 103680);
-
-%!test
-%! if exist (testfile, 'file')
-%!   delete (testfile);
-%! endif
 
 %!error fitsinfo
 %!error fitsinfo(1)

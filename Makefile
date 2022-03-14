@@ -146,6 +146,7 @@ endif
 	cd "$@/src" && ./configure && $(MAKE) prebuild && \
 	  $(MAKE) distclean && $(RM) Makefile
 	$(MAKE) -C "$@" docs
+	cd "$@" && mv testdata inst/demos
 	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" && $(RM) -f doc/mkfuncdocs.py
 ##
 	${FIX_PERMISSIONS} "$@"

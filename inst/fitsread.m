@@ -297,9 +297,7 @@ function out = fitsread (filename, varargin)
 endfunction
 
 %!shared testfile
-%! testfile = urlwrite ( ...
-%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
-%!   tempname() );
+%! testfile = file_in_loadpath("demos/tst0012.fits");
 
 %!test
 %! a = fitsread(testfile);
@@ -367,11 +365,6 @@ endfunction
 %! assert(!isempty(a))
 %! assert(size(a), [1 8]);
 %! assert(size(a{1}), [3, 9]);
-
-%!test
-%! if exist (testfile, 'file')
-%!   delete (testfile);
-%! endif
 
 %!error fitsread
 %!error fitsread(1)

@@ -170,9 +170,7 @@ function out = fitsdisp (filename, varargin)
 endfunction
 
 %!shared testfile
-%! testfile = urlwrite ( ...
-%!   'https://fits.gsfc.nasa.gov/nrao_data/tests/pg93/tst0012.fits', ...
-%!   tempname() );
+%! testfile = file_in_loadpath("demos/tst0012.fits");
 
 %!test
 %! a = fitsdisp(testfile);
@@ -214,11 +212,6 @@ endfunction
 %! assert(!isempty(a))
 %! x = strsplit(a, '\n');
 %! assert(length(x), 2);
-
-%!test
-%! if exist (testfile, 'file')
-%!   delete (testfile);
-%! endif
 
 %!error fitsdisp
 %!error fitsdisp(1)
