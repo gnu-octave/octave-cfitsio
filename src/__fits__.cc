@@ -255,23 +255,24 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
           ATYPE arr(dim_vector(1,repeatrow));
           boolNDArray nuldata(dim_vector(1, repeatrow));
 
-          // can we do single ones like elsewhere ?
-          DTYPE * item = new DTYPE[repeatrow];
-          anynul = 0;
-          if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
+          if(repeatrow > 0)
             {
-              error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
-              return ret;
+              // can we do single ones like elsewhere ?
+              DTYPE * item = new DTYPE[repeatrow];
+              anynul = 0;
+              if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
+                {
+                  error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
+                  return ret;
+                }
+              for(LONGLONG r = 0;r<repeatrow; r++)
+                {
+                  val = item[r];
+                  arr(0, r) = val;
+                  nuldata(0, r) = 0;
+	        }
+              delete [] item;
             }
-          for(LONGLONG r = 0;r<repeatrow; r++)
-            {
-	      val = item[r];
-
-              arr(0, r) = val;
-
-              nuldata(1, r) = 0;
-	    }
-          delete [] item;
           cresults(i) = arr;
           nresults(i) = nuldata;
         }
@@ -280,9 +281,10 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
     }
   else
     {
-
-      ATYPE arr(dim_vector(nrows,repeat));
-      boolNDArray nuldata(dim_vector(nrows, repeat));
+      // on 0 alloc 1 to store null
+      if(repeat == 0) repeatrow = 1;
+      ATYPE arr(dim_vector(nrows,repeatrow));
+      boolNDArray nuldata(dim_vector(nrows, repeatrow));
 
       for(LONGLONG i = 0; i<nrows; i++)
         {
@@ -302,6 +304,11 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
                 arr(i, r) = val;
 
               nuldata(i, r) = (anynul != 0);
+	    }
+	  if (repeat == 0)
+	    {
+              arr(i, 0) = 0;
+              nuldata(i, 1) = 1;
 	    }
         }
 
@@ -5005,6 +5012,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
       dtype = -dtype;
       variable = true;
     }
+  //printf("read %d t=%d r=%d w=%d v=%d\n", col, dtype, (int)repeat, (int)width, (int)variable);
 
   if(dtype == TBYTE)
     {
@@ -5029,6 +5037,10 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
   else if(dtype == TULONG)
     {
       ret = read_numeric_row<uint32NDArray,uint32_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
+    }
+  else if(dtype == TINT32BIT)
+    {
+      ret = read_numeric_row<int32NDArray,int32_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TUINT)
     {
