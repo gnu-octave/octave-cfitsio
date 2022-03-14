@@ -62,7 +62,7 @@ function out = fitsdisp (filename, varargin)
        if ismatrix(value)
          hduindex = value;
        elseif isscalar(value)
-         hdrindex = [value];
+         hduindex = [value];
        else
          error("fitsdisp: Expected matrix or scalar");
        endif
@@ -197,6 +197,11 @@ endfunction
 %!
 %! b = fitsdisp(testfile, 'Index', 1, 'Mode', 'standard');
 %! assert(a, b)
+%!
+%! a = fitsdisp(testfile, 'Index', 2);
+%! assert(!isempty(a))
+%! x = strsplit(a, '\n');
+%! assert(length(x), 52);
 
 %!test
 %! a = fitsdisp(testfile, 'Index', 1, 'Mode', 'full');
