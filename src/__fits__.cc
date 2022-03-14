@@ -153,44 +153,164 @@ static std::string get_fits_error (int status)
 }
 
 template <class ATYPE, typename DTYPE>
-octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat)
+int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const ATYPE &arr)
 {
-  ATYPE arr(dim_vector(nrows,repeat));
+  DTYPE val;
+  int status = 0;
+  bool variable = false;
+
+  // TODO: assume only 2 dims here ?
+  
+  LONGLONG nrows = arr.size(0);
+  LONGLONG repeat = arr.size(1);
+
+  int dxtype;
+  LONGLONG width;
+  if(fits_get_eqcoltypell(fp, col, &dxtype, &repeat, &width, &status) > 0)
+    {
+      error ("couldnt get col parms: %s", get_fits_error(status).c_str());
+      return -1;
+    }
+  if(dxtype < 0) 
+    {
+      dxtype = -dxtype;
+      variable = true;
+    }
+
+  nrows = arr.size(0);
+  repeat = arr.size(1);
+ 
+  for(LONGLONG i = 0; i<nrows; i++)
+    {
+      DTYPE * item = new DTYPE[repeat];
+      for(LONGLONG r = 0;r<repeat; r++)
+        {
+          val = arr(i, r);
+	  item[r] = val;
+	  //octave_stdout << "(" << i << "," << r << ")=" << val << std::endl; 
+	}
+
+      if (fits_write_col(fp, dtype, col, i+firstrow, 1, repeat, item, &status) > 0)
+        {
+          error ("couldnt write data: %s", get_fits_error(status).c_str());
+          return -1;
+        }
+
+      delete [] item;
+    }
+
+  return 0;
+}
+
+int write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Array<std::string> &arr)
+{
+  LONGLONG nrows = arr.size(0);
+  int status = 0;
+  char nullval = '\0';
+
+  for(LONGLONG i = 0; i<nrows; i++)
+    {
+      std::string value = arr(i);
+
+      char buffer[value.length()+ 1];
+      buffer[value.length()] = 0;
+
+      strcpy(buffer, value.c_str());
+      char * ptr[1];
+      ptr[0] = buffer;
+
+      if (fits_write_col(fp, TSTRING, col, firstrow+i, 1, 1, ptr, &status) > 0)
+        {
+          error ("couldnt write str: %s", get_fits_error(status).c_str());
+          return -1;
+        }
+    }
+  return 0;
+}
+
+template <class ATYPE, typename DTYPE>
+octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat, bool variable)
+{
   DTYPE val;
   DTYPE nulval = 1;
   int anynul;
   int status = 0;
-
-  boolNDArray nuldata(dim_vector(nrows, repeat));
-
+  long repeatrow = repeat;
   octave_value_list ret;
 
-  for(LONGLONG i = 0; i<nrows; i++)
+  if (variable)
     {
-      for(LONGLONG r = 0;r<repeat; r++)
+      long offset;
+      Cell cresults = Cell(dim_vector(nrows, 1));
+      Cell nresults = Cell(dim_vector(nrows, 1));
+
+      for(LONGLONG i = 0; i<nrows; i++)
         {
-          anynul = 0;
-          if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
+          if (fits_read_descript(fp, col, i+firstrow, &repeatrow, &offset, &status) > 0)
             {
-              error ("couldnt get data: %s", get_fits_error(status).c_str());
+              error ("couldnt read descript %lld, %lld: %s", i+firstrow, 1, get_fits_error(status).c_str());
               return ret;
             }
 
-          if(anynul)
-            arr(i, r) = 0;
-          else
-            arr(i, r) = val;
+          ATYPE arr(dim_vector(1,repeatrow));
+          boolNDArray nuldata(dim_vector(1, repeatrow));
 
-          nuldata(i, r) = (anynul != 0);
-	}
+          // can we do single ones like elsewhere ?
+          DTYPE * item = new DTYPE[repeatrow];
+          anynul = 0;
+          if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
+            {
+              error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
+              return ret;
+            }
+          for(LONGLONG r = 0;r<repeatrow; r++)
+            {
+	      val = item[r];
+
+              arr(0, r) = val;
+
+              nuldata(1, r) = 0;
+	    }
+          delete [] item;
+          cresults(i) = arr;
+          nresults(i) = nuldata;
+        }
+      ret(0) = octave_value(cresults);
+      ret(1) = octave_value(nresults);
     }
+  else
+    {
 
-  ret(0) = arr;
-  ret(1) = nuldata;
+      ATYPE arr(dim_vector(nrows,repeat));
+      boolNDArray nuldata(dim_vector(nrows, repeat));
+
+      for(LONGLONG i = 0; i<nrows; i++)
+        {
+          for(LONGLONG r = 0;r<repeat; r++)
+            {
+              anynul = 0;
+              // will always be ?
+              if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
+                {
+                  error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, r+1, get_fits_error(status).c_str());
+                  return ret;
+                }
+
+              if(anynul)
+                arr(i, r) = 0;
+              else
+                arr(i, r) = val;
+
+              nuldata(i, r) = (anynul != 0);
+	    }
+        }
+
+      ret(0) = arr;
+      ret(1) = nuldata;
+    }
 
   return ret;
 }
-
 
 #define MAX_OPEN_FITS_FILES 20
 #define FITS_FD_MASK ( (((uint64_t)'F') << 32) | (((uint64_t)'I') << 24) | (((uint64_t)'T') << 16) )
@@ -3555,6 +3675,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
       return octave_value ();
     }
 
+  // FIXME
   // TODO: should dtype be a string 
   ret(0) = octave_value(dtype);
 
@@ -3863,6 +3984,930 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   return ret;
 }
 
+// PKG_ADD: autoload ("fits_createTbl", "__fits__.oct");
+DEFUN_DLD(fits_createTbl, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform})\n \
+@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit})\n \
+@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname})\n \
+Create a new ASCII or bintable extension\n \
+\n \
+This is the equivalent of the cfitsio fits_create_tbl function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  // tunit and ext name is optional
+  if ( args.length() < 5 || args.length() > 7)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // tbltype
+  int tbltype = 0;
+  if (!args (1).is_string())
+    {
+      error ("Expected tbltype as a string");
+      return octave_value ();  
+    }
+  else if (args(1).string_value () == "ascii")
+    {
+      tbltype = ASCII_TBL;
+    }
+  else if (args(1).string_value () == "binary")
+    {
+      tbltype = BINARY_TBL;
+    }
+  else
+    {
+      error ("Expected tbltype as a 'ascii' or 'binary'");
+      return octave_value ();  
+    }
+
+  //nrows
+  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  long nrows = args(2).long_value();
+
+  int ncols = 1;
+  // ttype
+  if (!args (3).iscellstr())
+    {
+      error ("Expected ttype to be a cell of strings");
+      return octave_value ();  
+    }
+  Array<std::string> attype = args(3).cellstr_value();
+  ncols = attype.numel();
+  if (ncols < 1)
+    {
+      error ("Expected ttype to have at least 1 item");
+      return octave_value ();  
+    }
+
+  // tform
+  if (!args (4).iscellstr())
+    {
+      error ("Expected tform to be a cell of strings");
+      return octave_value ();  
+    }
+
+  Array<std::string> atform = args(4).cellstr_value();
+  if (atform.numel() != ncols)
+    {
+      error ("Expected tform to have %d items", ncols);
+      return octave_value ();  
+    }
+
+  // tunit
+  Array<std::string> atunit;
+  if ( args.length() > 5)
+    {
+      if (!args (5).iscellstr())
+        {
+          error ("Expected tunit to be a cell of strings");
+          return octave_value ();  
+        }
+
+      atunit = args(5).cellstr_value();
+      if (atunit.numel() != ncols)
+        {
+          error ("Expected tunit to have %d items", ncols);
+          return octave_value ();  
+        }
+    }
+
+  // extname
+  char extname[FLEN_CARD];
+  if ( args.length() > 6)
+    {
+      if (!args (6).is_string())
+        {
+          error ("Expected extname as a string");
+          return octave_value ();  
+        }
+      std::string name = args (6).string_value();
+      strcpy(extname, name.c_str());
+    }
+  else
+    extname[0] = 0;
+
+  char ttypebuf[(ncols*FLEN_CARD)+1];
+  char tformbuf[(ncols*FLEN_CARD)+1];
+  char tunitbuf[(ncols*FLEN_CARD)+1];
+
+  char * ttype[ncols];
+  char * tform[ncols];
+  char * tunit[ncols];
+
+  for (int i=0; i< ncols; i++)
+    {
+      ttype[i] = &ttypebuf[FLEN_CARD*i];
+      tform[i] = &tformbuf[FLEN_CARD*i];
+      tunit[i] = &tunitbuf[FLEN_CARD*i];
+
+      strncpy(ttype[i], attype(i).c_str(), FLEN_CARD-1);
+      strncpy(tform[i], atform(i).c_str(), FLEN_CARD-1);
+      if (i < atunit.numel())
+        strncpy(tunit[i], atunit(i).c_str(), FLEN_CARD-1);
+      else
+        *tunit[i] = 0;
+    }
+
+
+  int status = 0;
+
+  if(fits_create_tbl(fp, tbltype, nrows, ncols, ttype, tform, tunit, extname[0] != 0 ? extname : 0, &status) > 0)
+    {
+      error ("couldnt create table: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_insertBTbl", "__fits__.oct");
+DEFUN_DLD(fits_insertBTbl, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_insertBTbl(@var{file}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname}, @var{pcount})\n \
+Insert a new bintable extension\n \
+\n \
+This is the equivalent of the cfitsio fits_insert_btbl function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if (args.length() != 7)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  //nrows
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  long nrows = args(1).long_value();
+
+  int ncols = 1;
+  // ttype
+  if (!args (2).iscellstr())
+    {
+      error ("Expected ttype to be a cell of strings");
+      return octave_value ();  
+    }
+  Array<std::string> attype = args(2).cellstr_value();
+  ncols = attype.numel();
+  if (ncols < 1)
+    {
+      error ("Expected ttype to have at least 1 item");
+      return octave_value ();  
+    }
+
+  // tform
+  if (!args (3).iscellstr())
+    {
+      error ("Expected tform to be a cell of strings");
+      return octave_value ();  
+    }
+
+  Array<std::string> atform = args(3).cellstr_value();
+  if (atform.numel() != ncols)
+    {
+      error ("Expected tform to have %d items", ncols);
+      return octave_value ();  
+    }
+
+  // tunit
+  if (!args (4).iscellstr())
+    {
+      error ("Expected tunit to be a cell of strings");
+      return octave_value ();  
+    }
+
+  Array<std::string> atunit = args(4).cellstr_value();
+  if (atunit.numel() != ncols)
+    {
+      error ("Expected tunit to have %d items", ncols);
+      return octave_value ();  
+    }
+
+  // extname
+  char extname[FLEN_CARD];
+  if ( args.length() > 6)
+    {
+      if (!args (5).is_string())
+        {
+          error ("Expected extname as a string");
+          return octave_value ();  
+        }
+      std::string name = args (5).string_value();
+      strcpy(extname, name.c_str());
+    }
+  else
+    extname[0] = 0;
+
+  // pcount
+  if (!args (6).isnumeric()  || !args(6).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  long pcount = args(6).long_value();
+
+  char ttypebuf[(ncols*FLEN_CARD)+1];
+  char tformbuf[(ncols*FLEN_CARD)+1];
+  char tunitbuf[(ncols*FLEN_CARD)+1];
+
+  char * ttype[ncols];
+  char * tform[ncols];
+  char * tunit[ncols];
+
+  for (int i=0; i< ncols; i++)
+    {
+      ttype[i] = &ttypebuf[FLEN_CARD*i];
+      tform[i] = &tformbuf[FLEN_CARD*i];
+      tunit[i] = &tunitbuf[FLEN_CARD*i];
+
+      strncpy(ttype[i], attype(i).c_str(), FLEN_CARD-1);
+      strncpy(tform[i], atform(i).c_str(), FLEN_CARD-1);
+      if (i < atunit.numel())
+        strncpy(tunit[i], atunit(i).c_str(), FLEN_CARD-1);
+      else
+        *tunit[i] = 0;
+    }
+
+
+  int status = 0;
+
+  if(fits_insert_btbl(fp, nrows, ncols, ttype, tform, tunit, extname[0] != 0 ? extname : 0, pcount, &status) > 0)
+    {
+      error ("couldnt insert btable: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_insertBTbl(fd,0,ttype,tform,tunit,'table-name', 0);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+
+// PKG_ADD: autoload ("fits_insertATbl", "__fits__.oct");
+DEFUN_DLD(fits_insertATbl, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_createTbl(@var{file}, @var{rowlen}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform})\n \
+@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{rowlen}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit})\n \
+@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit}, @var{extname})\n \
+Insert a new ASCII table after current HDU\n \
+\n \
+This is the equivalent of the cfitsio fits_insert_atbl function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  // tunit and ext name is optional
+  if ( args.length() < 6 || args.length() > 8)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // rowlen
+  LONGLONG rowlen = 0;
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected rowlen to be a numeric value");
+      return octave_value ();  
+    }
+  rowlen = args(1).int64_value();
+
+  //nrows
+  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  LONGLONG nrows = args(2).int64_value();
+
+  int ncols = 1;
+  // ttype
+  if (!args (3).iscellstr())
+    {
+      error ("Expected ttype to be a cell of strings");
+      return octave_value ();  
+    }
+  Array<std::string> attype = args(3).cellstr_value();
+  ncols = attype.numel();
+  if (ncols < 1)
+    {
+      error ("Expected ttype to have at least 1 item");
+      return octave_value ();  
+    }
+
+  // tbcol
+  if (!args (4).is_matrix_type())
+    {
+      error("Expected tbcol as a  vector");
+      return octave_value ();
+    }
+  Array<long> atbcol = args (4).vector_value ();
+  if (atbcol.numel() != ncols)
+    {
+      error ("Expected tbcol to have %d items", ncols);
+      return octave_value ();  
+    }
+
+  // tform
+  if (!args (5).iscellstr())
+    {
+      error ("Expected tform to be a cell of strings");
+      return octave_value ();  
+    }
+
+  Array<std::string> atform = args(5).cellstr_value();
+  if (atform.numel() != ncols)
+    {
+      error ("Expected tform to have %d items", ncols);
+      return octave_value ();  
+    }
+
+  // tunit
+  Array<std::string> atunit;
+  if ( args.length() > 6)
+    {
+      if (!args (6).iscellstr())
+        {
+          error ("Expected tunit to be a cell of strings");
+          return octave_value ();  
+        }
+
+      atunit = args(6).cellstr_value();
+      if (atunit.numel() != ncols)
+        {
+          error ("Expected tunit to have %d items", ncols);
+          return octave_value ();  
+        }
+    }
+
+  // extname
+  char extname[FLEN_CARD];
+  if ( args.length() > 7)
+    {
+      if (!args (7).is_string())
+        {
+          error ("Expected extname as a string");
+          return octave_value ();  
+        }
+      std::string name = args (7).string_value();
+      strcpy(extname, name.c_str());
+    }
+  else
+    extname[0] = 0;
+
+  char ttypebuf[(ncols*FLEN_CARD)+1];
+  char tformbuf[(ncols*FLEN_CARD)+1];
+  char tunitbuf[(ncols*FLEN_CARD)+1];
+  long tbcol[ncols];
+
+  char * ttype[ncols];
+  char * tform[ncols];
+  char * tunit[ncols];
+
+  for (int i=0; i< ncols; i++)
+    {
+      ttype[i] = &ttypebuf[FLEN_CARD*i];
+      tform[i] = &tformbuf[FLEN_CARD*i];
+      tunit[i] = &tunitbuf[FLEN_CARD*i];
+
+      tbcol[i] = atbcol(i);
+
+      strncpy(ttype[i], attype(i).c_str(), FLEN_CARD-1);
+      strncpy(tform[i], atform(i).c_str(), FLEN_CARD-1);
+      if (i < atunit.numel())
+        strncpy(tunit[i], atunit(i).c_str(), FLEN_CARD-1);
+      else
+        *tunit[i] = 0;
+    }
+
+
+  int status = 0;
+
+  if(fits_insert_atbl(fp, rowlen, nrows, ncols, ttype, tbcol, tform, tunit, extname[0] != 0 ? extname : 0, &status) > 0)
+    {
+      error ("couldnt create table: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! fits_createImg(fd,'double',[20 30]);
+%! fits_createImg(fd,'double',[20 30]);
+%! fits_movRelHDU(fd,-1);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tbcol = [1 10 14 17 ];
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_insertATbl(fd, 0,0,ttype,tbcol,tform,tunit,'table-name');
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+
+// PKG_ADD: autoload ("fits_insertCol", "__fits__.oct");
+DEFUN_DLD(fits_insertCol, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_insertCol(@var{file}, @var{colnum}, @var{ttype}, @var{tform})\n \
+Insert a column into a table\n \
+\n \
+This is the equivalent of the cfitsio fits_insert_col function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 4)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // colnum
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  int colnum = args(1).int_value();
+
+  // ttype
+  if (!args (2).is_string())
+    {
+      error ("Expected ttype to be a string");
+      return octave_value ();  
+    }
+  std::string ttype = args (2).string_value ();
+
+  // tform
+  if (!args (3).is_string())
+    {
+      error ("Expected tform to be a string");
+      return octave_value ();  
+    }
+  std::string tform = args (3).string_value ();
+
+  char ttypebuf[FLEN_CARD];
+  char tformbuf[FLEN_CARD];
+  strncpy(ttypebuf, ttype.c_str(), FLEN_CARD-1);
+  strncpy(tformbuf, tform.c_str(), FLEN_CARD-1);
+
+  int status = 0;
+
+  if(fits_insert_col(fp, colnum, ttypebuf, tformbuf, &status) > 0)
+    {
+      error ("couldnt insert column: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! fits_insertCol(fd, 1,"ICol","9A");
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_deleteCol", "__fits__.oct");
+DEFUN_DLD(fits_deleteCol, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_deleteCol(@var{file}, @var{colnum})\n \
+Delete a column from a table\n \
+\n \
+This is the equivalent of the cfitsio fits_delete_col function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // colnum
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  int colnum = args(1).int_value();
+
+  int status = 0;
+
+  if(fits_delete_col(fp, colnum, &status) > 0)
+    {
+      error ("couldnt delete column: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'9A','4X','3B','1D'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! fits_deleteCol(fd, 1);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+
+// PKG_ADD: autoload ("fits_insertRows", "__fits__.oct");
+DEFUN_DLD(fits_insertRows, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_insertRows(@var{file}, @var{firstrow}, @var{numrows})\n \
+Insert a rows into a table\n \
+\n \
+This is the equivalent of the cfitsio fits_insert_rows function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // firstrow
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  long firstrow = args(1).long_value();
+
+  // nrows
+  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  long nrows = args(2).long_value();
+  if (nrows < 1)
+    {
+      error ("Expected nrows to be a positive value");
+      return octave_value ();  
+    }
+
+  int status = 0;
+
+  if(fits_insert_rows(fp, firstrow, nrows, &status) > 0)
+    {
+      error ("Couldnt insert rows: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! fits_closeFile(fd);
+%! fd = fits_openFile(filename, "READWRITE");
+%! fits_movRelHDU(fd,1);
+%! fits_insertRows(fd, 0, 5);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_deleteRows", "__fits__.oct");
+DEFUN_DLD(fits_deleteRows, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_deleteRows(@var{file}, @var{firstrow}, @var{numrows})\n \
+Insert a rows into a table\n \
+\n \
+This is the equivalent of the cfitsio fits_delete_rows function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 3)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // firstrow
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  long firstrow = args(1).long_value();
+
+  // nrows
+  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+    {
+      error ("Expected nrows to be a numeric value");
+      return octave_value ();  
+    }
+  long nrows = args(2).long_value();
+  if (nrows < 1)
+    {
+      error ("Expected nrows to be a positive value");
+      return octave_value ();  
+    }
+
+  int status = 0;
+
+  if(fits_delete_rows(fp, firstrow, nrows, &status) > 0)
+    {
+      error ("couldnt delete rows: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_createTbl(fd,'binary',10,ttype,tform,tunit,'table-name');
+%! fits_closeFile(fd);
+%! fd = fits_openFile(filename, 'READWRITE');
+%! fits_movAbsHDU(fd,2);
+%! fits_deleteRows(fd, 1, 5);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
+// PKG_ADD: autoload ("fits_writeCol", "__fits__.oct");
+DEFUN_DLD(fits_writeCol, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_writeCol(@var{file}, @var{colnum}, @var{firstrow}, @var{data})\n \
+Write elements to a table.\n \
+\n \
+This is the equivalent of the cfitsio fits_write_col function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 4)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  // colnum
+  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  int colnum = args(1).int_value();
+
+  // firstrow
+  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+    {
+      error ("Expected colnum to be a numeric value");
+      return octave_value ();  
+    }
+  long firstrow = args(2).long_value();
+
+  int status = 0;
+  int dtype;
+  LONGLONG repeat, width;
+  if(fits_get_eqcoltypell(fp, colnum, &dtype, &repeat, &width, &status) > 0)
+    {
+      error ("couldnt get col parms: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+  if(dtype < 0) dtype = -dtype;
+
+  if (args(3).iscell())
+    {
+      // TODO: 2nd dim shoud be 1 ? ie: somenumrows x 1
+      Cell cell = args(3).cell_value();
+
+      // handle each row separately ?
+      for(octave_idx_type idx=0; idx < cell.size(0); idx++)
+        {
+          octave_value value = cell(idx, 0);
+          if (dtype == TSTRING)
+            write_text_row(fp, colnum, TSTRING, firstrow, value.cellstr_value());
+          else if ((value.isnumeric() || value.islogical()))
+            {
+              // TODO: size of value should be 1 x somewidth
+              if (dtype == TLOGICAL)
+                write_numeric_row<boolNDArray,int8_t>(fp, colnum, TLOGICAL, firstrow+idx, value.bool_array_value());
+              else if(dtype == TBIT)
+                write_numeric_row<int8NDArray,int8_t>(fp, colnum, TBIT, firstrow+idx, value.int8_array_value());
+              else if(dtype == TCOMPLEX)
+                write_numeric_row<FloatComplexNDArray,FloatComplex>(fp, colnum, TCOMPLEX, firstrow+idx, value.float_complex_array_value());
+              else if(dtype == TDBLCOMPLEX)
+                write_numeric_row<ComplexNDArray,Complex>(fp, colnum, TDBLCOMPLEX, firstrow+idx, value.complex_array_value());
+              else
+                write_numeric_row<NDArray,double>(fp, colnum, TDOUBLE, firstrow+idx, value.array_value());
+            }
+        }
+
+    }
+  else if(dtype == TSTRING)
+      write_text_row(fp, colnum, TSTRING, firstrow, args(3).cellstr_value());
+  else if ((args(3).isnumeric() || args(3).islogical()))
+    {
+      if(dtype == TLOGICAL)
+        write_numeric_row<boolNDArray,int8_t>(fp, colnum, TLOGICAL, firstrow, args(3).bool_array_value());
+      else if(dtype == TBIT)
+        write_numeric_row<int8NDArray,int8_t>(fp, colnum, TBIT, firstrow, args(3).int8_array_value());
+      else if(dtype == TCOMPLEX)
+        write_numeric_row<FloatComplexNDArray,FloatComplex>(fp, colnum, TCOMPLEX, firstrow, args(3).float_complex_array_value());
+      else if(dtype == TDBLCOMPLEX)
+        write_numeric_row<ComplexNDArray,Complex>(fp, colnum, TDBLCOMPLEX, firstrow, args(3).complex_array_value());
+      else
+        write_numeric_row<NDArray,double>(fp, colnum, TDOUBLE, firstrow, args(3).array_value());
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
+%! fits_writeKeyUnit(fd, 'VELOCITY', "m/s");
+%! fits_closeFile(fd);
+%! delete (filename);
+
+%!error fits_writeKeyUnit(1);
+%!error fits_writeKeyUnit(1, "VELOCITY");
+%!error fits_writeKeyUnit(1, "VELOCITY", "m/s");
+#endif
+
+
+
 // PKG_ADD: autoload ("fits_readCol", "__fits__.oct");
 DEFUN_DLD(fits_readCol, args, nargout,
 "-*- texinfo -*-\n \
@@ -3948,66 +4993,88 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
   // get data type to use,  width etc
   int dtype;
   LONGLONG repeat, width;
+  bool variable = false;
   if(fits_get_eqcoltypell(fp, col, &dtype, &repeat, &width, &status) > 0)
     {
       error ("couldnt get parms: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
+  if(dtype < 0) 
+    {
+      // for variable length types
+      dtype = -dtype;
+      variable = true;
+    }
 
   if(dtype == TBYTE)
     {
-      ret = read_numeric_row<uint8NDArray,uint8_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<uint8NDArray,uint8_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TSBYTE)
     {
-      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TSHORT)
     {
-      ret = read_numeric_row<int16NDArray,int16_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int16NDArray,int16_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TUSHORT)
     {
-      ret = read_numeric_row<uint16NDArray,uint16_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<uint16NDArray,uint16_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TLONG)
     {
-      ret = read_numeric_row<int32NDArray,int32_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int32NDArray,int32_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TULONG)
     {
-      ret = read_numeric_row<uint32NDArray,uint32_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<uint32NDArray,uint32_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TUINT)
     {
-      ret = read_numeric_row<uint32NDArray,unsigned int>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<uint32NDArray,unsigned int>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TINT)
     {
-      ret = read_numeric_row<int32NDArray,int>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int32NDArray,int>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TULONGLONG)
     {
-      ret = read_numeric_row<uint64NDArray,uint64_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<uint64NDArray,uint64_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TLONGLONG)
     {
-      ret = read_numeric_row<int64NDArray,int64_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int64NDArray,int64_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TDOUBLE)
     {
-      ret = read_numeric_row<NDArray,double>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<NDArray,double>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TFLOAT)
     {
-      ret = read_numeric_row<FloatNDArray,float>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<FloatNDArray,float>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else if(dtype == TBIT)
     {
-      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat);
+      //ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat);
+      ret = read_numeric_row<int8NDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
+    }
+  else if(dtype == TLOGICAL)
+    {
+      ret = read_numeric_row<boolNDArray,int8_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
+    }
+  else if(dtype == TCOMPLEX)
+    {
+      ret = read_numeric_row<FloatComplexNDArray,FloatComplex>(fp, col, dtype,firstrow, nrows, repeat, variable);
+      //ret = read_numeric_row<Array<FloatComplex>,complex>(fp, col, dtype,firstrow, nrows, repeat);
+    }
+  else if(dtype == TDBLCOMPLEX)
+    {
+      ret = read_numeric_row<ComplexNDArray,Complex>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
   else
     {
+      // TODO: handle variable here ???
       LONGLONG firstel = 1;
 
       char cdata[FLEN_CARD];
@@ -4025,7 +5092,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
           char * nul = nullstr;
           if (fits_read_col(fp, TSTRING, col, firstrow+i, 1, 1, nul, &text, &anynul, &status) > 0)
             {
-              error ("couldnt get data: %s", get_fits_error(status).c_str());
+              error ("couldnt get %d data: %s", dtype, get_fits_error(status).c_str());
               return octave_value ();
             }
           rowdata.append(std::string(cdata));

@@ -126,23 +126,30 @@ function out = fitsread (filename, varargin)
         out{end+1} = tmp;
       endfor
     elseif strcmp(type, "BINARY_TBL")
-      ncols = fits_getNumCols(fd)
+      ncols = fits_getNumCols(fd);
       out = {};
       for idx = 1:ncols
         # error reading col 10 - coz PI(144)
+        fd, idx
         [x,n] = fits_readCol(fd, idx);
-        # TODO: need scale ?
 
-        if ischar(x)
-          tmp = {};
-          for i=1:length(x)
-            if n(i) == 1
-              tmp{end+1} = NaN;
-            else
-              tmp{end+1} = x(i:size(x,1):end);
-            endif
-          endfor
-          tmp = tmp';
+        if iscell(x)
+          # if returned a cell was variable length and no nulls
+          # to add ?
+          tmp = x;
+ 
+        elseif ischar(x)
+          #tmp = {};
+          #for i=1:length(x)
+          #  if n(i) == 1
+          #    tmp{end+1} = NaN;
+          #  else
+          #    tmp{end+1} = x(i:size(x,1):end);
+          #  endif
+          #endfor
+          #tmp = tmp';
+          tmp = x;
+          tmp(find(n==1)) = "\0";
         else
           tmp = double(x);
           tmp(find(n==1)) = NaN;

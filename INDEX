@@ -60,6 +60,13 @@ Low Level Commpression Functions
  fits_setHCompScale
  fits_setHCompSmooth
 Low Level Binary and ASCII Tables
+ fits_createTbl
+ fits_insertATbl
+ fits_insertBTbl
+ fits_insertCol
+ fits_deleteCol
+ fits_insertRows
+ fits_deleteRows
  fits_getAColParms
  fits_getBColParms
  fits_getColName
@@ -71,5 +78,6 @@ Low Level Binary and ASCII Tables
  fits_readATblHdr
  fits_readBTblHdr
  fits_readCol
+ fits_writeCol
 Import functions
  import_fits
