@@ -36,33 +36,35 @@ extern "C"
 
 #include "fits_constants.h"
 
-std::string coltype_to_string (int ct)
+static std::string
+coltype_to_string (int ct)
 {
   switch(ct)
-  {
-   case TBIT: return "TBIT";
-   case TBYTE: return "TBYTE";
-   case TSBYTE: return "TSBYTE";
-   case TLOGICAL: return "TLOGICAL";
-   case TSTRING: return "TSTRING";
-   case TUSHORT: return "TUSHORT";
-   case TSHORT: return "TSHORT";
-   case TUINT: return "TUINT";
-   case TINT: return "TINT";
-   case TULONG: return "TULONG";
-   case TLONG: return "TLONG";
-   //case TINT32BIT: return "TINT32BIT"; // same as TULONG
-   case TFLOAT: return "TFLOAT";
-   case TULONGLONG: return "TULONGLONG";
-   case TLONGLONG: return "TLONGLONG";
-   case TDOUBLE: return "TDOUBLE";
-   case TCOMPLEX: return "TCOMPLEX";
-   case TDBLCOMPLEX: return "TDBLCOMPLEX";
-  }
+    {
+       case TBIT: return "TBIT";
+       case TBYTE: return "TBYTE";
+       case TSBYTE: return "TSBYTE";
+       case TLOGICAL: return "TLOGICAL";
+       case TSTRING: return "TSTRING";
+       case TUSHORT: return "TUSHORT";
+       case TSHORT: return "TSHORT";
+       case TUINT: return "TUINT";
+       case TINT: return "TINT";
+       case TULONG: return "TULONG";
+       case TLONG: return "TLONG";
+       //case TINT32BIT: return "TINT32BIT"; // same as TULONG
+       case TFLOAT: return "TFLOAT";
+       case TULONGLONG: return "TULONGLONG";
+       case TLONGLONG: return "TLONGLONG";
+       case TDOUBLE: return "TDOUBLE";
+       case TCOMPLEX: return "TCOMPLEX";
+       case TDBLCOMPLEX: return "TDBLCOMPLEX";
+      }
   return "TSTRING";
 }
 
-int string_to_coltype (const std::string &s)
+static int
+string_to_coltype (const std::string &s)
 {
   std::string name = s;
   std::transform (name.begin(), name.end(), name.begin(), ::toupper);
@@ -76,7 +78,8 @@ int string_to_coltype (const std::string &s)
   return TSTRING;
 }
 
-static int octave_to_type(const octave_value &value)
+static int
+octave_to_type(const octave_value &value)
 {
   if (value.is_string())
     {
@@ -140,7 +143,8 @@ static int octave_to_type(const octave_value &value)
 }
 
 
-static std::string get_fits_error (int status)
+static std::string
+get_fits_error (int status)
 {
   char err[32];
 
@@ -153,7 +157,7 @@ static std::string get_fits_error (int status)
 }
 
 template <class ATYPE, typename DTYPE>
-int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const ATYPE &arr)
+static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const ATYPE &arr)
 {
   DTYPE val;
   int status = 0;
@@ -202,7 +206,8 @@ int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const
   return 0;
 }
 
-int write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Array<std::string> &arr)
+static int
+write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Array<std::string> &arr)
 {
   LONGLONG nrows = arr.size(0);
   int status = 0;
@@ -229,7 +234,9 @@ int write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Ar
 }
 
 template <class ATYPE, typename DTYPE>
-octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat, bool variable)
+static octave_value_list
+read_numeric_row(fitsfile *fp, int col, int dtype, 
+  LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat, bool variable)
 {
   DTYPE val;
   DTYPE nulval = 1;
@@ -259,8 +266,10 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
             {
               // can we do single ones like elsewhere ?
               DTYPE * item = new DTYPE[repeatrow];
+	      char * nulls = new char[repeatrow];
               anynul = 0;
-              if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
+              //if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
+              if (fits_read_colnull(fp, dtype, col, i+firstrow, 1, repeatrow, item, nulls, &anynul, &status) > 0)
                 {
                   error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
                   return ret;
@@ -269,9 +278,11 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
                 {
                   val = item[r];
                   arr(0, r) = val;
-                  nuldata(0, r) = 0;
+                  //nuldata(0, r) = 0;
+                  nuldata(0, r) = (nulls[r] == 1);
 	        }
               delete [] item;
+	      delete [] nulls;
             }
           cresults(i) = arr;
           nresults(i) = nuldata;
@@ -285,14 +296,15 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
       if(repeat == 0) repeatrow = 1;
       ATYPE arr(dim_vector(nrows,repeatrow));
       boolNDArray nuldata(dim_vector(nrows, repeatrow));
+      char nulls;
 
       for(LONGLONG i = 0; i<nrows; i++)
         {
           for(LONGLONG r = 0;r<repeat; r++)
             {
               anynul = 0;
-              // will always be ?
-              if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
+              //if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
+              if (fits_read_colnull(fp, dtype, col, i+firstrow, r+1, 1, &val, &nulls, &anynul, &status) > 0)
                 {
                   error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, r+1, get_fits_error(status).c_str());
                   return ret;
@@ -308,7 +320,7 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
 	  if (repeat == 0)
 	    {
               arr(i, 0) = 0;
-              nuldata(i, 1) = 1;
+              nuldata(i, 0) = 1;
 	    }
         }
 
@@ -323,7 +335,8 @@ octave_value_list read_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG fi
 #define FITS_FD_MASK ( (((uint64_t)'F') << 32) | (((uint64_t)'I') << 24) | (((uint64_t)'T') << 16) )
 fitsfile * fits_files[MAX_OPEN_FITS_FILES] = {0};
 
-static void close_all_fits_files()
+static void
+close_all_fits_files()
 {
   for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
     {
@@ -341,7 +354,8 @@ static void close_all_fits_files()
     }
 }
 
-static int get_free_fits_index()
+static int
+get_free_fits_index()
 {
   for (int i=0;i<MAX_OPEN_FITS_FILES; i++)
     {
@@ -354,7 +368,8 @@ static int get_free_fits_index()
   return -1;
 }
 
-static uint64_t add_fits_file(fitsfile *fd)
+static uint64_t
+add_fits_file(fitsfile *fd)
 {
   int idx = get_free_fits_index();
   if(idx >= 0)
@@ -366,7 +381,8 @@ static uint64_t add_fits_file(fitsfile *fd)
   return 0;
 }
 
-static uint64_t remove_fits_file(uint64_t fd)
+static uint64_t
+remove_fits_file(uint64_t fd)
 {
   if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
     return 0;
@@ -379,7 +395,8 @@ static uint64_t remove_fits_file(uint64_t fd)
   return fd;
 }
 
-static fitsfile * get_fits_file(uint64_t fd)
+static fitsfile *
+get_fits_file(uint64_t fd)
 {
   if ((fd & FITS_FD_MASK) != FITS_FD_MASK)
     return 0;
@@ -4910,8 +4927,6 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
 %!error fits_writeKeyUnit(1, "VELOCITY");
 %!error fits_writeKeyUnit(1, "VELOCITY", "m/s");
 #endif
-
-
 
 // PKG_ADD: autoload ("fits_readCol", "__fits__.oct");
 DEFUN_DLD(fits_readCol, args, nargout,
