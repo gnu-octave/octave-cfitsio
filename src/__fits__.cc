@@ -1641,6 +1641,70 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 %!error fits_readRecord("");
 #endif
 
+// PKG_ADD: autoload ("fits_deleteRecord", "__fits__.oct");
+DEFUN_DLD(fits_deleteRecord, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_deleteRecord(@var{file}, @var{keynum})\n \
+Delete a key in the fits file.\n \
+\n \
+This is the equivalent of the cfitsio fits_delete_record function.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 2)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("fits_deleteRecord: keynum should be a integer");
+      return octave_value ();  
+    }
+
+  int keynum = args (1).int_value ();
+
+  int status = 0;
+  if (fits_delete_record(fp, keynum, &status) > 0)
+    {
+      error ("fits_deleteRecord: couldnt delete key: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeDate(fd);
+%! fits_closeFile(fd);
+%!
+%! fd = fits_openFile(filename, 'readwrite');
+%! # date record
+%! card = fits_readRecord(fd,9);
+%! fits_deleteRecord(fd,9);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
+
 // PKG_ADD: autoload ("fits_readCard", "__fits__.oct");
 DEFUN_DLD(fits_readCard, args, nargout,
 "-*- texinfo -*-\n \
@@ -2535,7 +2599,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
 // PKG_ADD: autoload ("fits_deleteKey", "__fits__.oct");
 DEFUN_DLD(fits_deleteKey, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_deleyeKey(@var{file}, @var{key})\n \
+@deftypefn {Function File} {} fits_deleteKey(@var{file}, @var{key})\n \
 Delete a key in the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_delete_key function.\n \
@@ -2565,7 +2629,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_writeKey: key should be a string");
+      error ("fits_deleteKey: key should be a string");
       return octave_value ();  
     }
 
@@ -2579,7 +2643,22 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
     }
   return ret;
 }
-
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! assert(!isempty(fd));
+%! fits_createImg(fd,'int16',[10 20]);
+%! fits_writeDate(fd);
+%! fits_closeFile(fd);
+%!
+%! fd = fits_openFile(filename, 'readwrite');
+%! # date record
+%! d = fits_readKey(fd,"DATE")
+%! fits_deleteKey(fd,"DATE");
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
 
 // PKG_ADD: autoload ("fits_getConstantValue", "__fits__.oct");
 DEFUN_DLD(fits_getConstantValue, args, nargout,

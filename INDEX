@@ -39,6 +39,7 @@ Low Level Keyword Functions
  fits_writeKey
  fits_writeKeyUnit
  fits_deleteKey
+ fits_deleteRecord
 Low Level Image Manipulation
  fits_getImgSize
  fits_getImgType
