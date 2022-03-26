@@ -48,6 +48,7 @@ Low Level Image Manipulation
  fits_insertImg
  fits_writeImg
  fits_setBscale
+ fits_setTscale
 Low Level Utility Functions
  fits_getConstantValue
  fits_getConstantNames

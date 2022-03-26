@@ -2654,7 +2654,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
 %!
 %! fd = fits_openFile(filename, 'readwrite');
 %! # date record
-%! d = fits_readKey(fd,"DATE")
+%! d = fits_readKey(fd,"DATE");
 %! fits_deleteKey(fd,"DATE");
 %! fits_closeFile(fd);
 %! delete (filename);
@@ -3391,7 +3391,7 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 DEFUN_DLD(fits_setBscale, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} fits_setBscale(@var{file}, @var{bscale}, @var{bzero})\n \
-Set bscale and bzero to be used with reading and writing Images.\n \
+Reset bscale and bzero to be used with reading and writing Images.\n \
 @end deftypefn")
 {
   octave_value_list ret;
@@ -3433,15 +3433,9 @@ Set bscale and bzero to be used with reading and writing Images.\n \
 
   int status = 0;
 
-  if (fits_update_key(fp, TDOUBLE, "BSCALE", &scale, 0, &status) > 0)
+  if (fits_set_bscale(fp, scale, zero, &status) > 0)
     {
-      error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
-      return octave_value ();
-    }
-
-  if (fits_update_key(fp, TDOUBLE, "BZERO", &zero, 0, &status) > 0)
-    {
-      error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+      error ("fits_setBscale: couldnt set scale: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -3459,6 +3453,79 @@ Set bscale and bzero to be used with reading and writing Images.\n \
 %! delete (filename);
 #endif
 
+// PKG_ADD: autoload ("fits_setTscale", "__fits__.oct");
+DEFUN_DLD(fits_setTscale, args, nargout,
+"-*- texinfo -*-\n \
+@deftypefn {Function File} {} fits_setTscale(@var{file}, @var{col}, @var{scale}, @var{zero})\n \
+Reset scale and zero to be used with reading and writing table data.\n \
+@end deftypefn")
+{
+  octave_value_list ret;
+
+  if ( args.length() != 4)
+    {
+      print_usage ();
+      return octave_value();
+    }
+
+  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+    {
+      error ("Not a fits file");
+      return octave_value ();  
+    }
+
+  fitsfile * fp = get_fits_file (args(0).uint64_value());
+
+  if(!fp)
+    {
+      error("Not a fits file");
+      return octave_value ();
+    }
+
+  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+    {
+      error ("fits_setTscale: column should be numeric");
+      return octave_value ();  
+    }
+
+  if (! args (2).isnumeric () || !args (2).is_scalar_type())
+    {
+      error ("fits_setTscale: scale should be numeric");
+      return octave_value ();  
+    }
+
+  if (! args (3).isnumeric () || !args (3).is_scalar_type())
+    {
+      error ("fits_setTscale: zero should be numeric");
+      return octave_value ();  
+    }
+
+  int col = args (1).int_value ();
+  double scale = args (2).double_value ();
+  double zero = args (3).double_value ();
+
+  int status = 0;
+
+  if (fits_set_tscale(fp, col, scale, zero, &status) > 0)
+    {
+      error ("fits_setTscale: couldnt set scale: %s", get_fits_error(status).c_str());
+      return octave_value ();
+    }
+
+  return ret;
+}
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! ttype = {'Col1','Col2','Col3','Col4'};
+%! tform = {'A9','A4','A3','A8'};
+%! tunit = {'m','s','kg','km'};
+%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! fits_setTscale(fd, 1, 1.0, 0.0);
+%! fits_closeFile(fd);
+%! delete (filename);
+#endif
 
 // PKG_ADD: autoload ("fits_getAColParms", "__fits__.oct");
 DEFUN_DLD(fits_getAColParms, args, nargout,
