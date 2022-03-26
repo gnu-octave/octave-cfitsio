@@ -549,6 +549,21 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 
   return octave_value(octave_uint64 (fd));
 }
+#if 0
+%!test
+%! filename = tempname();
+%! fd = fits_createFile(filename);
+%! data = int16(zeros(10,10));
+%! fits_createImg(fd,class(data), size(data));
+%! fits_writeImg(fd,data);
+%! fits_closeFile(fd);
+%! fail("fits_createFile(filename)");
+%! fd = fits_createFile(["!" filename]);
+%! fits_createImg(fd,class(data), size(data));
+%! fits_writeImg(fd,data);
+%! fits_closeFile(fd);
+%! delete(filename);
+#endif
 
 // PKG_ADD: autoload ("fits_openFile", "__fits__.oct");
 DEFUN_DLD(fits_openFile, args, nargout,
@@ -1094,7 +1109,7 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 // PKG_ADD: autoload ("fits_movAbsHDU", "__fits__.oct");
 DEFUN_DLD(fits_movAbsHDU, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_moveAbsHDU(@var{file}, @var{hdunum})\n \
+@deftypefn {Function File} {[@var{type}]} = fits_movAbsHDU(@var{file}, @var{hdunum})\n \
 Got to absolute HDU index @var{hdunum}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -2006,7 +2021,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
 
   if (fits_read_key_dblcmp(fp, key.c_str(), val, cbuffer, &status) > 0)
     {
-      error ("fits_readKeyDblCpmlx: couldnt read key value: %s", get_fits_error(status).c_str());
+      error ("fits_readKeyCmplx: couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -3083,6 +3098,15 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
 
   return octave_value(arr);
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! assert(!isempty(fd));
+%! assert(fits_movAbsHDU(fd, 4), "IMAGE_HDU");
+%! data = fits_readImg(fd);
+%! assert (size(data), [31 73 5]);
+%! fits_closeFile(fd);
+#endif
 
 // PKG_ADD: autoload ("fits_createImg", "__fits__.oct");
 DEFUN_DLD(fits_createImg, args, nargout,
@@ -3592,6 +3616,19 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile, "readonly");
+%! assert(!isempty(fd));
+%! fits_movAbsHDU(fd,2);
+%! [ttype,tbcol,tunit,tform,scale,zero,nulstr,tdisp] = fits_getAColParms(fd, 1);
+%! assert (ttype, "IDENT");
+%! assert (tbcol, 1);
+%! assert (tform, "9A");
+%! assert (scale, 1);
+%! assert (zero, 0);
+%! fits_closeFile(fd);
+#endif
 
 // PKG_ADD: autoload ("fits_getBColParms", "__fits__.oct");
 DEFUN_DLD(fits_getBColParms, args, nargout,
@@ -3793,6 +3830,13 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! fits_movAbsHDU(fd,2);
+%! [dtype,repeat,width] = fits_getColType(fd,5);
+%! fits_closeFile(fd);
+#endif
 
 // PKG_ADD: autoload ("fits_getEqColType", "__fits__.oct");
 DEFUN_DLD(fits_getEqColType, args, nargout,
@@ -3852,6 +3896,13 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = fits_openFile(testfile);
+%! fits_movAbsHDU(fd,2);
+%! [dtype,repeat,width] = fits_getEqColType(fd,5);
+%! fits_closeFile(fd);
+#endif
 
 // PKG_ADD: autoload ("fits_getNumCols", "__fits__.oct");
 DEFUN_DLD(fits_getNumCols, args, nargout,
