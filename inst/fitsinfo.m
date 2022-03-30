@@ -151,13 +151,13 @@ function info = fitsinfo (filename)
         endif
       elseif strcmp(type, "ASCII_TBL") || strcmp(type, "BINARY_TBL")
         rows = fits.getNumRows(fd);
-        cols = fits_getNumCols(fd);
+        cols = fits.getNumCols(fd);
         hdu.Rows = rows;
         hdu.NFields = cols;
         hdu.DataSize = rows*cols;
 
         if strcmp(type, "ASCII_TBL")
-          [rowlen, rows, ttype, tbcol, tform, tunit, extname] = fits_readATblHdr(fd);
+          [rowlen, rows, ttype, tbcol, tform, tunit, extname] = fits.readATblHdr(fd);
           hdu.Rows = rows;
           hdu.RowSize = rowlen;
           hdu.DataSize = rows * rowlen;
@@ -195,7 +195,7 @@ function info = fitsinfo (filename)
           endfor
 
         elseif strcmp(type, "BINARY_TBL")
-          [rows, ttype, tform, tunit, extname, pcount] = fits_readBTblHdr(fd);
+          [rows, ttype, tform, tunit, extname, pcount] = fits.readBTblHdr(fd);
           hdu.Rows = rows;
           [hdu.RowSize, ~] = fits.readKeyDbl(fd, "NAXIS1");
           hdu.DataSize = rows*hdu.RowSize;

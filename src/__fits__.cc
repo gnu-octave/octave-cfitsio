@@ -1,4 +1,4 @@
-// Copyright (C) 2019 John Donoghue <john.donoghue@ieee.org>
+// Copyright (C) 2019-2022 John Donoghue <john.donoghue@ieee.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -449,20 +449,20 @@ DEFUN_DLD(__cfitsio_pkg_lock__, args, ,  "internal function")
 }
 #endif
 
-// PKG_ADD: autoload ("fits_getOpenFiles", "__fits__.oct");
-DEFUN_DLD(fits_getOpenFiles, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getOpenFiles__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getOpenFiles__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{files}]} = fits_getOpenFiles()\n \
-Attempt to create  a file of the gien input name.\n \
+@deftypefn {Function File} {[@var{files}]} = __cfitsio_getOpenFiles__()\n \
+Internal fits function.\n \
+\n\
+Get the file handles of all open fits files.\n \
 \n \
-Get the file handles of all open fits files\n \
-\n \
-@seealso {fits_openFile}\n \
+@seealso {__cfitsio_openFile__}\n \
 @end deftypefn")
 {
   if ( args.length() != 0)
     {
-      print_usage ();
+      error ("Unexpected inputs to function.");
       return octave_value();
     }
 
@@ -491,40 +491,42 @@ Get the file handles of all open fits files\n \
 }
 #if 0
 %!test
-%! assert(isempty(fits_getOpenFiles()));
-%! fd = fits_openFile(testfile);
-%! of = fits_getOpenFiles();
+%! assert(isempty(__cfitsio_getOpenFiles__()));
+%! fd = __cfitsio_openFile__(testfile);
+%! of = __cfitsio_getOpenFiles__();
 %! assert(!isempty(of));
 %! assert(fd, of);
-%! fits_closeFile(fd);
-%! of = fits_getOpenFiles();
+%! __cfitsio_closeFile__(fd);
+%! of = __cfitsio_getOpenFiles__();
 %! assert(isempty(of));
 
-%!error fits_getOpenFiles(1);
+%!error __cfitsio_getOpenFiles__(1);
 #endif
 
 
-// PKG_ADD: autoload ("fits_createFile", "__fits__.oct");
-DEFUN_DLD(fits_createFile, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_createFile__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_createFile__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{file}]} = fits_createFile(@var{filename})\n \
+@deftypefn {Function File} {[@var{file}]} = __cfitsio_createFile__(@var{filename})\n \
+Internal fits function.\n \
+\n \
 Attempt to create  a file of the given input name.\n \
 \n \
 If the filename starts with ! and the file exists, it will create a new file, otherwise, if the\n \
 file exists, the create will fail.\n \
 \n \
 This is the equivilent of the cfitsio fits_create_file funtion.\n \
-@seealso {fits_openFile}\n \
+@seealso {__cfitsio_openFile__}\n \
 @end deftypefn")
 {
   if ( args.length() == 0)
     {
-      print_usage ();
+      error( "createFile: expected filename (string)" );
       return octave_value();
     }
   if ( args.length() != 1 || !args(0).is_string() )
     {
-      error( "fits_createFile: filename (string) expected as only argument" );
+      error( "createFile: filename (string) expected as only argument" );
       return octave_value();
     }
 
@@ -532,7 +534,7 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 
   if (get_free_fits_index () < 0)
     {
-      error ("Out of space for new open file");
+      error ("createFile: Out of space for new open file");
       return octave_value ();
     }
 
@@ -541,7 +543,7 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 
   if ( fits_create_file( &fp, infile.c_str(), &status) > 0 )
     {
-      error ("Couldnt create file: %s", get_fits_error(status).c_str());
+      error ("createFile: Couldnt create file: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -552,30 +554,30 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! data = int16(zeros(10,10));
-%! fits_createImg(fd,class(data), size(data));
-%! fits_writeImg(fd,data);
-%! fits_closeFile(fd);
-%! fail("fits_createFile(filename)");
-%! fd = fits_createFile(["!" filename]);
-%! fits_createImg(fd,class(data), size(data));
-%! fits_writeImg(fd,data);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,class(data), size(data));
+%! __cfitsio_writeImg__(fd,data);
+%! __cfitsio_closeFile__(fd);
+%! fail("__cfitsio_createFile__(filename)");
+%! fd = __cfitsio_createFile__(["!" filename]);
+%! __cfitsio_createImg__(fd,class(data), size(data));
+%! __cfitsio_writeImg__(fd,data);
+%! __cfitsio_closeFile__(fd);
 %! delete(filename);
 #endif
 
-// PKG_ADD: autoload ("fits_openFile", "__fits__.oct");
-DEFUN_DLD(fits_openFile, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_openFile__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_openFile__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{file}]} = fits_openFile(@var{filename})\n \
-@deftypefnx {Function File} {[@var{file}]} = fits_openFile(@var{filename}, @var{mode})\n \
+@deftypefn {Function File} {[@var{file}]} = __cfitsio_openFile__(@var{filename})\n \
+@deftypefnx {Function File} {[@var{file}]} = __cfitsio_openFile__(@var{filename}, @var{mode})\n \
 Attempt to open a file of the given input name.\n \
 \n \
 If the opion mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
 This is the equivilent of the cfitsio fits_open_file funtion.\n \
-@seealso {fits_openDiskFile, fits_createFile}\n \
+@seealso {__cfitsio_openDiskFile__, __cfitsio_createFile__}\n \
 @end deftypefn")
 {
   if ( args.length() != 1 && args.length () != 2)
@@ -585,7 +587,7 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
     }
   if ( !args(0).is_string() )
     {
-      error( "fits_openFile: expected filename as a string" );
+      error( "__cfitsio_openFile__: expected filename as a string" );
       return octave_value ();
     }
 
@@ -595,7 +597,7 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
     {
       if ( !args(1).is_string() )
         {
-          error( "fits_openFile: expected mode as a string" );
+          error( "__cfitsio_openFile__: expected mode as a string" );
           return octave_value ();
         }
       std::string modestr = args(1).string_value();
@@ -607,7 +609,7 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
         mode = READONLY;
       else
         {
-          error( "fits_openFile:: unknown file mode" );
+          error( "__cfitsio_openFile__:: unknown file mode" );
           return octave_value ();
         }
     }
@@ -633,34 +635,34 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 
 %!test
-%! fd = fits_openFile(testfile, "readonly");
+%! fd = __cfitsio_openFile__(testfile, "readonly");
 %! assert(!isempty(fd));
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 
-%!error <expected filename as a string> fits_openFile(1);
-%!error <expected filename as a string> fits_openFile([]);
+%!error <expected filename as a string> __cfitsio_openFile__(1);
+%!error <expected filename as a string> __cfitsio_openFile__([]);
 
-%!error <expected mode as a string> fits_openFile(testfile, 1);
-%!error <unknown file mode> fits_openFile(testfile, "badmode");
+%!error <expected mode as a string> __cfitsio_openFile__(testfile, 1);
+%!error <unknown file mode> __cfitsio_openFile__(testfile, "badmode");
 #endif
 
 
-// PKG_ADD: autoload ("fits_openDiskFile", "__fits__.oct");
-DEFUN_DLD(fits_openDiskFile, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_openDiskFile__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_openDiskFile__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename})\n \
-@deftypefnx {Function File} {[@var{file}]} = fits_openDiskFile(@var{filename}, @var{mode})\n \
+@deftypefn {Function File} {[@var{file}]} = __cfitsio_openDiskFile__(@var{filename})\n \
+@deftypefnx {Function File} {[@var{file}]} = __cfitsio_openDiskFile__(@var{filename}, @var{mode})\n \
 Attempt to open a file of the given input name, ignoring any special processing of the filename.\n \
 \n \
 If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
 This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
-@seealso {fits_openFile, fits_createFile}\n \
+@seealso {__cfitsio_openFile__, __cfitsio_createFile__}\n \
 @end deftypefn")
 {
   if ( args.length() != 1 && args.length () != 2)
@@ -670,7 +672,7 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
     }
   if ( !args(0).is_string() )
     {
-      error( "fits_openDiskFile: expected filename as a string" );
+      error( "__cfitsio_openDiskFile__: expected filename as a string" );
       return octave_value();
     }
 
@@ -680,7 +682,7 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
     {
       if ( !args(1).is_string() )
         {
-          error ( "filts_openDiskFile: expected mode as a string" );
+          error ( "openDiskFile: expected mode as a string" );
           return octave_value();
         }
       std::string modestr = args(1).string_value();
@@ -692,7 +694,7 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
         mode = READONLY;
       else
         {
-          error( "fits_openDiskFile: unknown file mode" );
+          error( "openDiskFile: unknown file mode" );
          return octave_value();
         }
     }
@@ -718,10 +720,10 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
   return octave_value(octave_uint64 (fd));
 }
 
-// PKG_ADD: autoload ("fits_fileMode", "__fits__.oct");
-DEFUN_DLD(fits_fileMode, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_fileMode__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_fileMode__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{mode}} = fits_fileMode(@var{file})\n \
+@deftypefn {Function File} {@var{mode}} = __cfitsio_fileMode__(@var{file})\n \
 Return the file mode of the opened fits file\n \
 \n \
 The mode will return as a string 'READWRITE' or 'READONLY'\n \
@@ -753,7 +755,7 @@ The is the eqivalent of the fits_file_mode function.\n \
 
   if (fits_file_mode(fp, &mode, &status) > 0)
     {
-      error ("fits_fileMode: couldnt read file mode: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_fileMode__: couldnt read file mode: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -765,20 +767,20 @@ The is the eqivalent of the fits_file_mode function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile, "readonly");
+%! fd = __cfitsio_openFile__(testfile, "readonly");
 %! assert(!isempty(fd));
-%! assert(fits_fileMode(fd), "READONLY")
-%! fits_closeFile(fd);
+%! assert(__cfitsio_fileMode__(fd), "READONLY")
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_fileMode(1);
-%!error fits_fileMode([]);
+%!error __cfitsio_fileMode__(1);
+%!error __cfitsio_fileMode__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_fileName", "__fits__.oct");
-DEFUN_DLD(fits_fileName, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_fileName__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_fileName__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{name}} = fits_fileName(@var{file})\n \
+@deftypefn {Function File} {@var{name}} = __cfitsio_fileName__(@var{file})\n \
 Return the file name of the opened fits file\n \
 \n \
 The is the eqivalent of the fits_file_name function.\n \
@@ -809,7 +811,7 @@ The is the eqivalent of the fits_file_name function.\n \
 
   if( fits_file_name(fp, filename, &status) > 0)
     {
-      error ("fits_fileName: couldnt read file name: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_fileName__: couldnt read file name: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -817,19 +819,19 @@ The is the eqivalent of the fits_file_name function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_fileName(fd), testfile)
-%! fits_closeFile(fd);
+%! assert(__cfitsio_fileName__(fd), testfile)
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_fileName(1);
-%!error fits_fileName([]);
+%!error __cfitsio_fileName__(1);
+%!error __cfitsio_fileName__([]);
 #endif
 
-// PKG_ADD: autoload ("fits_closeFile", "__fits__.oct");
-DEFUN_DLD(fits_closeFile, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_closeFile__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_closeFile__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_closeFile(@var{file})\n \
+@deftypefn {Function File} {} __cfitsio_closeFile__(@var{file})\n \
 Close the opened fits file\n \
 \n \
 The is the eqivalent of the fits_close_file function.\n \
@@ -870,19 +872,19 @@ The is the eqivalent of the fits_close_file function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_openFile__(testfile);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_closeFile();
-%!error fits_closeFile(1);
-%!error fits_closeFile([]);
+%!error __cfitsio_closeFile__();
+%!error __cfitsio_closeFile__(1);
+%!error __cfitsio_closeFile__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_deleteFile", "__fits__.oct");
-DEFUN_DLD(fits_deleteFile, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteFile__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteFile__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} = fits_deleteFile(@var{file})\n \
+@deftypefn {Function File} {} __cfitsio_deleteFile__(@var{file})\n \
 Force a close and delete of a fits file.\n \
 \n \
 The is the eqivalent of the fits_delete_file function.\n \
@@ -928,21 +930,21 @@ The is the eqivalent of the fits_delete_file function.\n \
 %! copyfile(testfile,tmp);
 %! assert(exist(tmp, "file"), 2);
 %!
-%! fd = fits_openFile(tmp);
-%! fits_deleteFile(fd);
+%! fd = __cfitsio_openFile__(tmp);
+%! __cfitsio_deleteFile__(fd);
 %! assert(exist(tmp, "file"), 0);
 
-%!error fits_deleteFile();
-%!error fits_deleteFile(1);
-%!error fits_deleteFile("");
-%!error fits_deleteFile([]);
+%!error __cfitsio_deleteFile__();
+%!error __cfitsio_deleteFile__(1);
+%!error __cfitsio_deleteFile__("");
+%!error __cfitsio_deleteFile__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getHDUnum", "__fits__.oct");
-DEFUN_DLD(fits_getHDUnum, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getHDUnum__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getHDUnum__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{num}]} = fits_getHDUnum(@var{file})\n \
+@deftypefn {Function File} {[@var{num}]} = __cfitsio_getHDUnum__(@var{file})\n \
 Return the index of the current HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
@@ -977,24 +979,24 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_getHDUnum(fd), 1);
-%! fits_movAbsHDU(fd, 1);
-%! assert(fits_getHDUnum(fd), 1);
-%! fits_movAbsHDU(fd, 2);
-%! assert(fits_getHDUnum(fd), 2);
-%! fits_closeFile(fd);
+%! assert(__cfitsio_getHDUnum__(fd), 1);
+%! __cfitsio_movAbsHDU__(fd, 1);
+%! assert(__cfitsio_getHDUnum__(fd), 1);
+%! __cfitsio_movAbsHDU__(fd, 2);
+%! assert(__cfitsio_getHDUnum__(fd), 2);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getHDUnum(1);
-%!error fits_getHDUnum([]);
+%!error __cfitsio_getHDUnum__(1);
+%!error __cfitsio_getHDUnum__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getHDUtype", "__fits__.oct");
-DEFUN_DLD(fits_getHDUtype, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getHDUtype__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getHDUtype__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_getHDUtype(@var{file})\n \
+@deftypefn {Function File} {[@var{type}]} = __cfitsio_getHDUtype__(@var{file})\n \
 Return the current HDUs type as a string\n \
 \n \
 This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
@@ -1025,7 +1027,7 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 
   if(fits_get_hdu_type(fp, &hdutype, &status) > 0)
     {
-      error ("fits_getHDUtype: couldnt get hdu type : %s", get_fits_error(status).c_str());
+      error ("__cfitsio_getHDUtype__: couldnt get hdu type : %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1043,22 +1045,22 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_getHDUtype(fd), "IMAGE_HDU");
-%! type = fits_movAbsHDU(fd, 2);
-%! assert(fits_getHDUtype(fd), type);
-%! fits_closeFile(fd);
+%! assert(__cfitsio_getHDUtype__(fd), "IMAGE_HDU");
+%! type = __cfitsio_movAbsHDU__(fd, 2);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getHDUtype(1);
-%!error fits_getHDUtype([]);
+%!error __cfitsio_getHDUtype__(1);
+%!error __cfitsio_getHDUtype__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getNumHDUs", "__fits__.oct");
-DEFUN_DLD(fits_getNumHDUs, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getNumHDUs__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getNumHDUs__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{num}]} = fits_getNumHDUs(@var{file})\n \
+@deftypefn {Function File} {[@var{num}]} = __cfitsio_getNumHDUs__(@var{file})\n \
 Return the count of HDUs in the file\n \
 \n \
 This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
@@ -1097,19 +1099,19 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_getNumHDUs(fd), 5);
-%! fits_closeFile(fd);
+%! assert(__cfitsio_getNumHDUs__(fd), 5);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getNumHDUs(1);
-%!error fits_getNumHDUs([]);
+%!error __cfitsio_getNumHDUs__(1);
+%!error __cfitsio_getNumHDUs__([]);
 #endif
 
-// PKG_ADD: autoload ("fits_movAbsHDU", "__fits__.oct");
-DEFUN_DLD(fits_movAbsHDU, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_movAbsHDU__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_movAbsHDU__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_movAbsHDU(@var{file}, @var{hdunum})\n \
+@deftypefn {Function File} {[@var{type}]} = __cfitsio_movAbsHDU__(@var{file}, @var{hdunum})\n \
 Got to absolute HDU index @var{hdunum}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -1140,7 +1142,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 
   if (! args (1).isnumeric () || args (1).isempty())
     {
-      error ("fits_movAbsHDU: expected hdu number");
+      error ("__cfitsio_movAbsHDU__: expected hdu number");
       return octave_value ();  
     }
 
@@ -1150,7 +1152,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 
   if(fits_movabs_hdu(fp, hdu, &hdutype,&status) > 0)
     {
-      error ("fits_movAbsHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_movAbsHDU__: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1168,28 +1170,28 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! type = fits_movAbsHDU(fd, 1);
-%! assert(fits_getHDUtype(fd), type);
-%! assert(fits_getHDUnum(fd), 1);
-%! type = fits_movAbsHDU(fd, 2);
-%! assert(fits_getHDUtype(fd), type);
-%! assert(fits_getHDUnum(fd), 2);
-%! type = fits_movAbsHDU(fd, 3);
-%! assert(fits_getHDUtype(fd), type);
-%! assert(fits_getHDUnum(fd), 3);
-%! fits_closeFile(fd);
+%! type = __cfitsio_movAbsHDU__(fd, 1);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! assert(__cfitsio_getHDUnum__(fd), 1);
+%! type = __cfitsio_movAbsHDU__(fd, 2);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! assert(__cfitsio_getHDUnum__(fd), 2);
+%! type = __cfitsio_movAbsHDU__(fd, 3);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! assert(__cfitsio_getHDUnum__(fd), 3);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_movAbsHDU(1);
-%!error fits_movAbsHDU([]);
+%!error __cfitsio_movAbsHDU__(1);
+%!error __cfitsio_movAbsHDU__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_movRelHDU", "__fits__.oct");
-DEFUN_DLD(fits_movRelHDU, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_movRelHDU__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_movRelHDU__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_movRelHDU(@var{file}, @var{hdunum})\n \
+@deftypefn {Function File} {[@var{type}]} = __cfitsio_movRelHDU__(@var{file}, @var{hdunum})\n \
 Go to relative HDU index @var{hdunum}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -1220,7 +1222,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 
   if (! args (1).isnumeric () || args (1).isempty())
     {
-      error ("fits_movRelHDU: expected hdu number");
+      error ("__cfitsio_movRelHDU__: expected hdu number");
       return octave_value ();  
     }
 
@@ -1230,7 +1232,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 
   if(fits_movrel_hdu(fp, hdu, &hdutype,&status) > 0)
     {
-      error ("fits_movRelHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_movRelHDU__: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1248,28 +1250,28 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! type = fits_movAbsHDU(fd, 1);
-%! assert(fits_getHDUnum(fd), 1);
-%! type = fits_movRelHDU(fd, 1);
-%! assert(fits_getHDUtype(fd), type);
-%! assert(fits_getHDUnum(fd), 2);
-%! type = fits_movRelHDU(fd, -1);
-%! assert(fits_getHDUtype(fd), type);
-%! assert(fits_getHDUnum(fd), 1);
-%! fail ("fits_movRelHDU(fd, [])");
-%! fits_closeFile(fd);
+%! type = __cfitsio_movAbsHDU__(fd, 1);
+%! assert(__cfitsio_getHDUnum__(fd), 1);
+%! type = __cfitsio_movRelHDU__(fd, 1);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! assert(__cfitsio_getHDUnum__(fd), 2);
+%! type = __cfitsio_movRelHDU__(fd, -1);
+%! assert(__cfitsio_getHDUtype__(fd), type);
+%! assert(__cfitsio_getHDUnum__(fd), 1);
+%! fail ("__cfitsio_movRelHDU__(fd, [])");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_movRelHDU(1);
-%!error fits_movRelHDU([]);
+%!error __cfitsio_movRelHDU__(1);
+%!error __cfitsio_movRelHDU__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_movNamHDU", "__fits__.oct");
-DEFUN_DLD(fits_movNamHDU, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_movNamHDU__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_movNamHDU__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} fits_movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
+@deftypefn {Function File} __cfitsio_movNamHDU__(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
 Got to HDU matching @var{hdutype}, @var{extname}, @var{extver}\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -1302,18 +1304,18 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_movNamHDU: expected hdu type string");
+      error ("__cfitsio_movNamHDU__: expected hdu type string");
       return octave_value ();  
     }
   if (! args (2).is_string ())
     {
-      error ("fits_movNamHDU: expected extname string");
+      error ("__cfitsio_movNamHDU__: expected extname string");
       return octave_value ();  
     }
 
   if (! args (3).isnumeric () || args (3).isempty())
     {
-      error ("fits_movNamHDU: expected extver number");
+      error ("__cfitsio_movNamHDU__: expected extver number");
       return octave_value ();  
     }
 
@@ -1340,7 +1342,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 
   if(fits_movnam_hdu(fp, hdu, extname_c, extver, &status) > 0)
     {
-      error ("fits_movNamHDU: couldnt move hdus: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_movNamHDU__: couldnt move hdus: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1348,28 +1350,28 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! fits_movNamHDU(fd, 'IMAGE_HDU', 'quality', 1);
-%! assert(fits_getHDUnum(fd), 4);
-%! assert(fits_getHDUtype(fd), 'IMAGE_HDU');
-%! fits_movNamHDU(fd, 'BINARY_TBL', 'BinTest', 0);
-%! assert(fits_getHDUnum(fd), 2);
-%! assert(fits_getHDUtype(fd), 'BINARY_TBL');
-%! fits_movNamHDU(fd, 'ANY_HDU', 'Unknown', 1);
-%! assert(fits_getHDUnum(fd), 3);
-%! fail ("fits_movNamHDU(fd, 'INVALID_HDU', '', 0);");
-%! fits_closeFile(fd);
+%! __cfitsio_movNamHDU__(fd, 'IMAGE_HDU', 'quality', 1);
+%! assert(__cfitsio_getHDUnum__(fd), 4);
+%! assert(__cfitsio_getHDUtype__(fd), 'IMAGE_HDU');
+%! __cfitsio_movNamHDU__(fd, 'BINARY_TBL', 'BinTest', 0);
+%! assert(__cfitsio_getHDUnum__(fd), 2);
+%! assert(__cfitsio_getHDUtype__(fd), 'BINARY_TBL');
+%! __cfitsio_movNamHDU__(fd, 'ANY_HDU', 'Unknown', 1);
+%! assert(__cfitsio_getHDUnum__(fd), 3);
+%! fail ("__cfitsio_movNamHDU__(fd, 'INVALID_HDU', '', 0);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_movNamHDU(1);
-%!error fits_movNamHDU([]);
+%!error __cfitsio_movNamHDU__(1);
+%!error __cfitsio_movNamHDU__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_deleteHDU", "__fits__.oct");
-DEFUN_DLD(fits_deleteHDU, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteHDU__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteHDU__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{type}]} = fits_deleteHDU(@var{file})\n \
+@deftypefn {Function File} {[@var{type}]} = __cfitsio_deleteHDU__(@var{file})\n \
 Delete the current HDU and go to next HDU\n \
 \n \
 Returns the newly current HDU type as a string.\n \
@@ -1401,7 +1403,7 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
 
   if(fits_delete_hdu(fp, &hdutype,&status) > 0)
     {
-      error ("fits_deleteHDU: couldnt delete hdu: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_deleteHDU__: couldnt delete hdu: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1418,10 +1420,10 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
   return octave_value(name);
 }
 
-// PKG_ADD: autoload ("fits_copyHDU", "__fits__.oct");
-DEFUN_DLD(fits_copyHDU, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_copyHDU__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_copyHDU__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_copyHDU(@var{infile}, @var{outfile})\n \
+@deftypefn {Function File} {} __cfitsio_copyHDU__(@var{infile}, @var{outfile})\n \
 Copy current HDU from one infile to another.\n \
 \n \
 This is the equivalent of the cfitsio fits_copy_hdu function.\n \
@@ -1467,7 +1469,7 @@ This is the equivalent of the cfitsio fits_copy_hdu function.\n \
 
   if(fits_copy_hdu(fp1, fp2, 0, &status) > 0)
     {
-      error ("fits_copyHDU: couldnt copy hdu: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_copyHDU__: couldnt copy hdu: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1477,25 +1479,25 @@ This is the equivalent of the cfitsio fits_copy_hdu function.\n \
 %!test
 %! filename1 = tempname();
 %! filename2 = tempname();
-%! fd1 = fits_createFile(filename1);
-%! fits_createImg(fd1,'int16',[256 512]);
-%! fits_closeFile(fd1);
+%! fd1 = __cfitsio_createFile__(filename1);
+%! __cfitsio_createImg__(fd1,'int16',[256 512]);
+%! __cfitsio_closeFile__(fd1);
 %!
-%! fd1 = fits_openFile(filename1);
+%! fd1 = __cfitsio_openFile__(filename1);
 %!
-%! fd2 = fits_createFile(filename2);
-%! fits_copyHDU(fd1,fd2);
-%! fits_closeFile(fd1);
-%! fits_closeFile(fd2);
+%! fd2 = __cfitsio_createFile__(filename2);
+%! __cfitsio_copyHDU__(fd1,fd2);
+%! __cfitsio_closeFile__(fd1);
+%! __cfitsio_closeFile__(fd2);
 %!
 %! delete (filename1);
 %! delete (filename2);
 #endif
 
-// PKG_ADD: autoload ("fits_writeChecksum", "__fits__.oct");
-DEFUN_DLD(fits_writeChecksum, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeChecksum__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeChecksum__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeChecksum(@var{file})\n \
+@deftypefn {Function File} {} __cfitsio_writeChecksum__(@var{file})\n \
 Recalulate the HDU checksum and if required, write the new value\n \
 \n \
 This is the equivalent of the cfitsio fits_write_chksum function.\n \
@@ -1527,17 +1529,17 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
 
   if (fits_write_chksum(fp, &status) > 0)
     {
-      error ("fits_writeChecksum: couldnt write checksum: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeChecksum__: couldnt write checksum: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
   return octave_value ();
 }
 
-// PKG_ADD: autoload ("fits_getHdrSpace", "__fits__.oct");
-DEFUN_DLD(fits_getHdrSpace, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getHdrSpace__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getHdrSpace__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{numkeys}, @var{freekeys}] = } fits_getHdrSpace(@var{file})\n \
+@deftypefn {Function File} {[@var{numkeys}, @var{freekeys}] = } __cfitsio_getHdrSpace__(@var{file})\n \
 Get the number of keyword records used and available\n \
 \n \
 This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
@@ -1570,7 +1572,7 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
 
   if (fits_get_hdrspace(fp, &nexist, &nmore, &status) > 0)
     {
-      error ("fits_getHdrSpace: couldnt write checksum: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_getHdrSpace__: couldnt write checksum: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1581,22 +1583,22 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! [numkeys, freekeys] = fits_getHdrSpace(fd);
+%! [numkeys, freekeys] = __cfitsio_getHdrSpace__(fd);
 %! assert(numkeys, 23);
 %! assert(freekeys, 12);
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getHdrSpace(1);
-%!error fits_getHdrSpace([]);
+%!error __cfitsio_getHdrSpace__(1);
+%!error __cfitsio_getHdrSpace__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_readRecord", "__fits__.oct");
-DEFUN_DLD(fits_readRecord, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readRecord__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readRecord__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{rec} = } fits_readRecord(@var{file}, @var{recidx})\n \
+@deftypefn {Function File} {@var{rec} = } __cfitsio_readRecord__(@var{file}, @var{recidx})\n \
 Read the keyword record at @var{recidx}\n \
 \n \
 This is the equivalent of the cfitsio fits_read_record function.\n \
@@ -1624,7 +1626,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 
   if (! args (1).isnumeric () || args (1).isempty())
     {
-      error ("fits_readRecord: idx should be a value");
+      error ("__cfitsio_readRecord__: idx should be a value");
       return octave_value ();  
     }
   int idx = args (1).int_value();
@@ -1634,7 +1636,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 
   if (fits_read_record(fp, idx, buffer, &status) > 0)
     {
-      error ("fits_readRecord: couldnt read record: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readRecord__: couldnt read record: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1642,24 +1644,24 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! rec = fits_readRecord(fd, 1);
+%! rec = __cfitsio_readRecord__(fd, 1);
 %! assert(length(rec), 51);
-%! rec = fits_readRecord(fd, 2);
+%! rec = __cfitsio_readRecord__(fd, 2);
 %! assert(length(rec), 54);
-%! fail ("fits_readRecord(fd);");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readRecord__(fd);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readRecord(1);
-%!error fits_readRecord([]);
-%!error fits_readRecord("");
+%!error __cfitsio_readRecord__(1);
+%!error __cfitsio_readRecord__([]);
+%!error __cfitsio_readRecord__("");
 #endif
 
-// PKG_ADD: autoload ("fits_deleteRecord", "__fits__.oct");
-DEFUN_DLD(fits_deleteRecord, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteRecord__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteRecord__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_deleteRecord(@var{file}, @var{keynum})\n \
+@deftypefn {Function File} {} __cfitsio_deleteRecord__(@var{file}, @var{keynum})\n \
 Delete a key in the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_delete_record function.\n \
@@ -1689,7 +1691,7 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
 
   if (!args (0).isinteger()  || !args(0).is_real_scalar())
     {
-      error ("fits_deleteRecord: keynum should be a integer");
+      error ("__cfitsio_deleteRecord__: keynum should be a integer");
       return octave_value ();  
     }
 
@@ -1698,7 +1700,7 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
   int status = 0;
   if (fits_delete_record(fp, keynum, &status) > 0)
     {
-      error ("fits_deleteRecord: couldnt delete key: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_deleteRecord__: couldnt delete key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
   return ret;
@@ -1706,24 +1708,24 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeDate(fd);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeDate__(fd);
+%! __cfitsio_closeFile__(fd);
 %!
-%! fd = fits_openFile(filename, 'readwrite');
+%! fd = __cfitsio_openFile__(filename, 'readwrite');
 %! # date record
-%! card = fits_readRecord(fd,9);
-%! fits_deleteRecord(fd,9);
-%! fits_closeFile(fd);
+%! card = __cfitsio_readRecord__(fd,9);
+%! __cfitsio_deleteRecord__(fd,9);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_readCard", "__fits__.oct");
-DEFUN_DLD(fits_readCard, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readCard__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readCard__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{card} = } fits_readCard(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {@var{card} = } __cfitsio_readCard__(@var{file}, @var{recname})\n \
 Read the keyword card for name @var{recname}\n \
 \n \
 This is the equivalent of the cfitsio fits_read_card function.\n \
@@ -1751,7 +1753,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_readCard: key should be a string");
+      error ("__cfitsio_readCard__: key should be a string");
       return octave_value ();  
     }
 
@@ -1761,7 +1763,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 
   if (fits_read_card(fp, key.c_str(), buffer, &status) > 0)
     {
-      error ("fits_readCard: couldnt read card: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readCard__: couldnt read card: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -1769,24 +1771,24 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! rec = fits_readCard(fd, 'NAXIS');
+%! rec = __cfitsio_readCard__(fd, 'NAXIS');
 %! assert(length(rec), 54);
-%! fail ("fits_readCard(fd);");
-%! fail ("fits_readCard(fd, 1);");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readCard__(fd);");
+%! fail ("__cfitsio_readCard__(fd, 1);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readCard(1);
-%!error fits_readCard(1, "NAXIS");
-%!error fits_readCard([]);
-%!error fits_readCard("");
+%!error __cfitsio_readCard__(1);
+%!error __cfitsio_readCard__(1, "NAXIS");
+%!error __cfitsio_readCard__([]);
+%!error __cfitsio_readCard__("");
 #endif
 
-// PKG_ADD: autoload ("fits_readKey", "__fits__.oct");
-DEFUN_DLD(fits_readKey, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKey__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKey__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{keyvalue}, @var{keycomment}] = } fits_readKey(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{keyvalue}, @var{keycomment}] = } __cfitsio_readKey__(@var{file}, @var{recname})\n \
 Read the keyword value and comment for name @var{recname}\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_str function.\n \
@@ -1816,7 +1818,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_readKey: key should be a string");
+      error ("__cfitsio_readKey__: key should be a string");
       return octave_value ();  
     }
 
@@ -1827,7 +1829,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
 
   if (fits_read_key_str(fp, key.c_str(), vbuffer, cbuffer, &status) > 0)
     {
-      error ("fits_readKey: couldnt read key: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readKey__: couldnt read key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -1837,26 +1839,26 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! [val, com] = fits_readKey(fd, 'NAXIS');
+%! [val, com] = __cfitsio_readKey__(fd, 'NAXIS');
 %! assert(val, "2");
 %! assert(!isempty(com));
-%! fail ("fits_readKey(fd);");
-%! fail ("fits_readKey(fd, 1);");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readKey__(fd);");
+%! fail ("__cfitsio_readKey__(fd, 1);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readKey(1);
-%!error fits_readKey(1, "NAXIS");
-%!error fits_readKey([]);
-%!error fits_readKey("");
+%!error __cfitsio_readKey__(1);
+%!error __cfitsio_readKey__(1, "NAXIS");
+%!error __cfitsio_readKey__([]);
+%!error __cfitsio_readKey__("");
 #endif
 
 
-// PKG_ADD: autoload ("fits_readKeyUnit", "__fits__.oct");
-DEFUN_DLD(fits_readKeyUnit, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKeyUnit__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKeyUnit__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{keyunit} = } fits_readKeyUnit(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {@var{keyunit} = } __cfitsio_readKeyUnit__(@var{file}, @var{recname})\n \
 Read the physical key units value @var{recname}\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_unit function.\n \
@@ -1884,7 +1886,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_readKeyUnit: key should be a string");
+      error ("__cfitsio_readKeyUnit__: key should be a string");
       return octave_value ();  
     }
 
@@ -1894,7 +1896,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
 
   if (fits_read_key_unit(fp, key.c_str(), buffer, &status) > 0)
     {
-      error ("fits_readKeyUnit: couldnt read key units: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readKeyUnit__: couldnt read key units: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
   else
@@ -1905,10 +1907,10 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
   return octave_value (buffer);
 }
 
-// PKG_ADD: autoload ("fits_readKeyDbl", "__fits__.oct");
-DEFUN_DLD(fits_readKeyDbl, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKeyDbl__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKeyDbl__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyDbl(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyDbl__(@var{file}, @var{recname})\n \
 Read the key value @var{recname} as a double\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
@@ -1961,26 +1963,26 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! [val, com] = fits_readKeyDbl(fd, 'NAXIS');
+%! [val, com] = __cfitsio_readKeyDbl__(fd, 'NAXIS');
 %! assert(val, 2);
 %! assert(!isempty(com));
 %! assert(class(val), 'double');
-%! fail ("fits_readKeyDbl(fd);");
-%! fail ("fits_readKeyDbl(fd, 1);");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readKeyDbl__(fd);");
+%! fail ("__cfitsio_readKeyDbl__(fd, 1);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readKeyDbl(1);
-%!error fits_readKeyDbl(1, "NAXIS");
-%!error fits_readKeyDbl([]);
-%!error fits_readKeyDbl("");
+%!error __cfitsio_readKeyDbl__(1);
+%!error __cfitsio_readKeyDbl__(1, "NAXIS");
+%!error __cfitsio_readKeyDbl__([]);
+%!error __cfitsio_readKeyDbl__("");
 #endif
 
-// PKG_ADD: autoload ("fits_readKeyCmplx", "__fits__.oct");
-DEFUN_DLD(fits_readKeyCmplx, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKeyCmplx__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKeyCmplx__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyCmplx(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyCmplx__(@var{file}, @var{recname})\n \
 Read the key value @var{recname} as a complex double\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
@@ -2021,7 +2023,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
 
   if (fits_read_key_dblcmp(fp, key.c_str(), val, cbuffer, &status) > 0)
     {
-      error ("fits_readKeyCmplx: couldnt read key value: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readKeyCmplx__: couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
    }
 
@@ -2031,10 +2033,10 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("fits_readKeyLongLong", "__fits__.oct");
-DEFUN_DLD(fits_readKeyLongLong, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKeyLongLong__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKeyLongLong__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyLongLong(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyLongLong__(@var{file}, @var{recname})\n \
 Read the key value @var{recname} as a long\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
@@ -2064,7 +2066,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_readKeyLongLong: key should be a string");
+      error ("__cfitsio_readKeyLongLong__: key should be a string");
       return octave_value ();  
     }
 
@@ -2075,7 +2077,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
 
   if (fits_read_key_lnglng(fp, key.c_str(), &val, cbuffer, &status) > 0)
     {
-      error ("fits_readKeyLongLong: couldnt read key value: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readKeyLongLong__: couldnt read key value: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2086,27 +2088,27 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! [val, com] = fits_readKeyLongLong(fd, 'NAXIS');
+%! [val, com] = __cfitsio_readKeyLongLong__(fd, 'NAXIS');
 %! assert(class(val), 'int64');
 %! assert(val, int64(2));
 %! assert(!isempty(com));
-%! fail ("fits_readKeyLongLong(fd);");
-%! fail ("fits_readKeyLongLong(fd, 1);");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readKeyLongLong__(fd);");
+%! fail ("__cfitsio_readKeyLongLong__(fd, 1);");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readKeyLongLong(1);
-%!error fits_readKeyLongLong(1, "NAXIS");
-%!error fits_readKeyLongLong([]);
-%!error fits_readKeyLongLong("");
+%!error __cfitsio_readKeyLongLong__(1);
+%!error __cfitsio_readKeyLongLong__(1, "NAXIS");
+%!error __cfitsio_readKeyLongLong__([]);
+%!error __cfitsio_readKeyLongLong__("");
 #endif
 
 
-// PKG_ADD: autoload ("fits_readKeyLongStr", "__fits__.oct");
-DEFUN_DLD(fits_readKeyLongStr, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readKeyLongStr__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readKeyLongStr__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}, @var{comment}] = } fits_readKeyLongStr(@var{file}, @var{recname})\n \
+@deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyLongStr__(@var{file}, @var{recname})\n \
 Read the key value @var{recname} as a long\n \
 \n \
 This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
@@ -2136,7 +2138,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_readKeyLongStr: key should be a string");
+      error ("__cfitsio_readKeyLongStr__: key should be a string");
       return octave_value ();  
     }
 
@@ -2147,7 +2149,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 
   if (fits_read_key_longstr(fp, key.c_str(), &val, cbuffer, &status) > 0)
     {
-      error ("fits_readKeyLongStr: couldnt read key: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_readKeyLongStr__: couldnt read key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2161,27 +2163,27 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! [val, com] = fits_readKeyLongStr(fd, 'NAXIS');
+%! [val, com] = __cfitsio_readKeyLongStr__(fd, 'NAXIS');
 %! assert(class(val), 'char');
 %! assert(val, '2');
 %! assert(!isempty(com));
-%! fail ("fits_readKeyLongStr(fd);");
-%! fail ("fits_readKeyLongStr(fd, 1);");
-%! fail ("fits_readKeyLongStr(fd, 'NOTKEY');");
-%! fits_closeFile(fd);
+%! fail ("__cfitsio_readKeyLongStr__(fd);");
+%! fail ("__cfitsio_readKeyLongStr__(fd, 1);");
+%! fail ("__cfitsio_readKeyLongStr__(fd, 'NOTKEY');");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_readKeyLongStr(1);
-%!error fits_readKeyLongStr(1, "NAXIS");
-%!error fits_readKeyLongStr([]);
-%!error fits_readKeyLongStr("");
+%!error __cfitsio_readKeyLongStr__(1);
+%!error __cfitsio_readKeyLongStr__(1, "NAXIS");
+%!error __cfitsio_readKeyLongStr__([]);
+%!error __cfitsio_readKeyLongStr__("");
 #endif
 
-// PKG_ADD: autoload ("fits_writeDate", "__fits__.oct");
-DEFUN_DLD(fits_writeDate, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeDate__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeDate__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeDate(@var{file})\n \
+@deftypefn {Function File} {} __cfitsio_writeDate__(@var{file})\n \
 Write the date keyword.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_date function.\n \
@@ -2212,7 +2214,7 @@ This is the equivalent of the cfitsio fits_write_date function.\n \
   int status = 0;
   if (fits_write_date(fp, &status) > 0)
     {
-      error ("fits_writeDate: couldnt write date: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeDate__: couldnt write date: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2221,18 +2223,18 @@ This is the equivalent of the cfitsio fits_write_date function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeDate(fd);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeDate__(fd);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_writeComment", "__fits__.oct");
-DEFUN_DLD(fits_writeComment, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeComment__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeComment__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeComment(@var{file}, @var{comment})\n \
+@deftypefn {Function File} {} __cfitsio_writeComment__(@var{file}, @var{comment})\n \
 Append a comment to to the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_comment function.\n \
@@ -2262,7 +2264,7 @@ This is the equivalent of the cfitsio fits_write_comment function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_writeComment: comment should be a string");
+      error ("__cfitsio_writeComment__: comment should be a string");
       return octave_value ();  
     }
 
@@ -2271,7 +2273,7 @@ This is the equivalent of the cfitsio fits_write_comment function.\n \
 
   if (fits_write_comment(fp, comment.c_str(), &status) > 0)
     {
-      error ("fits_writeComment: couldnt write comment: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeComment__: couldnt write comment: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2280,23 +2282,23 @@ This is the equivalent of the cfitsio fits_write_comment function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeComment(fd, 'A comment');
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeComment__(fd, 'A comment');
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 
-%!error fits_writeComment(1);
-%!error fits_writeComment(1, "comment");
-%!error fits_writeComment([]);
-%!error fits_writeComment("");
+%!error __cfitsio_writeComment__(1);
+%!error __cfitsio_writeComment__(1, "comment");
+%!error __cfitsio_writeComment__([]);
+%!error __cfitsio_writeComment__("");
 #endif
 
-// PKG_ADD: autoload ("fits_writeHistory", "__fits__.oct");
-DEFUN_DLD(fits_writeHistory, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeHistory__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeHistory__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeHistory(@var{file}, @var{history})\n \
+@deftypefn {Function File} {} __cfitsio_writeHistory__(@var{file}, @var{history})\n \
 Append a history to to the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_history function.\n \
@@ -2326,7 +2328,7 @@ This is the equivalent of the cfitsio fits_write_history function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_writeHistory: history should be a string");
+      error ("__cfitsio_writeHistory__: history should be a string");
       return octave_value ();  
     }
 
@@ -2335,7 +2337,7 @@ This is the equivalent of the cfitsio fits_write_history function.\n \
 
   if (fits_write_history(fp, history.c_str(), &status) > 0)
     {
-      error ("fits_writeHistory: couldnt write history: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeHistory__: couldnt write history: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2344,23 +2346,23 @@ This is the equivalent of the cfitsio fits_write_history function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeHistory(fd, 'history');
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeHistory__(fd, 'history');
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 
-%!error fits_writeHistory(1);
-%!error fits_writeHistory(1, "history");
-%!error fits_writeHistory([]);
-%!error fits_writeHistory("");
+%!error __cfitsio_writeHistory__(1);
+%!error __cfitsio_writeHistory__(1, "history");
+%!error __cfitsio_writeHistory__([]);
+%!error __cfitsio_writeHistory__("");
 #endif
 
-// PKG_ADD: autoload ("fits_writeKeyUnit", "__fits__.oct");
-DEFUN_DLD(fits_writeKeyUnit, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeKeyUnit__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeKeyUnit__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeKeyUnit(@var{file}, @var{key}, @var{unit})\n \
+@deftypefn {Function File} {} __cfitsio_writeKeyUnit__(@var{file}, @var{key}, @var{unit})\n \
 Write a key unit to the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_key_unit function.\n \
@@ -2390,13 +2392,13 @@ This is the equivalent of the cfitsio fits_write_key_unit function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_writeKeyUnit: key should be a string");
+      error ("__cfitsio_writeKeyUnit__: key should be a string");
       return octave_value ();  
     }
 
   if (! args (2).is_string ())
     {
-      error ("fits_writeKeyUnit: unit should be a string");
+      error ("__cfitsio_writeKeyUnit__: unit should be a string");
       return octave_value ();  
     }
 
@@ -2406,7 +2408,7 @@ This is the equivalent of the cfitsio fits_write_key_unit function.\n \
 
   if (fits_write_key_unit(fp, key.c_str(), unit.c_str(), &status) > 0)
     {
-      error ("fits_writeKeyUnit: couldnt write key units: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeKeyUnit__: couldnt write key units: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -2415,25 +2417,25 @@ This is the equivalent of the cfitsio fits_write_key_unit function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
-%! fits_writeKeyUnit(fd, 'VELOCITY', "m/s");
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeKey__(fd, 'VELOCITY', 10.0, "Speed");
+%! __cfitsio_writeKeyUnit__(fd, 'VELOCITY', "m/s");
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 
-%!error fits_writeKeyUnit(1);
-%!error fits_writeKeyUnit(1, "VELOCITY");
-%!error fits_writeKeyUnit(1, "VELOCITY", "m/s");
+%!error __cfitsio_writeKeyUnit__(1);
+%!error __cfitsio_writeKeyUnit__(1, "VELOCITY");
+%!error __cfitsio_writeKeyUnit__(1, "VELOCITY", "m/s");
 #endif
 
-// PKG_ADD: autoload ("fits_writeKey", "__fits__.oct");
-DEFUN_DLD(fits_writeKey, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeKey__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeKey__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value})\n \
-@deftypefnx {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value}, @var{comment})\n \
-@deftypefnx {Function File} {} fits_writeKey(@var{file}, @var{key}, @var{value}, @var{comment}, @var{decimals})\n \
+@deftypefn {Function File} {} __cfitsio_writeKey__(@var{file}, @var{key}, @var{value})\n \
+@deftypefnx {Function File} {} __cfitsio_writeKey__(@var{file}, @var{key}, @var{value}, @var{comment})\n \
+@deftypefnx {Function File} {} __cfitsio_writeKey__(@var{file}, @var{key}, @var{value}, @var{comment}, @var{decimals})\n \
 Append or replace a key in the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_key and fits_update_key function.\n \
@@ -2463,7 +2465,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
 
   if (! args (1).is_string ())
     {
-      error ("fits_writeKey: key should be a string");
+      error ("__cfitsio_writeKey__: key should be a string");
       return octave_value ();  
     }
 
@@ -2477,7 +2479,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
     {
       if (! args (3).is_string ())
         {
-          error ("fits_writeKey: comment should be a string");
+          error ("__cfitsio_writeKey__: comment should be a string");
           return octave_value ();  
         }
       comment = args (3).string_value ();
@@ -2495,7 +2497,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       buffer[FLEN_CARD] = '\0';
       if (fits_update_key(fp, TSTRING, key.c_str(), &buffer, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2504,7 +2506,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       int svalue = value.int_value ();
       if (fits_update_key(fp, TLOGICAL, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2513,7 +2515,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       uint8_t svalue = value.uint_value ();
       if (fits_update_key(fp, TBYTE, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2522,7 +2524,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       unsigned short svalue = value.ushort_value ();
       if (fits_update_key(fp, TUSHORT, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2531,7 +2533,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       short svalue = value.short_value ();
       if (fits_update_key(fp, TSHORT, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2540,7 +2542,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       unsigned long svalue = value.long_value ();
       if (fits_update_key(fp, TULONG, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2549,7 +2551,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       long svalue = value.long_value ();
       if (fits_update_key(fp, TLONG, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2558,7 +2560,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       int64_t svalue = value.int64_value ();
       if (fits_update_key(fp, TLONGLONG, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2567,7 +2569,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       int svalue = value.int_value ();
       if (fits_update_key(fp, TINT, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2576,7 +2578,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       double svalue = value.double_value ();
       if (fits_update_key(fp, TDOUBLE, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
@@ -2585,13 +2587,13 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       float svalue = value.float_value ();
       if (fits_update_key(fp, TFLOAT, key.c_str(), &svalue, commentp, &status) > 0)
         {
-          error ("fits_writeKey: couldnt write key: %s", get_fits_error(status).c_str());
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
           return octave_value ();
         }
     }
   else
     {
-       error ("fits_writeKey: couldnt convert this data type");
+       error ("__cfitsio_writeKey__: couldnt convert this data type");
        return octave_value ();
     }
 
@@ -2600,21 +2602,21 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
-%! fits_writeKey(fd, 'VELOCITY', 10.1, "Speed1");
-%! fits_writeKey(fd, 'VELOCITY', 11.0);
-%! fits_writeKey(fd, 'AUTHOR', "me");
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeKey__(fd, 'VELOCITY', 10.0, "Speed");
+%! __cfitsio_writeKey__(fd, 'VELOCITY', 10.1, "Speed1");
+%! __cfitsio_writeKey__(fd, 'VELOCITY', 11.0);
+%! __cfitsio_writeKey__(fd, 'AUTHOR', "me");
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_deleteKey", "__fits__.oct");
-DEFUN_DLD(fits_deleteKey, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteKey__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteKey__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_deleteKey(@var{file}, @var{key})\n \
+@deftypefn {Function File} {} __cfitsio_deleteKey__(@var{file}, @var{key})\n \
 Delete a key in the fits file.\n \
 \n \
 This is the equivalent of the cfitsio fits_delete_key function.\n \
@@ -2644,7 +2646,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_deleteKey: key should be a string");
+      error ("__cfitsio_deleteKey__: key should be a string");
       return octave_value ();  
     }
 
@@ -2653,7 +2655,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
   int status = 0;
   if (fits_delete_key(fp, key.c_str(), &status) > 0)
     {
-      error ("fits_deleteKey: couldnt delete key: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_deleteKey__: couldnt delete key: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
   return ret;
@@ -2661,26 +2663,26 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeDate(fd);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeDate__(fd);
+%! __cfitsio_closeFile__(fd);
 %!
-%! fd = fits_openFile(filename, 'readwrite');
+%! fd = __cfitsio_openFile__(filename, 'readwrite');
 %! # date record
-%! d = fits_readKey(fd,"DATE");
-%! fits_deleteKey(fd,"DATE");
-%! fits_closeFile(fd);
+%! d = __cfitsio_readKey__(fd,"DATE");
+%! __cfitsio_deleteKey__(fd,"DATE");
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_getConstantValue", "__fits__.oct");
-DEFUN_DLD(fits_getConstantValue, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getConstantValue__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getConstantValue__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{value}]} = fits_getConstantValue(@var{name})\n \
+@deftypefn {Function File} {[@var{value}]} = __cfitsio_getConstantValue__(@var{name})\n \
 Return the value of a known fits constant.\n \
-@seealso {fits_getConstantNames}\n \
+@seealso {__cfitsio_getConstantNames__}\n \
 @end deftypefn")
 {
   if (args.length() != 1)
@@ -2707,29 +2709,29 @@ Return the value of a known fits constant.\n \
     }
   if (value.isempty ())
     {
-      error ("fits_getConstantValue: Couldnt find constant '%s'", name.c_str());
+      error ("__cfitsio_getConstantValue__: Couldnt find constant '%s'", name.c_str());
     }
   return value;
 }
 #if 0
 %!test
-%! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e-07);
-%! assert(fits_getConstantValue("IMAGE_HDU"), 0);
-%! assert(fits_getConstantValue("ASCII_TBL"), 1);
-%! assert(fits_getConstantValue("BINARY_TBL"), 2);
-%! assert(fits_getConstantValue("ANY_HDU"), -1);
+%! assert(__cfitsio_getVersion__(), __cfitsio_getConstantValue__("CFITSIO_VERSION"), 1e-07);
+%! assert(__cfitsio_getConstantValue__("IMAGE_HDU"), 0);
+%! assert(__cfitsio_getConstantValue__("ASCII_TBL"), 1);
+%! assert(__cfitsio_getConstantValue__("BINARY_TBL"), 2);
+%! assert(__cfitsio_getConstantValue__("ANY_HDU"), -1);
 
-%!error <Couldnt find constant> fits_getConstantValue("UnkownVarName");
-%!error <expected constant name> fits_getConstantValue();
-%!error <constant name should be a string> fits_getConstantValue(1);
+%!error <Couldnt find constant> __cfitsio_getConstantValue__("UnkownVarName");
+%!error <expected constant name> __cfitsio_getConstantValue__();
+%!error <constant name should be a string> __cfitsio_getConstantValue__(1);
 #endif
 
-// PKG_ADD: autoload ("fits_getConstantNames", "__fits__.oct");
-DEFUN_DLD(fits_getConstantNames, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getConstantNames__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getConstantNames__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{namelist}]} = fits_getConstantNames()\n \
+@deftypefn {Function File} {[@var{namelist}]} = __cfitsio_getConstantNames__()\n \
 Return the names of all known fits constants\n \
-@seealso {fits_getConstantValue}\n \
+@seealso {__cfitsio_getConstantValue__}\n \
 @end deftypefn")
 {
   if ( args.length() != 0)
@@ -2751,15 +2753,15 @@ Return the names of all known fits constants\n \
 }
 #if 0
 %!test
-%! names = fits_getConstantNames();
+%! names = __cfitsio_getConstantNames__();
 %! assert(length(names) > 20);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getVersion", "__fits__.oct");
-DEFUN_DLD(fits_getVersion, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getVersion__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getVersion__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{ver}]} = fits_getVersion()\n \
+@deftypefn {Function File} {@var{ver}} = __cfitsio_getVersion__()\n \
 Return the version number fo the cfitsio library used.\n \
 \n \
 This is the equivalent of the cfitsio fits_get_version function.\n \
@@ -2779,14 +2781,14 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
 }
 #if 0
 %!test
-%! assert(fits_getVersion(), fits_getConstantValue("CFITSIO_VERSION"), 1e-5);
+%! assert(__cfitsio_getVersion__(), __cfitsio_getConstantValue__("CFITSIO_VERSION"), 1e-5);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getHDUoff", "__fits__.oct");
-DEFUN_DLD(fits_getHDUoff, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getHDUoff__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getHDUoff__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = fits_getHDUoff(@var{file})\n \
+@deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = __cfitsio_getHDUoff__(@var{file})\n \
 Return offsets of the current HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_get_hduoff function.\n \
@@ -2832,26 +2834,26 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_getHDUoff(fd), 0);
-%! fits_movAbsHDU(fd,1);
-%! assert(fits_getHDUoff(fd), 0);
-%! fits_movAbsHDU(fd,2);
-%! assert(fits_getHDUoff(fd), 48960);
-%! fits_movAbsHDU(fd,4);
-%! assert(fits_getHDUoff(fd), 72000);
-%! fits_closeFile(fd);
+%! assert(__cfitsio_getHDUoff__(fd), 0);
+%! __cfitsio_movAbsHDU__(fd,1);
+%! assert(__cfitsio_getHDUoff__(fd), 0);
+%! __cfitsio_movAbsHDU__(fd,2);
+%! assert(__cfitsio_getHDUoff__(fd), 48960);
+%! __cfitsio_movAbsHDU__(fd,4);
+%! assert(__cfitsio_getHDUoff__(fd), 72000);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getHDUoff(1);
-%!error fits_getHDUoff([]);
-%!error fits_getHDUoff("");
+%!error __cfitsio_getHDUoff__(1);
+%!error __cfitsio_getHDUoff__([]);
+%!error __cfitsio_getHDUoff__("");
 #endif
 
-// PKG_ADD: autoload ("fits_getImgSize", "__fits__.oct");
-DEFUN_DLD(fits_getImgSize, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getImgSize__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getImgSize__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{size}} = fits_getImgSize(@var{file})\n \
+@deftypefn {Function File} {@var{size}} = __cfitsio_getImgSize__(@var{file})\n \
 Return size of a Image HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_get_img_size function.\n \
@@ -2915,26 +2917,26 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! type = fits_movAbsHDU(fd, 4);
+%! type = __cfitsio_movAbsHDU__(fd, 4);
 %! assert(type, 'IMAGE_HDU');
-%! assert (fits_getImgSize(fd), [31 73 5]);
-%! assert(fits_movAbsHDU(fd, 3), "IMAGE_HDU");
-%! assert (fits_getImgSize(fd), [41 17 1 1 1 1 1 1 1 1 1 1 2]);
-%! fits_closeFile(fd);
+%! assert (__cfitsio_getImgSize__(fd), [31 73 5]);
+%! assert(__cfitsio_movAbsHDU__(fd, 3), "IMAGE_HDU");
+%! assert (__cfitsio_getImgSize__(fd), [41 17 1 1 1 1 1 1 1 1 1 1 2]);
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getImgSize();
-%!error fits_getImgSize(1);
-%!error fits_getImgSize("");
-%!error fits_getImgSize([]);
+%!error __cfitsio_getImgSize__();
+%!error __cfitsio_getImgSize__(1);
+%!error __cfitsio_getImgSize__("");
+%!error __cfitsio_getImgSize__([]);
 #endif
 
 
-// PKG_ADD: autoload ("fits_getImgType", "__fits__.oct");
-DEFUN_DLD(fits_getImgType, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getImgType__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getImgType__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{type}} = fits_getImgType(@var{file})\n \
+@deftypefn {Function File} {@var{type}} = __cfitsio_getImgType__(@var{file})\n \
 Return size of a Image HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_get_img_type function.\n \
@@ -2999,26 +3001,26 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_movAbsHDU(fd, 4), "IMAGE_HDU");
-%! assert (fits_getImgType(fd), "SHORT_IMG");
-%! assert(fits_movAbsHDU(fd, 3), "IMAGE_HDU");
-%! assert (fits_getImgType(fd), "BYTE_IMG");
-%! fits_closeFile(fd);
+%! assert(__cfitsio_movAbsHDU__(fd, 4), "IMAGE_HDU");
+%! assert (__cfitsio_getImgType__(fd), "SHORT_IMG");
+%! assert(__cfitsio_movAbsHDU__(fd, 3), "IMAGE_HDU");
+%! assert (__cfitsio_getImgType__(fd), "BYTE_IMG");
+%! __cfitsio_closeFile__(fd);
 
-%!error fits_getImgType();
-%!error fits_getImgType(1);
-%!error fits_getImgType("");
-%!error fits_getImgType([]);
+%!error __cfitsio_getImgType__();
+%!error __cfitsio_getImgType__(1);
+%!error __cfitsio_getImgType__("");
+%!error __cfitsio_getImgType__([]);
 #endif
 
-// PKG_ADD: autoload ("fits_readImg", "__fits__.oct");
-DEFUN_DLD(fits_readImg, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readImg__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readImg__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{data}} = fits_readImg(@var{file})\n \
-@deftypefnx {Function File} {@var{data}} = fits_readImg(@var{file}, @var{fisrtpix}, @var{lastpix})\n \
-@deftypefnx {Function File} {@var{data}} = fits_readImg(@var{file}, @var{fisrtpix}, @var{lastpix}, @var{inc})\n \
+@deftypefn {Function File} {@var{data}} = __cfitsio_readImg__(@var{file})\n \
+@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{fisrtpix}, @var{lastpix})\n \
+@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{fisrtpix}, @var{lastpix}, @var{inc})\n \
 Read Image data\n \
 \n \
 This is the equivalent of the cfitsio fits_read_subset function.\n \
@@ -3100,18 +3102,18 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_movAbsHDU(fd, 4), "IMAGE_HDU");
-%! data = fits_readImg(fd);
+%! assert(__cfitsio_movAbsHDU__(fd, 4), "IMAGE_HDU");
+%! data = __cfitsio_readImg__(fd);
 %! assert (size(data), [31 73 5]);
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("fits_createImg", "__fits__.oct");
-DEFUN_DLD(fits_createImg, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_createImg__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_createImg__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_createImg(@var{file}, @var{bitpix}, @var{naxis})\n \
+@deftypefn {Function File} {} __cfitsio_createImg__(@var{file}, @var{bitpix}, @var{naxis})\n \
 create a new primary image or image extension\n \
 \n \
 This is the equivalent of the cfitsio fits_create_imgll function.\n \
@@ -3202,23 +3204,23 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_createImg(fd,'int16',[10 20 3]);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_createImg__(fd,'int16',[10 20 3]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 
-%!error fits_createImg(1);
-%!error fits_createImg(1, 'int16', []);
-%!error fits_createImg([]);
-%!error fits_createImg("");
+%!error __cfitsio_createImg__(1);
+%!error __cfitsio_createImg__(1, 'int16', []);
+%!error __cfitsio_createImg__([]);
+%!error __cfitsio_createImg__("");
 #endif
 
-// PKG_ADD: autoload ("fits_insertImg", "__fits__.oct");
-DEFUN_DLD(fits_insertImg, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_insertImg__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_insertImg__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_insertImg(@var{file}, @var{bitpix}, @var{naxis})\n \
+@deftypefn {Function File} {} __cfitsio_insertImg__(@var{file}, @var{bitpix}, @var{naxis})\n \
 insert a new primary image or image extension at current HDU position\n \
 \n \
 This is the equivalent of the cfitsio fits_insert_imgll function.\n \
@@ -3309,21 +3311,21 @@ This is the equivalent of the cfitsio fits_insert_imgll function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_insertImg(fd,'int16',[10 20 3]);
-%! fits_movAbsHDU(fd,1);
-%! fits_insertImg(fd,'int16',[20 30]);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_insertImg__(fd,'int16',[10 20 3]);
+%! __cfitsio_movAbsHDU__(fd,1);
+%! __cfitsio_insertImg__(fd,'int16',[20 30]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_writeImg", "__fits__.oct");
-DEFUN_DLD(fits_writeImg, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeImg__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeImg__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeImg(@var{file}, @var{data})\n \
-@deftypefnx {Function File} {} fits_writeImg(@var{file}, @var{data}, @var{fpixel})\n \
+@deftypefn {Function File} {} __cfitsio_writeImg__(@var{file}, @var{data})\n \
+@deftypefnx {Function File} {} __cfitsio_writeImg__(@var{file}, @var{data}, @var{fpixel})\n \
 write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc \
 \n \
 This is the equivalent of the cfitsio fits_write_subset function.\n \
@@ -3394,7 +3396,7 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
   int status = 0;
   if( fits_write_subset( fp, TDOUBLE, fpixel.data(), lpixel.data(), datap , &status ) > 0 )
     {
-      error ("fits_writeImg: couldnt write: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_writeImg__: couldnt write: %s", get_fits_error(status).c_str());
     }
 
   return octave_value();
@@ -3402,19 +3404,19 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! data = int16(zeros(10,10));
 %! assert(!isempty(fd));
-%! fits_createImg(fd,class(data), size(data));
-%! fits_writeImg(fd,data);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,class(data), size(data));
+%! __cfitsio_writeImg__(fd,data);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_setBscale", "__fits__.oct");
-DEFUN_DLD(fits_setBscale, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setBscale__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setBscale__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setBscale(@var{file}, @var{bscale}, @var{bzero})\n \
+@deftypefn {Function File} {} __cfitsio_setBscale__(@var{file}, @var{bscale}, @var{bzero})\n \
 Reset bscale and bzero to be used with reading and writing Images.\n \
 @end deftypefn")
 {
@@ -3442,13 +3444,13 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
 
   if (! args (1).isnumeric () || !args (1).is_scalar_type())
     {
-      error ("fits_setBscale: bscale should be numeric");
+      error ("__cfitsio_setBscale__: bscale should be numeric");
       return octave_value ();  
     }
 
   if (! args (2).isnumeric () || !args (1).is_scalar_type())
     {
-      error ("fits_setBscale: bzero should be numeric");
+      error ("__cfitsio_setBscale__: bzero should be numeric");
       return octave_value ();  
     }
 
@@ -3459,7 +3461,7 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
 
   if (fits_set_bscale(fp, scale, zero, &status) > 0)
     {
-      error ("fits_setBscale: couldnt set scale: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setBscale__: couldnt set scale: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -3468,19 +3470,19 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! data = uint16([1:3; 4:6; 7:9]);
-%! fits_createImg(fd,class(data), size(data));
-%! fits_setBscale(fd, 1.0, 0.0);
-%! fits_writeImg(fd,data);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,class(data), size(data));
+%! __cfitsio_setBscale__(fd, 1.0, 0.0);
+%! __cfitsio_writeImg__(fd,data);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_setTscale", "__fits__.oct");
-DEFUN_DLD(fits_setTscale, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setTscale__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setTscale__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setTscale(@var{file}, @var{col}, @var{scale}, @var{zero})\n \
+@deftypefn {Function File} {} __cfitsio_setTscale__(@var{file}, @var{col}, @var{scale}, @var{zero})\n \
 Reset scale and zero to be used with reading and writing table data.\n \
 @end deftypefn")
 {
@@ -3508,19 +3510,19 @@ Reset scale and zero to be used with reading and writing table data.\n \
 
   if (! args (1).isnumeric () || !args (1).is_scalar_type())
     {
-      error ("fits_setTscale: column should be numeric");
+      error ("__cfitsio_setTscale__: column should be numeric");
       return octave_value ();  
     }
 
   if (! args (2).isnumeric () || !args (2).is_scalar_type())
     {
-      error ("fits_setTscale: scale should be numeric");
+      error ("__cfitsio_setTscale__: scale should be numeric");
       return octave_value ();  
     }
 
   if (! args (3).isnumeric () || !args (3).is_scalar_type())
     {
-      error ("fits_setTscale: zero should be numeric");
+      error ("__cfitsio_setTscale__: zero should be numeric");
       return octave_value ();  
     }
 
@@ -3532,7 +3534,7 @@ Reset scale and zero to be used with reading and writing table data.\n \
 
   if (fits_set_tscale(fp, col, scale, zero, &status) > 0)
     {
-      error ("fits_setTscale: couldnt set scale: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setTscale__: couldnt set scale: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -3541,20 +3543,20 @@ Reset scale and zero to be used with reading and writing table data.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
-%! fits_setTscale(fd, 1, 1.0, 0.0);
-%! fits_closeFile(fd);
+%! __cfitsio_createTbl__(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! __cfitsio_setTscale__(fd, 1, 1.0, 0.0);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_getAColParms", "__fits__.oct");
-DEFUN_DLD(fits_getAColParms, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getAColParms__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getAColParms__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = fits_getAColParms(@var{file}, @var{colnum})\n \
+@deftypefn {Function File} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = __cfitsio_getAColParms__(@var{file}, @var{colnum})\n \
 Get ASCII table paramaters\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
@@ -3618,22 +3620,22 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile, "readonly");
+%! fd = __cfitsio_openFile__(testfile, "readonly");
 %! assert(!isempty(fd));
-%! fits_movAbsHDU(fd,2);
-%! [ttype,tbcol,tunit,tform,scale,zero,nulstr,tdisp] = fits_getAColParms(fd, 1);
+%! __cfitsio_movAbsHDU__(fd,2);
+%! [ttype,tbcol,tunit,tform,scale,zero,nulstr,tdisp] = __cfitsio_getAColParms__(fd, 1);
 %! assert (ttype, "IDENT");
 %! assert (tbcol, 1);
 %! assert (tform, "9A");
 %! assert (scale, 1);
 %! assert (zero, 0);
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("fits_getBColParms", "__fits__.oct");
-DEFUN_DLD(fits_getBColParms, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getBColParms__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getBColParms__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{ttype},@var{tunit},@var{typechar}@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = fits_getBColParms(@var{file}, @var{colnum})\n \
+@deftypefn {Function File} {[@var{ttype},@var{tunit},@var{typechar},@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = getBColParms(@var{file}, @var{colnum})\n \
 Get binary table paramaters\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
@@ -3698,10 +3700,10 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("fits_getColName", "__fits__.oct");
-DEFUN_DLD(fits_getColName, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getColName__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getColName__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{colnum},@var{colname}]} = fits_getColName(@var{file}, @var{template}, @var{casesens})\n \
+@deftypefn {Function File} {[@var{colnum},@var{colname}]} = __cfitsio_getColName__(@var{file}, @var{template}, @var{casesens})\n \
 Get column type\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_colname function.\n \
@@ -3771,12 +3773,18 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
 
   return ret;
 }
+#if 0
+%!test
+%! fd = __cfitsio_openFile__(testfile);
+%! __cfitsio_movAbsHDU__(fd,2);
+%! [colnum, colname] = __cfitsio_getColName__(fd,"C*");
+%! __cfitsio_closeFile__(fd);
+#endif
 
-
-// PKG_ADD: autoload ("fits_getColType", "__fits__.oct");
-DEFUN_DLD(fits_getColType, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getColType__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getColType__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = fits_getColType(@var{file}, @var{colnum})\n \
+@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = __cfitsio_getColType__(@var{file}, @var{colnum})\n \
 Get column type\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
@@ -3832,16 +3840,16 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
-%! fits_movAbsHDU(fd,2);
-%! [dtype,repeat,width] = fits_getColType(fd,5);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_openFile__(testfile);
+%! __cfitsio_movAbsHDU__(fd,2);
+%! [dtype,repeat,width] = __cfitsio_getColType__(fd,5);
+%! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("fits_getEqColType", "__fits__.oct");
-DEFUN_DLD(fits_getEqColType, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getEqColType__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getEqColType__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = fits_getEqColType(@var{file}, @var{colnum})\n \
+@deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = __cfitsio_getEqColType__(@var{file}, @var{colnum})\n \
 Get column type\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
@@ -3898,16 +3906,16 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
-%! fits_movAbsHDU(fd,2);
-%! [dtype,repeat,width] = fits_getEqColType(fd,5);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_openFile__(testfile);
+%! __cfitsio_movAbsHDU__(fd,2);
+%! [dtype,repeat,width] = __cfitsio_getEqColType__(fd,5);
+%! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("fits_getNumCols", "__fits__.oct");
-DEFUN_DLD(fits_getNumCols, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getNumCols__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getNumCols__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{ncols}} = fits_getNumCols(@var{file})\n \
+@deftypefn {Function File} {@var{ncols}} = __cfitsio_getNumCols__(@var{file})\n \
 Get number of columns\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
@@ -3946,10 +3954,10 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
   return octave_value(ncols);
 }
 
-// PKG_ADD: autoload ("fits_getNumRows", "__fits__.oct");
-DEFUN_DLD(fits_getNumRows, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getNumRows__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getNumRows__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{nrows}} = fits_getNumRows(@var{file})\n \
+@deftypefn {Function File} {@var{nrows}} = __cfitsio_getNumRows__(@var{file})\n \
 Get number of rows\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
@@ -3988,10 +3996,10 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
   return octave_value(nrows);
 }
 
-// PKG_ADD: autoload ("fits_getRowSize", "__fits__.oct");
-DEFUN_DLD(fits_getRowSize, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_getRowSize__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_getRowSize__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {@var{nrows}} = fits_getRowSize(@var{file})\n \
+@deftypefn {Function File} {@var{nrows}} = __cfitsio_getRowSize__(@var{file})\n \
 Get size of a row\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
@@ -4030,10 +4038,10 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
   return octave_value(rowsize);
 }
 
-// PKG_ADD: autoload ("fits_readATblHdr", "__fits__.oct");
-DEFUN_DLD(fits_readATblHdr, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readATblHdr__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readATblHdr__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{rowlen}, @var{nrows}, @var{ttype},@var{tbcol},@var{tform},@var{tunit},@var{extname}]} = fits_readATblHdr(@var{file})\n \
+@deftypefn {Function File} {[@var{rowlen}, @var{nrows}, @var{ttype},@var{tbcol},@var{tform},@var{tunit},@var{extname}]} = __cfitsio_readATblHdr__(@var{file})\n \
 Get ASCII table parameters\n \
 \n \
 This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
@@ -4119,10 +4127,10 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("fits_readBTblHdr", "__fits__.oct");
-DEFUN_DLD(fits_readBTblHdr, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readBTblHdr__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readBTblHdr__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{nrows}, @var{ttype},@var{tform},@var{tunit},@var{extname}, @var{pcount}]} = fits_readBTblHdr(@var{file})\n \
+@deftypefn {Function File} {[@var{nrows}, @var{ttype},@var{tform},@var{tunit},@var{extname}, @var{pcount}]} = __cfitsio_readBTblHdr__(@var{file})\n \
 Get Binary table parameters\n \
 \n \
 This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
@@ -4203,12 +4211,12 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("fits_createTbl", "__fits__.oct");
-DEFUN_DLD(fits_createTbl, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_createTbl__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_createTbl__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform})\n \
-@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit})\n \
-@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname})\n \
+@deftypefn {Function File} {} __cfitsio_createTbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform})\n \
+@deftypefnx {Function File} {} __cfitsio_createTbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit})\n \
+@deftypefnx {Function File} {} __cfitsio_createTbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname})\n \
 Create a new ASCII or bintable extension\n \
 \n \
 This is the equivalent of the cfitsio fits_create_tbl function.\n \
@@ -4364,19 +4372,19 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
-%! fits_closeFile(fd);
+%! __cfitsio_createTbl__(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_insertBTbl", "__fits__.oct");
-DEFUN_DLD(fits_insertBTbl, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_insertBTbl__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_insertBTbl__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_insertBTbl(@var{file}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname}, @var{pcount})\n \
+@deftypefn {Function File} {} __cfitsio_insertBTbl__(@var{file}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname}, @var{pcount})\n \
 Insert a new bintable extension\n \
 \n \
 This is the equivalent of the cfitsio fits_insert_btbl function.\n \
@@ -4514,22 +4522,19 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_insertBTbl(fd,0,ttype,tform,tunit,'table-name', 0);
-%! fits_closeFile(fd);
+%! __cfitsio_insertBTbl__(fd,0,ttype,tform,tunit,'table-name', 0);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-
-// PKG_ADD: autoload ("fits_insertATbl", "__fits__.oct");
-DEFUN_DLD(fits_insertATbl, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_insertATbl__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_insertATbl__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_createTbl(@var{file}, @var{rowlen}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform})\n \
-@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{rowlen}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit})\n \
-@deftypefnx {Function File} {} fits_createTbl(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit}, @var{extname})\n \
+@deftypefn {Function File} {} __cfitsio_insertATbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit}, @var{extname})\n \
 Insert a new ASCII table after current HDU\n \
 \n \
 This is the equivalent of the cfitsio fits_insert_atbl function.\n \
@@ -4689,24 +4694,24 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
-%! fits_createImg(fd,'double',[20 30]);
-%! fits_createImg(fd,'double',[20 30]);
-%! fits_movRelHDU(fd,-1);
+%! fd = __cfitsio_createFile__(filename);
+%! __cfitsio_createImg__(fd,'double',[20 30]);
+%! __cfitsio_createImg__(fd,'double',[20 30]);
+%! __cfitsio_movRelHDU__(fd,-1);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tbcol = [1 10 14 17 ];
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_insertATbl(fd, 0,0,ttype,tbcol,tform,tunit,'table-name');
-%! fits_closeFile(fd);
+%! __cfitsio_insertATbl__(fd, 0,0,ttype,tbcol,tform,tunit,'table-name');
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
 
-// PKG_ADD: autoload ("fits_insertCol", "__fits__.oct");
-DEFUN_DLD(fits_insertCol, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_insertCol__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_insertCol__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_insertCol(@var{file}, @var{colnum}, @var{ttype}, @var{tform})\n \
+@deftypefn {Function File} {} __cfitsio_insertCol__(@var{file}, @var{colnum}, @var{ttype}, @var{tform})\n \
 Insert a column into a table\n \
 \n \
 This is the equivalent of the cfitsio fits_insert_col function.\n \
@@ -4776,20 +4781,20 @@ This is the equivalent of the cfitsio fits_insert_col function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
-%! fits_insertCol(fd, 1,"ICol","9A");
-%! fits_closeFile(fd);
+%! __cfitsio_createTbl__(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! __cfitsio_insertCol__(fd, 1,"ICol","9A");
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_deleteCol", "__fits__.oct");
-DEFUN_DLD(fits_deleteCol, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteCol__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteCol__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_deleteCol(@var{file}, @var{colnum})\n \
+@deftypefn {Function File} {} __cfitsio_deleteCol__(@var{file}, @var{colnum})\n \
 Delete a column from a table\n \
 \n \
 This is the equivalent of the cfitsio fits_delete_col function.\n \
@@ -4838,21 +4843,21 @@ This is the equivalent of the cfitsio fits_delete_col function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'9A','4X','3B','1D'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
-%! fits_deleteCol(fd, 1);
-%! fits_closeFile(fd);
+%! __cfitsio_createTbl__(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! __cfitsio_deleteCol__(fd, 1);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
 
-// PKG_ADD: autoload ("fits_insertRows", "__fits__.oct");
-DEFUN_DLD(fits_insertRows, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_insertRows__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_insertRows__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_insertRows(@var{file}, @var{firstrow}, @var{numrows})\n \
+@deftypefn {Function File} {} __cfitsio_insertRows__(@var{file}, @var{firstrow}, @var{numrows})\n \
 Insert a rows into a table\n \
 \n \
 This is the equivalent of the cfitsio fits_insert_rows function.\n \
@@ -4914,24 +4919,24 @@ This is the equivalent of the cfitsio fits_insert_rows function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
-%! fits_closeFile(fd);
-%! fd = fits_openFile(filename, "READWRITE");
-%! fits_movRelHDU(fd,1);
-%! fits_insertRows(fd, 0, 5);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_createTbl__(fd,'binary',0,ttype,tform,tunit,'table-name');
+%! __cfitsio_closeFile__(fd);
+%! fd = __cfitsio_openFile__(filename, "READWRITE");
+%! __cfitsio_movRelHDU__(fd,1);
+%! __cfitsio_insertRows__(fd, 0, 5);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_deleteRows", "__fits__.oct");
-DEFUN_DLD(fits_deleteRows, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_deleteRows__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_deleteRows__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_deleteRows(@var{file}, @var{firstrow}, @var{numrows})\n \
+@deftypefn {Function File} {} __cfitsio_deleteRows__(@var{file}, @var{firstrow}, @var{numrows})\n \
 Insert a rows into a table\n \
 \n \
 This is the equivalent of the cfitsio fits_delete_rows function.\n \
@@ -4993,24 +4998,24 @@ This is the equivalent of the cfitsio fits_delete_rows function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! ttype = {'Col1','Col2','Col3','Col4'};
 %! tform = {'A9','A4','A3','A8'};
 %! tunit = {'m','s','kg','km'};
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_createTbl(fd,'binary',10,ttype,tform,tunit,'table-name');
-%! fits_closeFile(fd);
-%! fd = fits_openFile(filename, 'READWRITE');
-%! fits_movAbsHDU(fd,2);
-%! fits_deleteRows(fd, 1, 5);
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_createTbl__(fd,'binary',10,ttype,tform,tunit,'table-name');
+%! __cfitsio_closeFile__(fd);
+%! fd = __cfitsio_openFile__(filename, 'READWRITE');
+%! __cfitsio_movAbsHDU__(fd,2);
+%! __cfitsio_deleteRows__(fd, 1, 5);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_writeCol", "__fits__.oct");
-DEFUN_DLD(fits_writeCol, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_writeCol__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_writeCol__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_writeCol(@var{file}, @var{colnum}, @var{firstrow}, @var{data})\n \
+@deftypefn {Function File} {} __cfitsio_writeCol__(@var{file}, @var{colnum}, @var{firstrow}, @var{data})\n \
 Write elements to a table.\n \
 \n \
 This is the equivalent of the cfitsio fits_write_col function.\n \
@@ -5112,24 +5117,24 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_writeKey(fd, 'VELOCITY', 10.0, "Speed");
-%! fits_writeKeyUnit(fd, 'VELOCITY', "m/s");
-%! fits_closeFile(fd);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_writeKey__(fd, 'VELOCITY', 10.0, "Speed");
+%! __cfitsio_writeKeyUnit__(fd, 'VELOCITY', "m/s");
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 
-%!error fits_writeKeyUnit(1);
-%!error fits_writeKeyUnit(1, "VELOCITY");
-%!error fits_writeKeyUnit(1, "VELOCITY", "m/s");
+%!error __cfitsio_writeKeyUnit__(1);
+%!error __cfitsio_writeKeyUnit__(1, "VELOCITY");
+%!error __cfitsio_writeKeyUnit__(1, "VELOCITY", "m/s");
 #endif
 
-// PKG_ADD: autoload ("fits_readCol", "__fits__.oct");
-DEFUN_DLD(fits_readCol, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_readCol__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_readCol__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum})\n \
-@deftypefnx {Function File} {[@var{coldata}, @var{nullval}]} = fits_readCol(@var{file}, @var{colnum}, @var{firstrow}, @var{numrows})\n \
+@deftypefn {Function File} {[@var{coldata}, @var{nullval}]} = __cfitsio_readCol__(@var{file}, @var{colnum})\n \
+@deftypefnx {Function File} {[@var{coldata}, @var{nullval}]} = __cfitsio_readCol__(@var{file}, @var{colnum}, @var{firstrow}, @var{numrows})\n \
 Get table row data\n \
 \n \
 This is the equivalent of the cfitsio  fits_read_col function.\n \
@@ -5334,37 +5339,37 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 }
 #if 0
 %!test
-%! fd = fits_openFile(testfile);
+%! fd = __cfitsio_openFile__(testfile);
 %! assert(!isempty(fd));
-%! assert(fits_movAbsHDU(fd, 2), "BINARY_TBL");
-%! [d,n] = fits_readCol(fd, 1);
+%! assert(__cfitsio_movAbsHDU__(fd, 2), "BINARY_TBL");
+%! [d,n] = __cfitsio_readCol__(fd, 1);
 %! assert(size(d), [11 9])
 %! assert(size(n), [11 9])
-%! [d,n] = fits_readCol(fd, 1, 11);
+%! [d,n] = __cfitsio_readCol__(fd, 1, 11);
 %! assert(size(d), [1 9])
 %! assert(size(n), [1 9])
-%! [d,n] = fits_readCol(fd, 1, 8, 2);
+%! [d,n] = __cfitsio_readCol__(fd, 1, 8, 2);
 %! assert(size(d), [2 9])
 %! assert(size(n), [2 9])
 %!
-%! [d,n] = fits_readCol(fd, 2);
+%! [d,n] = __cfitsio_readCol__(fd, 2);
 %! assert(size(d), [11 13])
 %! assert(size(n), [11 13])
 %!
-%! assert(fits_movAbsHDU(fd, 5), "ASCII_TBL");
-%! [d,n] = fits_readCol(fd, 1);
+%! assert(__cfitsio_movAbsHDU__(fd, 5), "ASCII_TBL");
+%! [d,n] = __cfitsio_readCol__(fd, 1);
 %! assert(size(d), [53 9])
 %! assert(size(n), [1 53])
-%! [d,n] = fits_readCol(fd, 2);
+%! [d,n] = __cfitsio_readCol__(fd, 2);
 %! assert(size(d), [53 1])
 %! assert(size(n), [53 1])
-%! fits_closeFile(fd);
+%! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("fits_setCompressionType", "__fits__.oct");
-DEFUN_DLD(fits_setCompressionType, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setCompressionType__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setCompressionType__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setCompressionType(@var{file}, @var{comptype})\n \
+@deftypefn {Function File} {} __cfitsio_setCompressionType__(@var{file}, @var{comptype})\n \
 Set compression type for writing FITS images.\n \
 \n \
 Valid comptype values are: 'GZIP', 'GZIP2', 'RICE', 'PLIO', 'HCOMPRESS' or 'NOCOMPRESS'\n \
@@ -5396,7 +5401,7 @@ This is the equivalent of the cfitsio fits_set_compression_type function.\n \
 
   if (! args (1).is_string ())
     {
-      error ("fits_setCompressionType: comptype should be a string");
+      error ("__cfitsio_setCompressionType__: comptype should be a string");
       return octave_value ();  
     }
 
@@ -5413,13 +5418,13 @@ This is the equivalent of the cfitsio fits_set_compression_type function.\n \
   else if (comptype == "NOCOMPRESS") ctype = NOCOMPRESS;
   else
     {
-      error ("fits_setCompressionType: unknown compression type '%s'", comptype.c_str());
+      error ("__cfitsio_setCompressionType__: unknown compression type '%s'", comptype.c_str());
       return octave_value ();
     }
 
   if (fits_set_compression_type(fp, ctype, &status) > 0)
     {
-      error ("fits_setCompressionType couldnt write type: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setCompressionType__ couldnt write type: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5428,18 +5433,18 @@ This is the equivalent of the cfitsio fits_set_compression_type function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_setCompressionType(fd, "NOCOMPRESS");
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_closeFile(fd);
+%! __cfitsio_setCompressionType__(fd, "NOCOMPRESS");
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_setTileDim", "__fits__.oct");
-DEFUN_DLD(fits_setTileDim, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setTileDim__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setTileDim__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setTileDim(@var{file}, @var{tiledims})\n \
+@deftypefn {Function File} {} __cfitsio_setTileDim__(@var{file}, @var{tiledims})\n \
 Set compression tile dims for writing FITS images.\n \
 \n \
 This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
@@ -5490,7 +5495,7 @@ This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
   int status = 0;
   if (fits_set_tile_dim(fp, num_axis, axis, &status) > 0)
     {
-      error ("fits_setTileDim couldnt write tile dims: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setTileDim__ couldnt write tile dims: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5499,19 +5504,19 @@ This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! #fits_setCompressionType(fd, "RICE");
-%! fits_setTileDim(fd, [64 128]);
-%! fits_createImg(fd,'int16',[256 512]);
-%! fits_closeFile(fd);
+%! #__cfitsio_setCompressionType__(fd, "RICE");
+%! __cfitsio_setTileDim__(fd, [64 128]);
+%! __cfitsio_createImg__(fd,'int16',[256 512]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_isCompressedImg", "__fits__.oct");
-DEFUN_DLD(fits_isCompressedImg, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_isCompressedImg__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_isCompressedImg__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_isCompressedImg(@var{file})\n \
+@deftypefn {Function File} {@var{yes} = } __cfitsio_isCompressedImg__(@var{file})\n \
 Return true if image is compressed.\n \
 \n \
 This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
@@ -5544,7 +5549,7 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
   int compressed = fits_is_compressed_image(fp, &status);
   if(status != 0)
     {
-      error ("fits_isCompressedImg: couldnt determine compression: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_isCompressedImg__: couldnt determine compression: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5555,25 +5560,25 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
+%! fd = __cfitsio_createFile__(filename);
 %! assert(!isempty(fd));
-%! fits_setCompressionType(fd, "RICE");
-%! fits_createImg(fd,'int16',[256 512]);
-%! assert(fits_isCompressedImg(fd), true);
-%! fits_closeFile(fd);
+%! __cfitsio_setCompressionType__(fd, "RICE");
+%! __cfitsio_createImg__(fd,'int16',[256 512]);
+%! assert(__cfitsio_isCompressedImg__(fd), true);
+%! __cfitsio_closeFile__(fd);
 %!
-%! fd = fits_createFile(['!' filename]);
-%! fits_createImg(fd,'int16',[256 512]);
-%! assert(fits_isCompressedImg(fd), false);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_createFile__(['!' filename]);
+%! __cfitsio_createImg__(fd,'int16',[256 512]);
+%! assert(__cfitsio_isCompressedImg__(fd), false);
+%! __cfitsio_closeFile__(fd);
 %!
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_imgCompress", "__fits__.oct");
-DEFUN_DLD(fits_imgCompress, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_imgCompress__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_imgCompress__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_imgCompress(@var{infile}, @var{outfile})\n \
+@deftypefn {Function File} {} __cfitsio_imgCompress__(@var{infile}, @var{outfile})\n \
 Copy HDU and image data from one infile to another, using the outfiles compression type\n \
 \n \
 This is the equivalent of the cfitsio fits_img_compress function.\n \
@@ -5619,7 +5624,7 @@ This is the equivalent of the cfitsio fits_img_compress function.\n \
 
   if (fits_img_compress(fp1, fp2, &status) > 0)
     {
-      error ("fits_imgCompress: couldnt copy image: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_imgCompress__: couldnt copy image: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5629,26 +5634,26 @@ This is the equivalent of the cfitsio fits_img_compress function.\n \
 %!test
 %! filename1 = tempname();
 %! filename2 = tempname();
-%! fd1 = fits_createFile(filename1);
-%! fits_createImg(fd1,'int16',[256 512]);
-%! fits_closeFile(fd1);
+%! fd1 = __cfitsio_createFile__(filename1);
+%! __cfitsio_createImg__(fd1,'int16',[256 512]);
+%! __cfitsio_closeFile__(fd1);
 %!
-%! fd1 = fits_openFile(filename1);
+%! fd1 = __cfitsio_openFile__(filename1);
 %!
-%! fd2 = fits_createFile(filename2);
-%! fits_setCompressionType(fd2, "RICE");
-%! fits_imgCompress(fd1,fd2);
-%! fits_closeFile(fd1);
-%! fits_closeFile(fd2);
+%! fd2 = __cfitsio_createFile__(filename2);
+%! __cfitsio_setCompressionType__(fd2, "RICE");
+%! __cfitsio_imgCompress__(fd1,fd2);
+%! __cfitsio_closeFile__(fd1);
+%! __cfitsio_closeFile__(fd2);
 %!
 %! delete (filename1);
 %! delete (filename2);
 #endif
 
-// PKG_ADD: autoload ("fits_setHCompScale", "__fits__.oct");
-DEFUN_DLD(fits_setHCompScale, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setHCompScale__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setHCompScale__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setHCompScale(@var{file}, @var{scale})\n \
+@deftypefn {Function File} {} __cfitsio_setHCompScale__(@var{file}, @var{scale})\n \
 Set scale to be used with HCOMPRESS compression.\n \
 \n \
 This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
@@ -5678,7 +5683,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
 
   if (! args (1).isnumeric () || !args (1).is_scalar_type())
     {
-      error ("fits_setHCompScale: scale should be numeric");
+      error ("__cfitsio_setHCompScale__: scale should be numeric");
       return octave_value ();  
     }
 
@@ -5688,7 +5693,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
 
   if (fits_set_hcomp_scale(fp, scale, &status) > 0)
     {
-      error ("fits_setHCompScale: couldnt write scale: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setHCompScale__: couldnt write scale: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5697,17 +5702,17 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
-%! fits_setHCompScale(fd, 1.0);
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_createFile__(filename);
+%! __cfitsio_setHCompScale__(fd, 1.0);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("fits_setHCompSmooth", "__fits__.oct");
-DEFUN_DLD(fits_setHCompSmooth, args, nargout,
+// PKG_ADD: autoload ("__cfitsio_setHCompSmooth__", "__fits__.oct");
+DEFUN_DLD(__cfitsio_setHCompSmooth__, args, nargout,
 "-*- texinfo -*-\n \
-@deftypefn {Function File} {} fits_setHCompSmooth(@var{file}, @var{smooth})\n \
+@deftypefn {Function File} {} __cfitsio_setHCompSmooth__(@var{file}, @var{smooth})\n \
 Set smooth value to be used with HCOMPRESS compression.\n \
 \n \
 This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
@@ -5737,7 +5742,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
 
   if (! args (1).isnumeric () || !args (1).is_scalar_type())
     {
-      error ("fits_setHCompSmooth: scale should be numeric");
+      error ("__cfitsio_setHCompSmooth__: scale should be numeric");
       return octave_value ();  
     }
 
@@ -5747,7 +5752,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
 
   if (fits_set_hcomp_smooth(fp, smooth, &status) > 0)
     {
-      error ("fits_setHCompSmooth: couldnt write smooth: %s", get_fits_error(status).c_str());
+      error ("__cfitsio_setHCompSmooth__: couldnt write smooth: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
 
@@ -5756,10 +5761,10 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
 #if 0
 %!test
 %! filename = tempname();
-%! fd = fits_createFile(filename);
-%! fits_setHCompSmooth(fd, 1);
-%! fits_createImg(fd,'int16',[10 20]);
-%! fits_closeFile(fd);
+%! fd = __cfitsio_createFile__(filename);
+%! __cfitsio_setHCompSmooth__(fd, 1);
+%! __cfitsio_createImg__(fd,'int16',[10 20]);
+%! __cfitsio_closeFile__(fd);
 %! delete (filename);
 #endif
 

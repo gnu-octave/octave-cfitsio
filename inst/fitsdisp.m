@@ -14,8 +14,8 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {[@var{info}]} = fitsdisp(@var{filename})
-## @deftypefnx {Function File} {[@var{info}]} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
+## @deftypefn {} {[@var{info}]} = fitsdisp(@var{filename})
+## @deftypefnx {} {[@var{info}]} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
 ## Display information about fits format file
 ##
 ## Known property names are:
@@ -119,7 +119,7 @@ function out = fitsdisp (filename, varargin)
             output = [output sprintf("HDU %2d: %s %s %s\n", n, dtype, type, dims)];
           else
             rows = fits.getNumRows(fd);
-            cols = fits_getNumCols(fd);
+            cols = fits.getNumCols(fd);
             output = [output sprintf("HDU %2d: %s [ %d %d ]\n", n, type, rows, cols)];
           endif
         elseif strcmp(mode, 'standard') || strcmp(mode, 'full')

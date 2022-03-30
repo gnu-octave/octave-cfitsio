@@ -17,7 +17,7 @@ CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
 TST_SOURCES := $(patsubst %.cc,../inst/$(ARCHDIR)/%.cc-tst,$(CC_TST_SOURCES))
 
 .PHONY: all
-all: $(OCT_FILES) $(ARCHTESTS) ../inst/import_fits.m
+all: $(OCT_FILES) $(ARCHTESTS)
 	
 %.o: %.cc fits_constants.h
 	$(MKOCTFILE) -c $< $(CXXFLAGS)
@@ -50,26 +50,8 @@ fits_constants.h: $(FITSIO_INCPATH)/fitsio.h
 		echo "};"; \
 	) > "$@"
 
-../inst/import_fits.m: $(CC_SOURCES) | ../inst
-	@echo "Generating $@"
-	@(      echo "# Generated from $^"; \
-		echo; \
-	        echo "## -*- texinfo -*-"; \
-		echo "## @deftypefn {} {fits =} import_fits"; \
-	        echo "## Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace."; \
-		echo "## @end deftypefn"; \
-		echo; \
-		echo "fits = {};"; \
-	        cat $< | $(SED) -n 's|DEFUN_DLD(fits_\([^,]*\),.*$$|fits\.\1 = @fits_\1;|p'; \
-		echo; \
-	        echo "%!test"; \
-		echo "%! import_fits;"; \
-	        echo "%! assert(fits.getVersion(), fits.getConstantValue('CFITSIO_VERSION'), 1e8);"; \
-	) > "$@"
-
-
 .PHONY: prebuild
-prebuild: ../inst/import_fits.m
+prebuild:
 
 .PHONY: clean
 .PHONY: distclean
@@ -85,7 +67,6 @@ distclean: clean
 	$(RM) -rf autom4te.cache
 	$(RM) -f Makefile config.status config.log config.h
 	$(RM) -r oct-alt-includes.h
-	$(RM) -r ../inst/import_fits.m
 
 extraclean: distclean
 	$(RM) -r config.h.in

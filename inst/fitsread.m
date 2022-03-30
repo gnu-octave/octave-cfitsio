@@ -174,7 +174,7 @@ function out = fitsread (filename, varargin)
     out = [];
 
     if strcmp(type, "ASCII_TBL")
-      ncols = fits_getNumCols(fd);
+      ncols = fits.getNumCols(fd);
       out = {};
 
       if isempty(tablecols)
@@ -182,9 +182,9 @@ function out = fitsread (filename, varargin)
       endif
       for idx = 1:length(tablecols)
         if !isempty(tablerows)
-          [x,n] = fits_readCol(fd, tablecols(idx), min(tablerows), max(tablerows));
+          [x,n] = fits.readCol(fd, tablecols(idx), min(tablerows), max(tablerows));
         else
-          [x,n] = fits_readCol(fd, tablecols(idx));
+          [x,n] = fits.readCol(fd, tablecols(idx));
         endif
 
         if iscell(x)
@@ -230,16 +230,16 @@ function out = fitsread (filename, varargin)
         out{end+1} = tmp;
       endfor
     elseif strcmp(type, "BINARY_TBL")
-      ncols = fits_getNumCols(fd);
+      ncols = fits.getNumCols(fd);
       out = {};
       if isempty(tablecols)
         tablecols = 1:ncols;
       endif
       for idx = 1:length(tablecols)
         if !isempty(tablerows)
-          [x,n] = fits_readCol(fd, tablecols(idx), min(tablerows), max(tablerows));
+          [x,n] = fits.readCol(fd, tablecols(idx), min(tablerows), max(tablerows));
         else
-          [x,n] = fits_readCol(fd, tablecols(idx));
+          [x,n] = fits.readCol(fd, tablecols(idx));
         endif
 
         if iscell(x)
@@ -284,11 +284,11 @@ function out = fitsread (filename, varargin)
 
     elseif strcmp(type, "IMAGE_HDU")
       # image data
-      imgsize = fits_getImgSize(fd);
+      imgsize = fits.getImgSize(fd);
       if isempty(imgsize)
         error ("No data in this HDU");
       endif
-      out = fits_readImg(fd);
+      out = fits.readImg(fd);
     endif
 
   unwind_protect_cleanup
