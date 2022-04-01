@@ -14,8 +14,8 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {[@var{info}]} = fitsdisp(@var{filename})
-## @deftypefnx {} {[@var{info}]} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
+## @deftypefn {} {@var{info}} = fitsdisp(@var{filename})
+## @deftypefnx {} {@var{info}} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
 ## Display information about fits format file
 ##
 ## Known property names are:

@@ -14,15 +14,15 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {} fitswrite(@var{data}, @var{filename})
-## @deftypefnx {Function File} {} fitswrite(@var{data}, @var{filename}, @var{propertyname}, @var{propertyvalue})
+## @deftypefn {} {} fitswrite(@var{data}, @var{filename})
+## @deftypefnx {} {} fitswrite(@var{data}, @var{filename}, @var{propertyname}, @var{propertyvalue})
 ## Write image data @var{data}  to FITS file @var{filename}. If the fie already exists, overwrte it.
 ##
 ## Additional properties can be set as @var{propertyname}, @var{propertyvalue} pairs.
 ## Known property names are:
 ## @table @asis
 ## @item WriteMode
-## Set mode for writing to image as 'overwrite' (default) ot 'append' to append images.
+## Set mode for writing to image as 'overwrite' (default) or 'append' to append images.
 ## @end table
 ##
 ## @end deftypefn

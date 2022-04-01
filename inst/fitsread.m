@@ -14,11 +14,11 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {@var{data}} = fitsread(@var{filename})
-## @deftypefnx {Function File} {@var{info}} = fitsread(@var{filename}, 'raw')
-## @deftypefnx {Function File} {@var{info}} = fitsread(@var{filename}, @var{extname})
-## @deftypefnx {Function File} {@var{info}} = fitsread(@var{filename}, @var{extname}, @var{index})
-## @deftypefnx {Function File} {@var{info}} = fitsread(@var{filename}, ____, @var{propertyname}, @var{propertyvalue})
+## @deftypefn {} {@var{data}} = fitsread(@var{filename})
+## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, 'raw')
+## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname})
+## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname}, @var{index})
+## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, ____, @var{propertyname}, @var{propertyvalue})
 ## Read the primary data, or specifed extenstion data. It scales the data and applied Nan to any undefined values.
 ##
 ## @var{exttype} can be  'primary', 'asciitable', 'binarytable', 'image', 'unknown'.

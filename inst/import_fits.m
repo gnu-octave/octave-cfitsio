@@ -14,7 +14,7 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {fits =} import_fits
+## @deftypefn {} {} import_fits
 ## Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
 ## @end deftypefn
 

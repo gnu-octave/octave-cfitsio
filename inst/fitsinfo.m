@@ -14,7 +14,7 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {[@var{info}]} = fitsinfo(@var{filename})
+## @deftypefn {} {@var{info}} = fitsinfo(@var{filename})
 ## Read information about fits format file
 ## @end deftypefn
 function info = fitsinfo (filename)

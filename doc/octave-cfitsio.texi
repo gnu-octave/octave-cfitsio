@@ -1,5 +1,5 @@
 \input texinfo @c -*-texinfo-*-
-@c Copyright (c) 2019-2020, John Donoghue <john.donoghue@ieee.org>
+@c Copyright (c) 2019-2022, John Donoghue <john.donoghue@ieee.org>
 @c Octave cfitsio - Octave FITS file I/O.
 
 @c For manually generating the documentation use
@@ -24,7 +24,7 @@
 @author John Donoghue
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2019-2020 John Donoghue
+Copyright @copyright{} 2019-2022 John Donoghue
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -91,7 +91,7 @@ or can be installed in an off-line mode via a downloaded tarball.
 
 
 The toolkit has a dependency on the cfitsio library (@url{https://heasarc.gsfc.nasa.gov/fitsio/}), so it must be installed in order
-to successfully install the toolkit.
+to successfully install the @acronym{GNU} Octave toolkit.
 
 For Fedora: @code{yum install cfitsio-devel} 
 
@@ -102,7 +102,7 @@ The toolkit must be then be loaded once per each @acronym{GNU} Octave session in
 If running in Windows, the package may already be installed, to check run:
 
 @example
-pkg list audio
+pkg list octave-cfitsio
 @end example
 
 Otherwise it can be installed by installing the requirements and then using the online or offline install method.
@@ -143,9 +143,82 @@ The toolkit must be loaded on each @acronym{GNU} Octave session.
 @chapter Basic Usage Overview
 @cindex Basic Usage Overview
 
+@section Overview
+@cindex Overview
+The octave-cfitsio tookkit provides high and level functionality for reading and
+writing FITS format files.
+
+The high level functions provide base read and write of data to octave.
+
+The low level functions almost direct access to the cfitsio API and 
+are provided under the matlab.io.fits namespace.
+
+Since @acronym{GNU} Octave does not support the matlab import command, a import_fits function
+is provided.
+
+Running the statement:
+@example
+import_fits
+@end example
+
+Is the eqivalent of running in matlab:
+@example
+import matlab.io.fits;
+@end example
+
+
+@section Using the toolkit
+@cindex Using the toolkit
+
 The package must be loaded each time a @acronym{GNU} Octave session is started:
 @example
 pkg load octave-cfitsio
+@end example
+
+After loading the toolkit, the toolkit functions are available.
+
+@subsection Reading Data
+@cindex  Reading Data
+To read the primary image data of a fits file, use the fitsread function:
+
+
+@example
+  imagedata = fitsread("thefitsfile.fits");
+@end example
+
+@subsection Reading Information
+@cindex  Reading Information
+To read information about the content in a fits file, use the fitsinfo functions.
+
+
+@example
+  info = fitsinfo("thefitsfile.fits");
+@end example
+
+@subsection Low level functionality
+@cindex  Low level functionality
+Where functionality is required that is not met be the high level functions, 
+most of the cfitsio functsions are available in the matlab.io.fits namespace.
+
+
+@example
+  # import the fits functions so dont have to use the full namespace each time
+  import_fits;
+
+  # open the file
+  fd = fits.openFile('tst0012.fits');
+
+  # get num of hdus in the file
+  n = fits.getNumHDUs (fd);
+
+  # for each hdu, go to it, print out the type
+  for j = 1:n
+    hdutype = fits.movAbsHDU (fd, j);
+    printf ('HDU %d:  "%s"\n', j, hdutype);
+  endif
+
+  # close the file
+  fits.closeFile (fd);
 @end example
 
 @c -------------------------------------------------------------------------
