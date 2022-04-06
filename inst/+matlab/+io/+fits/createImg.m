@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} createImg(@var{file}, @var{bitpix}, @var{naxis})
-## create a new primary image or image extension\n \
+## create a new primary image or image extension.
 ##
 ## This is the equivalent of the cfitsio fits_create_imgll function.
 ##
