@@ -29,6 +29,7 @@ AC_CONFIG_MACRO_DIRS([m4])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_CXXCPP
 AC_LANG(C++)
 AC_CHECK_PROG(PKG_CONFIG, pkg-config, pkg-config)
 AC_PROG_GREP
@@ -50,12 +51,53 @@ fi
 FITSIO_CXXFLAGS=`$PKG_CONFIG --cflags cfitsio`
 FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
 FITSIO_INCPATH=`$PKG_CONFIG --variable=includedir cfitsio`
+
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$FITSIO_CXXFLAGS $CPPFLAGS"
-AC_CHECK_HEADERS([fitsio.h],[],[
-  AC_MSG_ERROR([Cant find cfitsio,h])
-])
+save_LDFLAGS=$LDFLAGS
+# spaces in paths can mess stuff up
+# so if cant find the header, do a manual find
+if test "$FITSIO_CXXFLAGS$FITSIO_LIBS" != "" ; then
+  CPPFLAGS="$FITSIO_CXXFLAGS $save_CPPFLAGS"
+  AC_CHECK_HEADERS([fitsio.h], ,
+     [FITSIO_CXXFLAGS=""; FITSIO_LIBS=""],
+   )
+fi
+
+if test "$FITSIO_CXXFLAGS$FITSIO_LIBS" == "" ; then
+  AC_MSG_NOTICE([Trying fallback FITSIO detection])
+
+  # find headers first
+  AC_MSG_CHECKING([for fitsio headers path])
+  found_header=
+  for p in [ /usr/include /usr/local/include /opt/include /mingw32/include /mingw64/include ]; do
+    for v in [ cfitsio ]; do
+    CPPFLAGS="-I$p/$v $save_CPPFLAGS"
+    AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM([
+        #include <fitsio.h>
+        ],
+        [
+          int i=0;
+        ])],
+      [found_header="$p/$v"],
+      [])
+    done
+  done
+
+  if test "$found_header" == "" ; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Unable to find CFITSIO headers]),
+  else
+    AC_MSG_RESULT([$found_header])
+    FITSIO_CXXFLAGS="-I$found_header"
+    FITSIO_INCPATH="$found_header"
+    FITSIO_LIBS=-lcfitsio
+  fi
+fi
+
 CPPFLAGS=$save_CPPFLAGS
+LDFLAGS=$save_LDFLAGS
+
 AC_SUBST([FITSIO_LIBS])
 AC_SUBST([FITSIO_INCPATH])
 AC_SUBST([FITSIO_CXXFLAGS])
