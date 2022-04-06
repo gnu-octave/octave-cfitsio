@@ -45,9 +45,9 @@
 ## @example
 ## import_fits;
 ## fd = fits.createFile("test.fits");
-## ttype = {'Col1','Col2','Col3','Col4'};
-## tform = {'A9','A4','A3','A8'};
-## tunit = {'m','s','kg','km'};
+## ttype = @{'Col1','Col2','Col3','Col4'@};
+## tform = @{'A9','A4','A3','A8'@};
+## tunit = @{'m','s','kg','km'@};
 ## fits.createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
 ## fits.closeFile(fd);
 ## @end example

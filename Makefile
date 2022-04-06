@@ -18,6 +18,22 @@ GREP ?= grep
 CUT ?= cut
 TR ?= tr
 TEXI2PDF  ?= texi2pdf -q
+MAKEINFO  ?= makeinfo
+
+# work out a possible help generator
+ifeq ($(strip $(QHELPGENERATOR)),)
+  ifneq ($(shell qhelpgenerator -qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qhelpgenerator -qt5
+  else ifneq ($(shell qhelpgenerator-qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qhelpgenerator-qt5
+  else ifneq ($(shell qcollectiongenerator -qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qcollectiongenerator -qt5
+  else ifneq ($(shell qcollectiongenerator-qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qcollectiongenerator-qt5
+  else
+    QHELPGENERATOR = true
+  endif
+endif
 
 ## Note the use of ':=' (immediate set) and not just '=' (lazy set).
 ## http://stackoverflow.com/a/448939/1609556
@@ -147,7 +163,7 @@ endif
 	  $(MAKE) distclean && $(RM) Makefile
 	$(MAKE) -C "$@" docs
 	cd "$@" && mv testdata inst/demos
-	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" && $(RM) -f doc/mkfuncdocs.py
+	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" && $(RM) -f doc/mkfuncdocs.py doc/mkqhcp.py
 ##
 	${FIX_PERMISSIONS} "$@"
 
@@ -242,12 +258,13 @@ check: $(install_stamp)
 ## Docs
 ##
 .PHONY: docs
-docs: doc/$(package).pdf
+docs: doc/$(package).pdf doc/$(package).qhc
 
 clean-docs:
 	$(RM) -f doc/$(package).info
 	$(RM) -f doc/$(package).pdf
 	$(RM) -f doc/functions.texi
+	$(RM) -f doc/$(PACKAGE).qhc doc/$(PACKAGE).qch
 
 doc/$(package).pdf: doc/$(package).texi doc/functions.texi
 	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(package).texi
@@ -257,6 +274,11 @@ doc/$(package).pdf: doc/$(package).texi doc/functions.texi
 doc/functions.texi:
 	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
+doc/$(package).qhc: doc/$(package).texi doc/functions.texi
+	# try also create qch file if can
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(package).css  --no-split --output=${package}.html $(package).texi
+	cd doc && ./mkqhcp.py $(package) && $(QHELPGENERATOR) $(package).qhcp -o $(package).qhc
+	cd doc && $(RM) -f $(package).html $(package).qhcp $(package).qhp
 ##
 ## CLEAN
 ##
