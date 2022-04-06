@@ -20,6 +20,37 @@
 ## Create a new ASCII or bintable extension.
 ##
 ## This is the equivalent of the cfitsio fits_create_tbl function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{tbltype} - table type 'binary' or 'ascii'.
+##
+## @var{nrows} - initial number of rows (normally 0)
+##
+## @var{ttype} - cell array of column type
+##
+## @var{tform} - cell array of column format
+##
+## @var{tunit} - cell array of column units
+##
+## @var{extname} - optional extension name
+##
+## @var{ttype}, @var{tform}, @var{tunit} are expected to be the same size.
+##
+## @subsubheading Outputs
+## None
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## fd = fits.createFile("test.fits");
+## ttype = {'Col1','Col2','Col3','Col4'};
+## tform = {'A9','A4','A3','A8'};
+## tunit = {'m','s','kg','km'};
+## fits.createTbl(fd,'binary',0,ttype,tform,tunit,'table-name');
+## fits.closeFile(fd);
+## @end example
 ## @end deftypefn
 function createTbl (file, tbltype, nrows, ttype, tform, varargin)
   __cfitsio_createTbl__(file, tbltype, nrows, ttype, tform, varargin{:});

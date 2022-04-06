@@ -18,6 +18,14 @@
 ## Read the keyword card for name @var{recname}
 ## 
 ## This is the equivalent of the cfitsio fits_read_card function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - record name to read
+##
+## @subsubheading Outputs
+## @var{card} - unparsed record value string
 ## @end deftypefn
 function ret = readCard (file, recname)
   ret = __cfitsio_readCard__ (file, recname);

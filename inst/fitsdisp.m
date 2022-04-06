@@ -16,7 +16,12 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{info}} = fitsdisp(@var{filename})
 ## @deftypefnx {} {@var{info}} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
-## Display information about fits format file
+## Display metadata about fits format file
+##
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @var{propertyname}, @var{propertyvalue} - property name/value pairs
 ##
 ## Known property names are:
 ## @table @asis
@@ -29,6 +34,17 @@
 ## 'standard' display mode shows the standard keywords for the selected HDUs.@*
 ## 'min' display mode shows only the type and size of the selected HDUs.@*
 ## 'full' display shows all keywords for the selected HDU.
+##
+## @subsubheading Outputs
+## @var{info} - the metadata of the file. If no output variable is provided, it displays
+## to the screen.
+##
+## @subsubheading Examples
+## @example
+## filename = file_in_loadpath("demos/tst0012.fits");
+##
+## fitsdisp(filename);
+## @end example
 ## @end deftypefn
 function out = fitsdisp (filename, varargin)
   import_fits;

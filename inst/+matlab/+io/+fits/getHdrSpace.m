@@ -18,6 +18,14 @@
 ## Get the number of keyword records used and available.
 ##
 ## This is the equivalent of the cfitsio fits_get_hdrspace function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{numkeys} - number of existing keys.
+##
+## @var{freekeys} - number of free key space.
 ## @end deftypefn
 function [numkeys, freekeys] = getHdrSpace (file)
   [numkeys, freekeys] = __cfitsio_getHdrSpace__(file);

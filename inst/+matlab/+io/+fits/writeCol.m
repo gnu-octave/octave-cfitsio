@@ -18,6 +18,18 @@
 ## Write elements to a table.
 ##
 ## This is the equivalent of the cfitsio fits_write_col function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - column number.
+##
+## @var{firstrow} - first row number.
+##
+## @var{data} - data to write to column
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeCol (file, colnum, firstrow, data)
   __cfitsio_writeCol__ (file, colnum, firstrow, data);

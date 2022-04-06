@@ -16,6 +16,20 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{info}} = fitsinfo(@var{filename})
 ## Read information about fits format file
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @subsubheading Outputs
+## @var{info} - a struct containing the structure and information about
+## the fits file.
+##
+## @subsubheading Examples
+## @example
+## filename = file_in_loadpath("demos/tst0012.fits");
+##
+## info = fitsinfo(filename);
+## @end example
+##
 ## @end deftypefn
 function info = fitsinfo (filename)
   import_fits;

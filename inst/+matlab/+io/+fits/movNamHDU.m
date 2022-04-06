@@ -17,9 +17,19 @@
 ## @deftypefn {Function File} {@var{hdutype} =} movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})
 ## Go to HDU matching @var{hdutype}, @var{extname}, @var{extver}.
 ##
-## Valid hdutype values are 'IMAGE_HDU', 'ASCII_TBL', 'BINARY_TBL', 'ANY_HDU'.
 ##
 ## This is the equivalent of the cfitsio fits_movnam_hdu function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{hdutype} - HDU number to move to.
+## Valid hdutype values are 'IMAGE_HDU', 'ASCII_TBL', 'BINARY_TBL', 'ANY_HDU'.
+##
+## @var{extname}, @var{extver} - EXTNAME and EXTVER keywords to match.
+##
+## @subsubheading Outputs
+## @var{hdutype} - hdu type of the now current HDU. 
 ## @end deftypefn
 function movNamHDU (file, hdutype, extname, extver)
   __cfitsio_movNamHDU__ (file, hdutype, extname, extver);

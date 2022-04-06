@@ -18,6 +18,18 @@
 ## Reset scale and zero to be used with reading and writing table data.
 ##
 ## This is the equivalent of the cfitsio fits_set_tscale function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{col} - column number
+##
+## @var{scale} - scale value
+##
+## @var{zero} - zero value
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setTscale (file, col, scale, zero)
   __cfitsio_setTscale__(file, col, scale, zero);

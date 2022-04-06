@@ -16,6 +16,13 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{value}} = getConstantValue(@var{name})
 ## Return the value of a known fits constant.
+##
+## @subsubheading Inputs
+## @var{name} - name of the constant to retrieve value of.
+##
+## @subsubheading Outputs
+## @var{value} - value of the constant
+##
 ## @seealso {getConstantNames}
 ## @end deftypefn
 function ret = getConstantValue (name)

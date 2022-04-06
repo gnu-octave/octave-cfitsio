@@ -14,10 +14,16 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {} isCompressedImg(@var{file})
+## @deftypefn {} {@var{comp} =} isCompressedImg(@var{file})
 ## Return true if image is compressed.
 ##
 ## This is the equivalent of the cfitsio fits_is_compressed_image function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{comp} - boolean for whether image is compressed or not. 
 ## @end deftypefn
 function ret = isCompressedImg (file)
   ret = __cfitsio_isCompressedImg__ (file);

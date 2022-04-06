@@ -18,6 +18,12 @@
 ## Return the index of the current HDU.
 ##
 ## This is the equivalent of the cfitsio fits_get_hdu_num function.
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{num} - current hdu number.
+##
 ## @end deftypefn
 function ret = getHDUnum (file)
   ret = __cfitsio_getHDUnum__ (file);

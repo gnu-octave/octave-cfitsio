@@ -16,6 +16,13 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{namelist}} = getConstantNames()
 ## Return the names of all known fits constants.
+##
+## @subsubheading Inputs
+## None
+##
+## @subsubheading Outputs
+## @var{namelist} - cell array of all known fits constant names
+##
 ## @seealso {getConstantValue}
 ## @end deftypefn
 function ret = getConstantNames ()

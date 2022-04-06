@@ -18,6 +18,17 @@
 ## Insert a new primary image or image extension at current HDU position.
 ##
 ## This is the equivalent of the cfitsio fits_insert_imgll function.
+##
+## @subsubheading Inputs
+## @var{file} - file previously opened with openFile, openDiskFile
+## or createFile.
+##
+## @var{bitpix} - type for the data as a string in either matlab or cfitsio naming.
+##
+## @var{naxis} - axis values for the image.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function insertImg (file, bitpix, naxis)
   __cfitsio_insertImg__ (file, bitpix, naxis);

@@ -19,6 +19,29 @@
 ## Get column name.
 ##
 ## This is the equivalent of the cfitsio fits_get_colname function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{template} - template string for matching column name.
+##
+## @var{casesens} - boolean whether to be case sensitive in match.
+##
+## @subsubheading Outputs
+## @var{colnum} - column number of match.
+##
+## @var{colname} - column name of match.
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## filename = file_in_loadpath("demos/tst0012.fits");
+## fd = fits.openFile(filename);
+## fits.movAbsHDU(fd,2);
+## [colnum, colname] = fits.getColName(fd,"C*");
+## # returned 3, "COUNTS"
+## fits.closeFile(fd);
+## @end example
 ## @end deftypefn
 function [colnum, colname] = getColName (file, template, varargin)
   [colnum, colname] = __cfitsio_getColName__ (file, template, varargin{:});

@@ -18,6 +18,12 @@
 ## Get number of rows.
 ##
 ## This is the equivalent of the cfitsio fits_get_numrowsll function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{nrows} - the number of rows in in the current table.
 ## @end deftypefn
 function ret = getNumRows (file)
   ret = __cfitsio_getNumRows__ (file);

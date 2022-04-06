@@ -18,6 +18,14 @@
 ## Read the keyword record at @var{recidx}.
 ##
 ## This is the equivalent of the cfitsio fits_read_record function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recidx} - record number.
+##
+## @subsubheading Outputs
+## @var{rec} - full keyword record
 ## @end deftypefn
 function ret = readRecord (file, recidx)
   ret = __cfitsio_readRecord__ (file, recidx);

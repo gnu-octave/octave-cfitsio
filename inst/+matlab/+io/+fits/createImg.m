@@ -18,6 +18,25 @@
 ## create a new primary image or image extension\n \
 ##
 ## This is the equivalent of the cfitsio fits_create_imgll function.
+##
+## @subsubheading Inputs
+## @var{file} - file previously opened with openFile, openDiskFile
+## or createFile.
+##
+## @var{bitpix} - type for the data as a string in either matlab or cfitsio naming.
+##
+## @var{naxis} - axis values for the image.
+##
+## @subsubheading Outputs
+## None
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## fd = fits.createFile("test.fits");
+## fits.createImg(fd,'int16',[10 20]);
+## fits.close(fd);
+## @end example
 ## @end deftypefn
 function createImg (file, bitpix, naxis)
   __cfitsio_createImg__(file, bitpix, naxis);

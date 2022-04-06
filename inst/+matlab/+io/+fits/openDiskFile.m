@@ -18,10 +18,26 @@
 ## @deftypefnx {} {@var{file}} = openDiskFile(@var{filename}, @var{mode})
 ## Attempt to open a file of the given input name, ignoring any special processing of the filename.
 ##
-## If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using
-## that mode.
-##
 ## This is the equivilent of the cfitsio fits_open_diskfile funtion.
+##
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @var{mode} - If the opion mode string 'READONLY' (default) or 'READWRITE' is provided,
+## open the file using that mode.
+##
+## @subsubheading Outputs
+## @var{file} - opened file identifier.
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## filename = file_in_loadpath("demos/tst0012.fits")
+##
+## fd = fits.openDiskFile(filename, 'READONLY');
+## fits.closeFile(fd);
+## @end example
+##
 ## @seealso {openFile, createFile}
 ## @end deftypefn
 function ret = openDiskFile (file, varargin)

@@ -18,6 +18,16 @@
 ## Read the key value @var{recname} as a string.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_longstr function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{value} - string value of record.
+##
+## @var{comment} - comment string
 ## @end deftypefn
 function [value, comment] = readKeyLongStr (file, recname)
   [value, comment] = __cfitsio_readKeyLongStr__ (file, recname);

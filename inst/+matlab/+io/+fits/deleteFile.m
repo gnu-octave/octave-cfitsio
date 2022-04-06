@@ -18,6 +18,12 @@
 ## Force a close and delete of a fits file.
 ##
 ## The is the eqivalent of the fits_delete_file function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function deleteFile (file)
   __cfitsio_deleteFile__(file);

@@ -21,7 +21,23 @@
 ## file exists, the create will fail.
 ##
 ## This is the equivilent of the cfitsio fits_create_file funtion.
-## @seealso {openFile}
+##
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @subsubheading Outputs
+## @var{file} - opened file identifier.
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+##
+## fd = fits.createFile("myfitsfile.fits");
+## fits.createImg(fd, 'uint16', [100 100]);
+## fits.closeFile(fd);
+## @end example
+##
+## @seealso {matlab.io.fits.openFile}
 ## @end deftypefn
 function ret = createFile (filename)
   ret = __cfitsio_createFile__ (filename);

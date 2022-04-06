@@ -20,6 +20,19 @@
 ## Append or replace a key in the fits file.
 ##
 ## This is the equivalent of the cfitsio fits_write_key and fits_update_key function.
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{key} - keyword name.
+##
+## @var{value} - keyword value.
+##
+## @var{comment} - keyword comment.
+##
+## @var{decimals} - number of decimals.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeKey (file, key, value, varargin)
   __cfitsio_writeKey__ (file, key, value, varargin{:});

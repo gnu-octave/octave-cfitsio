@@ -19,6 +19,16 @@
 ## Reset bscale and bzero to be used with reading and writing Images.
 ##
 ## This is the equivalent of the cfitsio fits_set_bscale function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{bscale} - bscale value
+##
+## @var{bzero} - bzero value
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setBscale (file, bscale, bzero)
   __cfitsio_setBscale__ (file, bscale, bzero);

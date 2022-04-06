@@ -18,6 +18,16 @@
 ## Read the keyword value and comment for name @var{recname}.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_str function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{keyvalue} - string value of record.
+##
+## @var{keycomment} - comment string
 ## @end deftypefn
 function [keyvalue, keycomment] = readKey (file, recname)
   [keyvalue, keycomment] = __cfitsio_readKey__ (file, recname);

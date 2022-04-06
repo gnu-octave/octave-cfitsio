@@ -18,6 +18,12 @@
 ## Write the date keyword.
 ##
 ## This is the equivalent of the cfitsio fits_write_date function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeDate (file)
   __cfitsio_writeDate__ (file);

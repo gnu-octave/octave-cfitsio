@@ -18,6 +18,13 @@
 ## @deftypefnx {} {} fitswrite(@var{data}, @var{filename}, @var{propertyname}, @var{propertyvalue})
 ## Write image data @var{data}  to FITS file @var{filename}. If the fie already exists, overwrte it.
 ##
+## @subsubheading Inputs
+## @var{data} - imagedata to write to a file.
+##
+## @var{filename} - filename to write to.
+##
+## @var{propertyname}, @var{propertyvalue} - property name/value pairs
+##
 ## Additional properties can be set as @var{propertyname}, @var{propertyvalue} pairs.
 ## Known property names are:
 ## @table @asis
@@ -25,6 +32,15 @@
 ## Set mode for writing to image as 'overwrite' (default) or 'append' to append images.
 ## @end table
 ##
+## @subsubheading Outputs
+## None
+##
+## @subsubheading Examples
+## @example
+## filename = tempname();
+## X =  double([1:3;4:6]);
+## fitswrite(X, filename);
+## @end example
 ## @end deftypefn
 function fitswrite (imagedata, filename, varargin)
   import_fits;

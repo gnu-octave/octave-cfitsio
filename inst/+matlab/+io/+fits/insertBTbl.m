@@ -18,6 +18,26 @@
 ## Insert a new bintable extension.
 ##
 ## This is the equivalent of the cfitsio fits_insert_btbl function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{nrows} - initial number of rows (normally 0)
+##
+## @var{ttype} - cell array of column type
+##
+## @var{tform} - cell array of column format
+##
+## @var{tunit} - cell array of column units
+##
+## @var{extname} - optional extension name
+##
+## @var{pcount} - heap size.
+##
+## @var{ttype}, @var{tform}, @var{tunit} are expected to be the same size.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function insertBTbl (file, nrows, ttype, tform, tunit, varargin)
   __cfitsio_insertBTbl__ (file, nrows, ttype, tform, tunit, varargin{:});

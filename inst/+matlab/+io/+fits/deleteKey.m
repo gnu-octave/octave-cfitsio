@@ -18,6 +18,15 @@
 ## Delete a key in the fits file.
 ##
 ## This is the equivalent of the cfitsio fits_delete_key function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{key} - Key name to remove.
+##
+## @subsubheading Outputs
+## None
+##
 ## @end deftypefn
 function deleteKey (file, key)
   __cfitsio_deleteKey__ (file, key);

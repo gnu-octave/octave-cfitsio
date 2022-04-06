@@ -20,6 +20,18 @@
 ## Read Image data.
 ##
 ## This is the equivalent of the cfitsio fits_read_subset function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{firstpix} - first pile coordinate
+##
+## @var{lastpix} - last pixel coordinate
+##
+## @var{inc} -  pixel increment
+##
+## @subsubheading Outputs
+## @var{data} - image data read
 ## @end deftypefn
 function ret = readImg (file, varargin)
   ret = __cfitsio_readImg__ (file, varargin{:});

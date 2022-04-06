@@ -18,6 +18,12 @@
 ## Get ASCII table parameters.
 ##
 ## This is the equivalent of the cfitsio  fits_read_atablhdrll function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{rowlen},@var{nrows},@var{ttype},@var{tbcol},@var{tform},@var{tunit},@var{extname} - table properties
 ## @end deftypefn
 function varargout = readATblHdr (file)
   [varargout{1:nargout}] = __cfitsio_readATblHdr__ (file);

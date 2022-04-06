@@ -14,10 +14,16 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {@var{name}} = fileName(@var{file})
+## @deftypefn {} {@var{filename}} = fileName(@var{file})
 ## Return the file name of the opened fits file.
 ##
 ## The is the eqivalent of the fits_file_name function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{filename} - name of the fits file.
 ## @end deftypefn
 function ret = fileName (file)
   ret = __cfitsio_fileName__ (file);

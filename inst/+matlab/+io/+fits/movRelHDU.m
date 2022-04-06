@@ -20,6 +20,14 @@
 ## Returns the newly current HDU type as a string.
 ##
 ## This is the equivalent of the cfitsio fits_movrel_hdu function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{hdunum} - relative HDU number to move to.
+##
+## @subsubheading Outputs
+## @var{type} - hdu type of the now current HDU. 
 ## @end deftypefn
 function ret = movRelHDU (file, hdunum)
   ret = __cfitsio_movRelHDU__ (file, hdunum);

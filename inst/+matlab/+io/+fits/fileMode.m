@@ -17,9 +17,13 @@
 ## @deftypefn {} {@var{mode}} = fileMode(@var{file})
 ## Return the file mode of the opened fits file.
 ##
-## The mode will return as a string 'READWRITE' or 'READONLY'
-##
 ## The is the eqivalent of the fits_file_mode function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{mode} - The mode will return as a string 'READWRITE' or 'READONLY'
 ## @end deftypefn
 function ret = fileMode (file)
   ret = __cfitsio_fileMode__ (file);

@@ -18,6 +18,16 @@
 ## Read the key value @var{recname} as a long long.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_lnglng function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{value} - int64 value of record.
+##
+## @var{comment} - comment string
 ## @end deftypefn
 function [value, comment] = readKeyLongLong (file, recname)
   [value, comment] = __cfitsio_readKeyLongLong__ (file, recname);

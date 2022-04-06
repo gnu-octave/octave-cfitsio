@@ -14,12 +14,20 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {@var{type}} = movAbsHDU(@var{file}, @var{hdunum})
+## @deftypefn {} {@var{type} =} movAbsHDU(@var{file}, @var{hdunum})
 ## Goto absolute HDU index @var{hdunum}
 ##
 ## Returns the newly current HDU type as a string.
 ##
 ## This is the equivalent of the cfitsio fits_movabs_hdu function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{hdunum} - HDU number to move to.
+##
+## @subsubheading Outputs
+## @var{type} - hdu type of the now current HDU. 
 ## @end deftypefn
 function ret = movAbsHDU (file, hdunum)
   ret = __cfitsio_movAbsHDU__ (file, hdunum);

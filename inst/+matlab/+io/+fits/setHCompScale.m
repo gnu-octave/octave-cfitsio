@@ -18,6 +18,13 @@
 ## Set scale to be used with HCOMPRESS compression.
 ##
 ## This is the equivalent of the cfitsio fits_set_hcomp_scale function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{scale} - scale value
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setHCompScale (file, scale)
   __cfitsio_setHCompScale__(file, scale);

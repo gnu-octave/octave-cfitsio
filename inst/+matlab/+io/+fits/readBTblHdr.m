@@ -18,6 +18,12 @@
 ## Get Binary table parameters.
 ##
 ## This is the equivalent of the cfitsio  fits_read_btablhdrll function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{nrows},@var{ttype},@var{tform},@var{tunit},@var{extname},@var{pcount}] - table properties
 ## @end deftypefn
 function varargout = readBTblHdr (file)
   [varargout{1:nargout}] = __cfitsio_readBTblHdr__ (file);

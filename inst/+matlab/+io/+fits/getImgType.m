@@ -15,9 +15,15 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{type}} = getImgType(@var{file})
-## Return size of a Image HDU
+## Return datatype of a Image HDU
 ##
 ## This is the equivalent of the cfitsio fits_get_img_type function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{type} - datatype as a string for the image type.
 ## @end deftypefn
 function ret = getImgType (file)
   ret = __cfitsio_getImgType__ (file);

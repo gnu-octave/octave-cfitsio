@@ -18,6 +18,14 @@
 ## Delete a key in the fits file.
 ##
 ## This is the equivalent of the cfitsio fits_delete_record function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{keynum} - Record number to remove.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function deleteRecord (file, keynum)
   __cfitsio_deleteRecord__ (file, keynum);

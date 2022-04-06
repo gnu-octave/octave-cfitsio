@@ -17,6 +17,11 @@
 ## @deftypefn {} {@var{files}} = getOpenFiles()
 ## Get the file handles of all open fits files.
 ##
+## @subsubheading Inputs
+## None
+##
+## @subsubheading Outputs
+## @var{files} list of opened fits file handles.
 ## @seealso {openFile}
 ## @end deftypefn
 function ret = getOpenFiles ()

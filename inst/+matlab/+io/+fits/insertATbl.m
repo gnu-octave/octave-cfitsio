@@ -20,6 +20,28 @@
 ## Insert a new ASCII table after current HDU.
 ##
 ## This is the equivalent of the cfitsio fits_insert_atbl function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{rowlen} - row length. If set to 0, the function will calculate size based on 
+## tbcol and ttype.
+##
+## @var{nrows} - initial number of rows (normally 0)
+##
+## @var{ttype} - cell array of column type
+##
+## @var{tbcol} - array containing the start indices for each column.
+##
+## @var{tform} - cell array of column format
+##
+## @var{tunit} - cell array of column units
+##
+## @var{extname} - optional extension name
+##
+## @subsubheading Outputs
+## None
+##
 ## @end deftypefn
 function insertATbl (file, rowlen, nrows, ttype, tbcol, tform, varargin)
   __cfitsio_insertATbl__ (file, rowlen, nrows, ttype, tbcol, tform, varargin{:});

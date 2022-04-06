@@ -18,6 +18,15 @@
 ## Write a key unit to the fits file.
 ##
 ## This is the equivalent of the cfitsio fits_write_key_unit function.
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{key} - keyword name.
+##
+## @var{unit} - keyword units as string.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeKeyUnit (file, key, unit)
   __cfitsio_writeKeyUnit__ (file, key, unit);

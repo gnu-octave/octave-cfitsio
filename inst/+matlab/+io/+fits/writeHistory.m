@@ -18,6 +18,13 @@
 ## Append a history to to the fits file.
 ##
 ## This is the equivalent of the cfitsio fits_write_history function.
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{history} - history string.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeHistory (file, history)
   __cfitsio_writeHistory__ (file, history);

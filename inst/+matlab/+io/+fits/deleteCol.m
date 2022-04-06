@@ -18,6 +18,14 @@
 ## Delete a column from a table.
 ##
 ## This is the equivalent of the cfitsio fits_delete_col function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - Column to delete from current table.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function deleteCol (file, colnum)
   __cfitsio_deleteCol__ (file, colnum);

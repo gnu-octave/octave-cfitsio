@@ -18,6 +18,16 @@
 ## Read the key value @var{recname} as a complex double.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_dblcmp function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{value} - complex value of record.
+##
+## @var{comment} - comment string
 ## @end deftypefn
 function [value, comment] = readKeyCmplx (file, recname)
   [value, comment] = __cfitsio_readKeyCmplx__ (file, rename);

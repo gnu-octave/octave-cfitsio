@@ -14,14 +14,24 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {} writeImg(@var{file}, @var{data})
-## @deftypefnx {} {} writeImg(@var{file}, @var{data}, @var{fpixel})
+## @deftypefn {} {} writeImg(@var{file}, @var{imagedata})
+## @deftypefnx {} {} writeImg(@var{file}, @var{imagedata}, @var{fpixel})
 ## write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc
 ##
 ## This is the equivalent of the cfitsio fits_write_subset function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{imgedata} - Image data.
+##
+## @var{fpixel} - start pixel to write from.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
-function writeImg (file, data, varargin)
-  __cfitsio_writeImg__ (file, data, varargin{:});
+function writeImg (file, imagedata, varargin)
+  __cfitsio_writeImg__ (file, imagedata, varargin{:});
 endfunction
 
 %!test

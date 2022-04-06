@@ -18,6 +18,14 @@
 ## Set smooth value to be used with HCOMPRESS compression.
 ##
 ## This is the equivalent of the cfitsio fits_set_hcomp_smooth function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{smooth} - smooth value
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setHCompSmooth (file, smooth)
   __cfitsio_setHCompSmooth__ (file, smooth);

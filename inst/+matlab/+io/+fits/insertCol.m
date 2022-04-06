@@ -18,6 +18,16 @@
 ## Insert a column into a table.
 ##
 ## This is the equivalent of the cfitsio fits_insert_col function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - Column to delete from current table.
+##
+## @var{ttype}, @var{tform} - column type to insert
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function insertCol (file, colnum, ttype, tform)
   __cfitsio_insertCol__ (file, colnum, ttype, tform);

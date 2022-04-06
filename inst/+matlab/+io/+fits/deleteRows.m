@@ -18,6 +18,16 @@
 ## Insert a rows into a table.
 ##
 ## This is the equivalent of the cfitsio fits_delete_rows function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{firstrow} - Start row to delete.
+##
+## @var{numrows} - Number of rows to delete.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function deleteRows (file, firstrow, numrows)
   __cfitsio_deleteRows__ (file, firstrow, numrows);

@@ -18,6 +18,12 @@
 ## Return size of a Image HDU.
 ##
 ## This is the equivalent of the cfitsio fits_get_img_size function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{size} - vector containing the image dimensions.
 ## @end deftypefn
 function ret = getImgSize (file)
   ret = __cfitsio_getImgSize__ (file);

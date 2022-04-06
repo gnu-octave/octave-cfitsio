@@ -18,6 +18,34 @@
 ## Copy current HDU from one infile to another.
 ##
 ## This is the equivalent of the cfitsio fits_copy_hdu function.
+##
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @subsubheading Outputs
+## @var{infile} - opened input file identifier.
+##
+## @var{outfile} - opened output file identifier.
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## 
+## # open input and output files
+## infilename = file_in_loadpath("demos/tst0012.fits");
+## infile = fits.openFile(infilename);
+##
+## outfile = fits.createFile("myfitsfile.fits");
+## # copy first hdu
+## fits.copyHDU(infile, outfile);
+## # move to and then copy 2nd hdu
+## fits.movAbsHDU(infile,2);
+## fits.copyHDU(infile, outfile);
+##
+## # close files
+## fits.closeFile(infile);
+## fits.closeFile(outfile);
+## @end example
 ## @end deftypefn
 function copyHDU (infile, outfile)
   __cfitsio_copyHDU__(infile, outfile);

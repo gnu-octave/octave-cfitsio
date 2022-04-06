@@ -18,12 +18,27 @@
 ## @deftypefnx {} {@var{file}} = openFile(@var{filename}, @var{mode})
 ## Attempt to open a file of the given input name.
 ## 
-## If the opion mode string 'READONLY' (default) or 'READWRITE' is provided,
-## open the file using that mode.
-##
 ## This is the equivilent of the cfitsio fits_open_file funtion.
 ##
-## @seealso {openDiskFile, createFile}
+## @subsubheading Inputs
+## @var{filename} - filename to open.
+##
+## @var{mode} - If the opion mode string 'READONLY' (default) or 'READWRITE' is provided,
+## open the file using that mode.
+##
+## @subsubheading Outputs
+## @var{file} - opened file identifier.
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## filename = file_in_loadpath("demos/tst0012.fits")
+##
+## fd = fits.openFile(filename, 'READONLY');
+## fits.closeFile(fd);
+## @end example
+##
+## @seealso {matlab.io.fits.openDiskFile, matlab.io.fits.createFile}
 ## @end deftypefn
 
 function ret = openFile (filename, varargin)

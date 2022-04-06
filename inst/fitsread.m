@@ -21,16 +21,47 @@
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, ____, @var{propertyname}, @var{propertyvalue})
 ## Read the primary data, or specifed extenstion data. It scales the data and applied Nan to any undefined values.
 ##
-## @var{exttype} can be  'primary', 'asciitable', 'binarytable', 'image', 'unknown'.
+## @subsubheading Inputs
+## @var{filename} - filename to open.
 ##
-## @var{index} can be used to specify which table when more than one of a given type exists.
+## @var{exttype} - can be  'primary', 'asciitable', 'binarytable', 'image', 'unknown'.
 ##
-## If the 'raw' keyword is used, the raw data from the file will be used without replacing undefined values with Nan
+## @var{index} - can be used to specify which table when more than one of a given type exists.
+##
+## 'raw'-  If the 'raw' keyword is used, the raw data from the file will be used without replacing
+## undefined values with Nan
 ##
 ## Known property names are:
 ## @table @asis
+## @item Info
+## input info from fitsinfo call.
+## @item PixelRegion
+## pixel region to extract data for in an image (Currently not implemented)
+## @item TableColumns
+## A list of columns to extract from a ascii or binary table.
+## @item TableRows
+## A list of rows to extract from an ascii or binary table.
 ## @end table
 ##
+## @subsubheading Outputs
+## @var{data} - The read data from the table or image.
+##
+## @subsubheading Examples
+## @example
+## filename = file_in_loadpath("demos/tst0012.fits");
+##
+## # read the primary image data
+## imagedata = fitsread(filename);
+##
+## # read the 1st non primaty image
+## imagedata = fitsread(filename, "image");
+##
+## # read the first binary table, selected columns
+## tbldata = fitsread(filename, "binarytable", "TableColumns", [1 2 11]);
+##
+## # read the first acsii table
+## atbldata = fitsread(filename, "asciitable");
+## @end example
 ## @end deftypefn
 function out = fitsread (filename, varargin)
   import_fits;

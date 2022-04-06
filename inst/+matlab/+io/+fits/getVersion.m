@@ -18,6 +18,12 @@
 ## Return the version number of the cfitsio library used.
 ##
 ## This is the equivalent of the cfitsio fits_get_version function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{ver} - version 
 ## @end deftypefn
 function ret = getVersion ()
   ret = __cfitsio_getVersion__ ();

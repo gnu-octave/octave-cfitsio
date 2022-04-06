@@ -17,9 +17,24 @@
 ## @deftypefn {} {} closeFile(@var{file})
 ## Close the opened fits file
 ## 
-## The is the eqivalent of the fits_close_file function.
+## This is the eqivalent of the fits_close_file function.
 ##
-## @seealso {matlab.io.fits.openFile}
+## @subsubheading Inputs
+## @var{file} - opened file returned from openFile or createFile.
+##
+## @subsubheading Outputs
+## None
+##
+## @subsubheading Examples
+## @example
+## import_fits;
+## filename = file_in_loadpath("demos/tst0012.fits")
+##
+## fd = fits.openFile(filename);
+## fits.closeFile(fd);
+## @end example
+##
+## @seealso {matlab.io.fits.createFile, matlab.io.fits.openFile}
 ## @end deftypefn
 function closeFile (file)
   __cfitsio_closeFile__ (file);

@@ -15,9 +15,15 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} writeChecksum(@var{file})
-## Recalulate the HDU checksum and if required, write the new value.
+## Recalculate the HDU checksum and if required, write the new value.
 ##
 ## This is the equivalent of the cfitsio fits_write_chksum function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeChecksum (file)
   __cfitsio_writeChecksum__ (file);

@@ -18,6 +18,14 @@
 ## Read the physical key units value @var{recname}.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_unit function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{keyunit} - inits value of record.
 ## @end deftypefn
 function ret = readKeyUnit (file, recname)
   ret = __cfitsio_readKeyUnit__ (file, recname);

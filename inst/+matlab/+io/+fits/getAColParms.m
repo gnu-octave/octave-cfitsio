@@ -17,7 +17,16 @@
 ## @deftypefn {} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = getAColParms(@var{file}, @var{colnum})
 ## Get ASCII table paramaters.
 ##
-## This is the equivalent of the cfitsio  fits_get_acolparms function.
+## This is the equivalent of the cfitsio fits_get_acolparms function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - Column to retrieve.
+##
+## @subsubheading Outputs
+## @var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}
+## column information in same format as provided by fits_get_acolparms.
 ## @end deftypefn
 function varargout = getAColParms (file, colnum)
   [varargout{1:nargout}] = __cfitsio_getAColParms__ (file, colnum);

@@ -18,6 +18,14 @@
 ## Copy HDU and image data from one infile to another, using the outfiles compression type.
 ##
 ## This is the equivalent of the cfitsio fits_img_compress function.
+##
+## @subsubheading Inputs
+## @var{infile} - opened input fits file.
+##
+## @var{outfile} - opened writable output fits file.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function imgCompress (infile, outfile)
   __cfitsio_imgCompress__ (infile, outfile);

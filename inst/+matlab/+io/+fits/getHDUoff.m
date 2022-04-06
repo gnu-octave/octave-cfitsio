@@ -18,6 +18,12 @@
 ## Return offsets of the current HDU.
 ##
 ## This is the equivalent of the cfitsio fits_get_hduoff function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{headtstart}, @var{datastart}, @var{dataend} - offset information for the current HDU.
 ## @end deftypefn
 function varargout = getHDUoff (file)
   [varargout{1:nargout}] = __cfitsio_getHDUoff__ (file);

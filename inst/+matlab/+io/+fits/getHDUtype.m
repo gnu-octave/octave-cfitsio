@@ -18,6 +18,12 @@
 ## Return the current HDUs type as a string.
 ##
 ## This is the equivalent of the cfitsio fits_get_hdu_type function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{type} - current hdu type
 ## @end deftypefn
 function ret = getHDUtype (file)
   ret = __cfitsio_getHDUtype__ (file);

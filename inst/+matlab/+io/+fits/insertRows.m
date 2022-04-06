@@ -18,6 +18,16 @@
 ## Insert rows into a table.
 ##
 ## This is the equivalent of the cfitsio fits_insert_rows function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{firstrow} - Start row to insert from.
+##
+## @var{numrows} - Number of rows to add.
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function insertRows (file, firstrow, numrows)
   __cfitsio_insertRows__ (file, firstrow, numrows);

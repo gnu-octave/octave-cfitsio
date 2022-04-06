@@ -20,6 +20,13 @@
 ## Returns the newly current HDU type as a string.
 ##
 ## This is the equivalent of the cfitsio fits_delete_hdu function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{type} - string value for type of the next HDU.
+##
 ## @end deftypefn
 function ret = deleteHDU (file)
   ret = __cfitsio_deleteHDU__(file);

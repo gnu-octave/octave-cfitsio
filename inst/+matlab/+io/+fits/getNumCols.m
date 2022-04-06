@@ -18,6 +18,12 @@
 ## Get number of columns.
 ##
 ## This is the equivalent of the cfitsio  fits_get_num_cols function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{ncols} - the number of columns in the table.
 ## @end deftypefn
 function ret = getNumCols (file)
   ret = __cfitsio_getNumCols__ (file);

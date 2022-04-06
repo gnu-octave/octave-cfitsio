@@ -18,6 +18,14 @@
 ## Set compression tile dims for writing FITS images.
 ##
 ## This is the equivalent of the cfitsio fits_set_tile_dim function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{tiledims} - tile dimensions
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setTileDim (file, tiledims)
   __cfitsio_setTileDim__ (file, tiledims);

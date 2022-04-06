@@ -18,6 +18,16 @@
 ## Read the key value @var{recname} as a double.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{recname} - keyword name.
+##
+## @subsubheading Outputs
+## @var{value} - double value of record.
+##
+## @var{comment} - comment string
 ## @end deftypefn
 function [value, comment] = readKeyDbl (file, recname)
   [value, comment] = __cfitsio_readKeyDbl__ (file, recname);

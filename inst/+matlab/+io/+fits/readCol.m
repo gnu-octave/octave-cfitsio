@@ -19,6 +19,18 @@
 ## Get table row data.
 ##
 ## This is the equivalent of the cfitsio  fits_read_col function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{firstrow} - Start row
+##
+## @var{numrows} - Number of rows to read
+##
+## @subsubheading Outputs
+## @var{coldata} - the colmn data rows
+##
+## @var{nulldata} - the null value flags
 ## @end deftypefn
 function [coldata, nullval] = readCol (file, colnum, varargin)
   [coldata, nullval] = __cfitsio_readCol__ (file, colnum, varargin{:});

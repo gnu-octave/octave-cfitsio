@@ -18,6 +18,15 @@
 ## Get binary table paramaters.
 ##
 ## This is the equivalent of the cfitsio  fits_get_bcolparms function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - Column to retrieve.
+##
+## @subsubheading Outputs
+## @var{ttype},@var{tunit},@var{typechar},@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}
+## column information in same format as provided by fits_get_bcolparms.
 ## @end deftypefn
 function varargout = getBColParms (file, colnum)
   [varargout{1:nargout}] = __cfitsio_getBColParms__ (file, colnum);

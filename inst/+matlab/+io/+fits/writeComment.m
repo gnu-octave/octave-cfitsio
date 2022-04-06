@@ -14,10 +14,18 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {} fits_writeComment(@var{file}, @var{comment})\n \
-## Append a comment to to the fits file.\n \
-## \n \
-## This is the equivalent of the cfitsio fits_write_comment function.\n \
+## @deftypefn {} {} writeComment(@var{file}, @var{comment})
+## Append a comment to to the fits file.
+##
+## This is the equivalent of the cfitsio fits_write_comment function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{comment} - comment to append
+##
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function writeComment (file, comment)
   __cfitsio_writeComment__ (file, comment);

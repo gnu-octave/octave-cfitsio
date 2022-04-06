@@ -18,6 +18,14 @@
 ## Get column type.
 ##
 ## This is the equivalent of the cfitsio  fits_get_coltypell function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{colnum} - Column to delete from current table.
+##
+## @subsubheading Outputs
+## @var{dtype},@var{repeat},@var{width} - column information.
 ## @end deftypefn
 function [dtype, repeat, width] = getColType (file, colnum)
   [dtype, repeat, width] = __cfitsio_getColType__ (file, colnum);

@@ -14,10 +14,16 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {@var{nrows}} = getRowSize(@var{file})
-## Get size of a row.
+## @deftypefn {} {@var{nrows}} = getRowSize(@var{file})
+## Get optinum number of rows to read/write at one time.
 ##
 ## This is the equivalent of the cfitsio  fits_get_rowsize function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{nrows} - number of rows.
 ## @end deftypefn
 function ret = getRowSize (file)
   ret = __cfitsio_getRowSize__ (file);

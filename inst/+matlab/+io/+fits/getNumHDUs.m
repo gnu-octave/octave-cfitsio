@@ -17,7 +17,13 @@
 ## @deftypefn {} {@var{num}} = getNumHDUs(@var{file})
 ## Return the count of HDUs in the file.
 ##
-## This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
+## This is the equivalent of the cfitsio fits_get_num_hdus function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @subsubheading Outputs
+## @var{num} - return the number of HDUs in the file.
 ## @end deftypefn
 function ret = getNumHDUs (file)
   ret = __cfitsio_getNumHDUs__ (file);

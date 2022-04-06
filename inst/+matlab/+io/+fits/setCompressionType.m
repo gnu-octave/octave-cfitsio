@@ -17,9 +17,16 @@
 ## @deftypefn {} {} setCompressionType(@var{file}, @var{comptype})
 ## Set compression type for writing FITS images.
 ##
+## This is the equivalent of the cfitsio fits_set_compression_type function.
+##
+## @subsubheading Inputs
+## @var{file} - opened fits file.
+##
+## @var{comptype} - compression type.
 ## Valid comptype values are: 'GZIP', 'GZIP2', 'RICE', 'PLIO', 'HCOMPRESS' or 'NOCOMPRESS'.
 ##
-## This is the equivalent of the cfitsio fits_set_compression_type function.
+## @subsubheading Outputs
+## None
 ## @end deftypefn
 function setCompressionType (file, comptype)
   __cfitsio_setCompressionType__ (file, comptype);
