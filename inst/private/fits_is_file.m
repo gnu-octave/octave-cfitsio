@@ -14,33 +14,16 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {@var{files}} = getOpenFiles()
-## Get the file handles of all open fits files.
-##
-## @subsubheading Inputs
-## None
-##
-## @subsubheading Outputs
-## @var{files} list of opened fits file handles.
-## @seealso {openFile}
+## @deftypefn {} {} fits_is_file(@var{filename})
+## Private function
 ## @end deftypefn
-function ret = getOpenFiles ()
-  if nargin > 0
-    error ("Unexpected inputs to getOpenFiles");
+function yes = fits_is_file (filename)
+  yes = false;
+  if exist("isfile") == 2
+    yes = isfile(filename);
+  else
+    [info, err] = stat (filename);
+    yes = (! err && S_ISREG (info.mode));
   endif
-  ret = __cfitsio_getOpenFiles__ ();
 endfunction
-
-%!test
-%! testfile = file_in_loadpath("demos/tst0012.fits");
-%! assert(isempty(matlab.io.fits.getOpenFiles()));
-%! fd = matlab.io.fits.openFile(testfile);
-%! of = matlab.io.fits.getOpenFiles();
-%! assert(!isempty(of));
-%! assert(fd, of);
-%! matlab.io.fits.closeFile(fd);
-%! of = matlab.io.fits.getOpenFiles();
-%! assert(isempty(of));
-
-%!error matlab.io.fits.getOpenFiles(1);
-
+ 

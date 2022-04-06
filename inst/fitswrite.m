@@ -88,7 +88,7 @@ function fitswrite (imagedata, filename, varargin)
 
   fd = -1;
 
-  if isfile(filename)
+  if fits_is_file(filename)
     if strcmpi(p.Results.WriteMode, "overwrite")
       fd = fits.createFile(['!' filename]);
     else
@@ -111,6 +111,7 @@ function fitswrite (imagedata, filename, varargin)
   end_unwind_protect
 
 endfunction
+
 
 %!test
 %! testfile = tempname();

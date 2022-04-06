@@ -18,7 +18,18 @@
 ## Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
 ## @end deftypefn
 
-fits = __get_fits_imports__();
+try
+  fits = __get_fits_imports__();
+catch
+  # pre version 6 octave wont find the private function
+  cwd = pwd;
+  unwind_protect
+    cd (fullfile(fileparts(mfilename ("fullpath")), "private"))
+    fits = __get_fits_imports__();
+  unwind_protect_cleanup
+    cd (cwd);
+  end_unwind_protect
+end_try_catch
 
 %!test
 %! import_fits
