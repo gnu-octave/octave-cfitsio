@@ -31,6 +31,10 @@ AC_CONFIG_MACRO_DIRS([m4])
 AC_PROG_CXX
 AC_PROG_CXXCPP
 AC_LANG(C++)
+
+# check can access std c files
+AC_CHECK_HEADERS([string.h])
+
 AC_CHECK_PROG(PKG_CONFIG, pkg-config, pkg-config)
 AC_PROG_GREP
 AC_PROG_SED
@@ -44,7 +48,6 @@ AC_CHECK_TOOL([OCTAVE_CONFIG], [octave-config], [none])
 if [ test "$OCTAVE_CONFIG" = "none" ]; then
   AC_MSG_ERROR([octave-config required to install $PACKAGE_NAME])
 fi
-
 
 
 # checks for cfitsio
@@ -70,17 +73,20 @@ if test "$FITSIO_CXXFLAGS$FITSIO_LIBS" == "" ; then
   AC_MSG_CHECKING([for fitsio headers path])
   found_header=
   for p in [ /usr/include /usr/local/include /opt/include /mingw32/include /mingw64/include ]; do
-    for v in [ cfitsio ]; do
-    CPPFLAGS="-I$p/$v $save_CPPFLAGS"
-    AC_COMPILE_IFELSE(
-      [AC_LANG_PROGRAM([
-        #include <fitsio.h>
-        ],
-        [
-          int i=0;
-        ])],
-      [found_header="$p/$v"],
-      [])
+    for v in [ '' cfitsio ]; do
+      file_name="$p/$v/fitsio.h"
+      if test -f $file_name; then 
+        CPPFLAGS="-I$p/$v $save_CPPFLAGS"
+        AC_COMPILE_IFELSE(
+          [AC_LANG_PROGRAM([
+           #include <fitsio.h>
+          ],
+          [
+            int i=0;
+          ])],
+        [found_header="$p/$v"],
+        [])
+      fi
     done
   done
 
