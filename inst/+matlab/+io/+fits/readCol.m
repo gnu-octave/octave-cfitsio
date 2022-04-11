@@ -31,6 +31,26 @@
 ## @var{coldata} - the colmn data rows
 ##
 ## @var{nulldata} - the null value flags
+## @subsubheading Examples
+## @example
+## import_fits;
+##
+## # open file
+## filename = file_in_loadpath("demos/tst0012.fits");
+## fd = fits.openFile(filename);
+##
+## # move to binary table and gte column for flux
+## fits.movAbsHDU(fd, 2);
+## colnum = fits.getColName(fd, 'flux');
+##
+## # read all rows in column
+## fluxdata = fits.readCol(fd, colnum);
+## # read data starting at 2nd value
+## fluxdata = fits.readCol(fd, colnum, 2);
+## # read rows 3 rows starting at row 2
+## fluxdata = fits.readCol(fd, colnum, 2, 3);
+## fits.closeFile(fd);
+## @end example
 ## @end deftypefn
 function [coldata, nullval] = readCol (file, colnum, varargin)
   [coldata, nullval] = __cfitsio_readCol__ (file, colnum, varargin{:});

@@ -32,6 +32,14 @@
 ##
 ## @subsubheading Outputs
 ## @var{data} - image data read
+## @subsubheading Examples
+## @example
+## import_fits;
+## filename = file_in_loadpath("demos/tst0012.fits");
+## fd = fits.openFile(filename);
+## imagedata = fits.readImg(fd);
+## fits.closeFile(fd);
+## @end example
 ## @end deftypefn
 function ret = readImg (file, varargin)
   ret = __cfitsio_readImg__ (file, varargin{:});

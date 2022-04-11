@@ -236,9 +236,10 @@ rungui: $(install_stamp)
 ## Test example blocks in the documentation.  Needs doctest package
 ##  https://octave.sourceforge.io/doctest/index.html
 doctest: $(install_stamp)
-	$(run_in_place) --eval 'pkg load doctest;'                                                          \
-	  --eval "targets = '$(shell (ls inst; ls src | $(GREP) .oct) | $(CUT) -f2 -d@ | $(CUT) -f1 -d.)';" \
-	  --eval "targets = strsplit (targets, ' ');  doctest (targets);"
+	$(run_in_place) --eval 'pkg load doctest;' \
+          --eval "pkgs = pkg('list', '$(package)');" \
+          --eval "target = {pkgs{1}.dir};" \
+	  --eval "doctest (target);"
 
 
 ## Test package.

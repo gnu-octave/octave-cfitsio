@@ -24,6 +24,14 @@
 ##
 ## @subsubheading Outputs
 ## @var{num} - return the number of HDUs in the file.
+## @subsubheading Examples
+## @example
+## import_fits;
+## testname = file_in_loadpath("demos/tst0012.fits");
+## fd = fits.openFile(testname);
+## hducount = getNumHDUs(fd), 5);
+## fits.closeFile(fd);
+## @end example
 ## @end deftypefn
 function ret = getNumHDUs (file)
   ret = __cfitsio_getNumHDUs__ (file);
