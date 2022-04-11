@@ -19,7 +19,7 @@
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname})
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname}, @var{index})
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, ____, @var{propertyname}, @var{propertyvalue})
-## Read the primary data, or specifed extenstion data. It scales the data and applied Nan to any undefined values.
+## Read the primary data, or specifed extension data. It scales the data and applied Nan to any undefined values.
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.
@@ -36,7 +36,9 @@
 ## @item Info
 ## input info from fitsinfo call.
 ## @item PixelRegion
-## pixel region to extract data for in an image (Currently not implemented)
+## pixel region to extract data for in an image. It expects a cell array of same size as 
+## the number of axis in the image. Each cell should be in vector format of: start, [start stop] 
+## or [start, increment, stop].
 ## @item TableColumns
 ## A list of columns to extract from a ascii or binary table.
 ## @item TableRows
@@ -76,6 +78,7 @@ function out = fitsread (filename, varargin)
   propstart = 1;
   tablecols = [];
   tablerows = [];
+  region = [];
 
   # process varargs
   if nargin > 1 && ischar(varargin{1})
@@ -117,6 +120,17 @@ function out = fitsread (filename, varargin)
           # input fitsinfo data struct
         case "PixelRegion"
           # pixel region
+          region = val;
+          if !iscell(val)
+            error ("Expected pixel region as a cell array")
+          endif
+          for x = 1:length(val)
+            # allowed val or [start stop] or [start inc stop]
+            # a single value evaluates as a 1x1 vector
+            if !isvector(val{x})
+              error ("Expected pixel region elements to be vectors")
+            endif
+          endfor
         case "TableColumns"
           if !isnumeric(val) || !isvector(val)
             error ("Expected tablecolumns as a vector");
@@ -319,7 +333,37 @@ function out = fitsread (filename, varargin)
       if isempty(imgsize)
         error ("No data in this HDU");
       endif
-      out = fits.readImg(fd);
+
+      if isempty(region)
+        out = fits.readImg(fd);
+      else
+        if length(region) != length(imgsize)
+          error ("Expected pixel region length to match image axis count");
+        endif
+        startp = [];
+        endp = [];
+        incp = [];
+
+        for x = 1:length(region)
+          val = region{x};
+          if length(val) == 1
+            startp(end+1) = val;
+            endp(end+1) = imgsize(x);
+            incp(end+1) = 1;
+          elseif length(val) == 2
+            startp(end+1) = val(1);
+            endp(end+1) = val(2);
+            incp(end+1) = 1;
+          elseif length(val) == 3
+            startp(end+1) = val(1);
+            endp(end+1) = val(3);
+            incp(end+1) = val(2);
+          else
+            error ("Expected start, [start stop] or [start inc stop] format in pixel regions");
+          endif
+        endfor
+        out = fits.readImg(fd, startp, endp, incp);
+      endif
     endif
 
   unwind_protect_cleanup
@@ -359,6 +403,17 @@ endfunction
 %! a = fitsread(testfile, "image", 1);
 %! assert(!isempty(a))
 %! assert(size(a), [31 73 5]);
+
+%!test
+%! info = fitsinfo(testfile);
+%! rowend = info.Image.Size(1);
+%! colend = info.Image.Size(2);
+%! # read every other row / column
+%! a = fitsread(testfile, "image", 'PixelRegion',{[1 2 rowend], [1 2 colend], 5 });
+%! assert(size(a), [16 37]);
+%! # from prmary image
+%! a = fitsread(testfile,'PixelRegion',{[1 2 100],[1 2 100]});
+%! assert(size(a), [50 50]);
 
 %!test
 %! a = fitsread(testfile, "binarytable");
