@@ -37,7 +37,10 @@
 ## import_fits;
 ## filename = file_in_loadpath("demos/tst0012.fits");
 ## fd = fits.openFile(filename);
+## # read the image
 ## imagedata = fits.readImg(fd);
+## # read a 70x80 part of the image
+## imagedata = fits.readImg(fd, [11 11],[80 90]);
 ## fits.closeFile(fd);
 ## @end example
 ## @end deftypefn
@@ -52,4 +55,13 @@ endfunction
 %! assert(matlab.io.fits.movAbsHDU(fd, 4), "IMAGE_HDU");
 %! data = matlab.io.fits.readImg(fd);
 %! assert (size(data), [31 73 5]);
+%! assert(matlab.io.fits.movAbsHDU(fd, 1), "IMAGE_HDU");
+%! data = matlab.io.fits.readImg(fd);
+%! assert (size(data), [109 102]);
+%! data = matlab.io.fits.readImg(fd, [1,1]);
+%! assert (size(data), [109 102]);
+%! data = matlab.io.fits.readImg(fd, [11 11], [80 90]);
+%! assert (size(data), [70 80]);
+%! data = matlab.io.fits.readImg(fd, [11 11], [80 90], [2 4]);
+%! assert (size(data), [35 20]);
 %! matlab.io.fits.closeFile(fd);

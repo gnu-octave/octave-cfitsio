@@ -16,6 +16,7 @@
 #include <iostream>
 #include <sstream>
 #include <ctype.h>
+#include <cmath>
 #include <octave/oct.h>
 #include <octave/version.h>
 #include <octave/file-info.h>
@@ -3019,8 +3020,8 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
 DEFUN_DLD(__cfitsio_readImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{data}} = __cfitsio_readImg__(@var{file})\n \
-@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{fisrtpix}, @var{lastpix})\n \
-@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{fisrtpix}, @var{lastpix}, @var{inc})\n \
+@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{firstpix}, @var{lastpix})\n \
+@deftypefnx {Function File} {@var{data}} = __cfitsio_readImg__(@var{file}, @var{firstpix}, @var{lastpix}, @var{inc})\n \
 Read Image data\n \
 \n \
 This is the equivalent of the cfitsio fits_read_subset function.\n \
@@ -3058,15 +3059,56 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
       return octave_value();
   }
 
-  dim_vector dv(1, 1);
-  dv.resize( num_axis );
-  for(int i=0; i<num_axis;i++)
+  if (args.length() > 1)
     {
-      dv(i) = axis[i];
+      if (!args (1).is_matrix_type())
+        {
+          error("Expected startpix as a vector");
+          return octave_value ();
+        }
+      else
+        {
+          Array<double> tdv = args (1).vector_value ();
+          if (tdv.numel() != num_axis)
+	    {
+              error("Expected startpix vector to contain %d elements", num_axis);
+	    }
+        }
     }
 
-  // TODO: convert to stored type 
-  MArray<double> arr(dv); // a octave double-type array
+  if (args.length() > 2)
+    {
+      if (!args (2).is_matrix_type())
+        {
+          error("Expected lastpix as a vector");
+          return octave_value ();
+        }
+      else
+        {
+          Array<double> tdv = args (2).vector_value ();
+          if (tdv.numel() != num_axis)
+	    {
+              error("Expected lastpix vector to contain %d elements", num_axis);
+	    }
+        }
+    }
+
+  if (args.length() > 3)
+    {
+      if (!args (3).is_matrix_type())
+        {
+          error("Expected inc as a vector");
+          return octave_value ();
+        }
+      else
+        {
+          Array<double> tdv = args (3).vector_value ();
+          if (tdv.numel() != num_axis)
+	    {
+              error("Expected inc vector to contain %d elements", num_axis);
+	    }
+        }
+    }
 
   int datatype = TDOUBLE;
   std::vector<long> fpixel(num_axis,1);
@@ -3074,9 +3116,46 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
   std::vector<long> lpixel(num_axis,1);
   double nulval = 0;
 
-  // read all image
-  for(int i=0;i<num_axis;i++)
-    lpixel[i] = axis[i];
+  // if we have start pix, set it
+  if (args.length() > 1)
+    {
+      Array<double> tdv = args (1).vector_value ();
+      for(int i=0; i<num_axis;i++)
+        // also swap axis 0 & 1
+        fpixel[i] = (long)(i > 1 ? tdv(i) : tdv((i+1)&1));
+    }
+
+  // if we have end pix, set it
+  if (args.length() > 2)
+    {
+      Array<double> tdv = args (2).vector_value ();
+      for(int i=0; i<num_axis;i++)
+        lpixel[i] = (long)(i > 1 ? tdv(i) : tdv((i+1)&1));
+    }
+  else
+    {
+      // read all image
+      for (int i=0;i<num_axis;i++)
+        lpixel[i] = axis[i];
+    }
+
+  // if we have inc pix, set it
+  if (args.length() > 3)
+    {
+      Array<double> tdv = args (3).vector_value ();
+      for(int i=0; i<num_axis;i++)
+        inc[i] = (long)(i > 1 ? tdv(i) : tdv((i+1)&1));
+    }
+
+  dim_vector dv(1, 1);
+  dv.resize( num_axis );
+  for(int i=0; i<num_axis;i++)
+    {
+      dv(i) = std::ceil((lpixel[i] - fpixel[i] + 1.0)/(double)inc[i]);
+    }
+
+  // TODO: convert to stored type 
+  MArray<double> arr(dv); // a octave double-type array
 
   int  anynul;
   if(fits_read_subset(fp, datatype, fpixel.data(), lpixel.data(), inc.data(), NULL, arr.fortran_vec(), &anynul, &status) > 0)
