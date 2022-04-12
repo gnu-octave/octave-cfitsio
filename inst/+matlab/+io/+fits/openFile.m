@@ -42,6 +42,10 @@
 ## @end deftypefn
 
 function ret = openFile (filename, varargin)
+  if !ischar(filename)
+    error ("Expected filename as a string.");
+  endif
+
   ret = __cfitsio_openFile__ (filename, varargin{:});
 endfunction
 
@@ -58,8 +62,8 @@ endfunction
 %! assert(!isempty(fd));
 %! matlab.io.fits.closeFile(fd);
 
-%!error <expected filename as a string> matlab.io.fits.openFile(1);
-%!error <expected filename as a string> matlab.io.fits.openFile([]);
+%!error <Expected filename as a string> matlab.io.fits.openFile(1);
+%!error <Expected filename as a string> matlab.io.fits.openFile([]);
 
 %!error <expected mode as a string> matlab.io.fits.openFile(testfile, 1);
 %!error <unknown file mode> matlab.io.fits.openFile(testfile, "badmode");

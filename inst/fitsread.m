@@ -94,6 +94,9 @@ function out = fitsread (filename, varargin)
 
       # optional index here
       if nargin > 2 && isnumeric(varargin{2})
+        if !isindex(varargin{2})
+          error ("fitsread: expected index as positive number");
+        endif
         typeindex = varargin{2};
         propstart = 3;
       endif
@@ -127,12 +130,12 @@ function out = fitsread (filename, varargin)
           for x = 1:length(val)
             # allowed val or [start stop] or [start inc stop]
             # a single value evaluates as a 1x1 vector
-            if !isvector(val{x})
-              error ("Expected pixel region elements to be vectors")
+            if !(isvector(val{x}) && isindex(val{x}))
+              error ("Expected pixel region elements to be index vectors")
             endif
           endfor
         case "TableColumns"
-          if !isnumeric(val) || !isvector(val)
+          if !isnumeric(val) || !isvector(val) || !isindex(val)
             error ("Expected tablecolumns as a vector");
           endif
           tablecols = val;
@@ -144,7 +147,7 @@ function out = fitsread (filename, varargin)
           endif
  
         case "TableRows"
-          if !isnumeric(val) || !isvector(val)
+          if !isnumeric(val) || !isvector(val) || !isindex(val)
             error ("Expected tablerows as a vector");
           endif
           tablerows = val;

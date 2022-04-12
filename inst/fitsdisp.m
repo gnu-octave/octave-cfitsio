@@ -72,7 +72,7 @@ function out = fitsdisp (filename, varargin)
     value = varargin{i+1};
     switch (name)
       case "index"
-       if !isnumeric(value)
+       if !isnumeric(value) || !isindex(value)
          error ("fitsdisp: Expected index to be numeric");
        endif
        if ismatrix(value)

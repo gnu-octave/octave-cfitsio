@@ -40,8 +40,12 @@
 ##
 ## @seealso {openFile, createFile}
 ## @end deftypefn
-function ret = openDiskFile (file, varargin)
-  ret = __cfitsio_openDiskFile__ (file, varargin{:});
+function ret = openDiskFile (filename, varargin)
+  if !ischar(filename)
+    error ("Expected filename as a string.");
+  endif
+
+  ret = __cfitsio_openDiskFile__ (filename, varargin{:});
 endfunction
 
 %!shared testfile

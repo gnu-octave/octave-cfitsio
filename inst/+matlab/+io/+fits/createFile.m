@@ -40,6 +40,9 @@
 ## @seealso {matlab.io.fits.openFile}
 ## @end deftypefn
 function ret = createFile (filename)
+  if !ischar(filename)
+    error ("Expected filename as a string.");
+  endif
   ret = __cfitsio_createFile__ (filename);
 endfunction
 
