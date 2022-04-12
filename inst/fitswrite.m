@@ -30,6 +30,9 @@
 ## @table @asis
 ## @item WriteMode
 ## Set mode for writing to image as 'overwrite' (default) or 'append' to append images.
+## @item Compression
+## Set compression type to use for image as
+## 'none' (default), 'gzip', 'rice', 'hcompress' or 'plio'.
 ## @end table
 ##
 ## @subsubheading Outputs
@@ -75,12 +78,13 @@ function fitswrite (imagedata, filename, varargin)
   p.FunctionName = 'fitswrite';
   p.KeepUnmatched = false;
   is_wr_mode = @(x) (ischar(x) && (strcmpi(x, "append") || strcmpi(x, "overwrite")));
+  is_comp_mode = @(x) (ischar(x) && sum(strcmpi(x, {"none", "gzip", "rice", "hcompress", "plio"}))>0);
   if has_add_param
     p.addParameter('WriteMode', 'overwrite', is_wr_mode);
-    p.addParameter('Compression', 'none', @ischar);
+    p.addParameter('Compression', 'none', is_comp_mode);
   else
     p.addParamValue('WriteMode', 'overwrite', is_wr_mode);
-    p.addParamValue('Compression', 'none', @ischar);
+    p.addParamValue('Compression', 'none', is_comp_mode);
   endif
   p.parse(varargin{:});
 
@@ -100,7 +104,7 @@ function fitswrite (imagedata, filename, varargin)
 
   unwind_protect
     if !strcmpi(p.Results.Compression, 'none')
-      fits.setCompressionType(fd, p.Results.Compression);
+      fits.setCompressionType(fd, upper(p.Results.Compression));
     endif
     fits.createImg(fd, class(imagedata), size(imagedata));
     fits.writeDate(fd);
@@ -140,9 +144,19 @@ endfunction
 %! assert(a.PrimaryData.DataType, 'int16');
 %! assert(a.PrimaryData.Size, [3 3]);
 %!
+%! X =  double([1:3;4:6]);
+%! fitswrite(X, testfile, "Compression", "gzip");
+%! a = fitsinfo(testfile);
+%! assert(!isempty(a));
+%! assert(length(a.Contents), 2);
+%!
+%! assert(a.Unknown.DataType, 'double');
+%! assert(a.Unknown.Size, [2 32]);
+%!
 %! delete (testfile);
 
 %!error fitswrite
 %!error fitswrite(1)
 %!error fitswrite([])
 %!error fitswrite('')
+%!error fitswrite([1], 'file.fits', "Compression", "error")
