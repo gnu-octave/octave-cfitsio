@@ -317,7 +317,7 @@ function info = fitsinfo (filename)
           else
             info.Unknown = hdu;
           endif
-          contents{end+1} = "unknown";
+          contents{end+1} = "Unknown";
         endif
       endif
     endfor
