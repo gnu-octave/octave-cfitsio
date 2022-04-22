@@ -23,7 +23,7 @@
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.
 ##
-## @var{mode} - If the opion mode string 'READONLY' (default) or 'READWRITE' is provided,
+## @var{mode} - If the option mode string 'READONLY' (default) or 'READWRITE' is provided,
 ## open the file using that mode.
 ##
 ## @subsubheading Outputs
