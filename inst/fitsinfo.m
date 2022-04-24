@@ -72,38 +72,39 @@ function info = fitsinfo (filename)
       for i=1:nkeys
         # record is 80 char test field
         rec = fits.readRecord(fd, i);
-        % keyword is everything before '='
-        [~,~,~,~,~,nm,~] = regexp(rec, "^(?<key>[^= ]+) *=.*$");
-        if !isempty(nm)
-          kw = strtrim(nm.key);
-          [v, com] = fits.readKey(fd, kw);
-          keywords(i, 1:3) = { kw, v, com};
+        if !isempty(rec)
+          % keyword is everything before '='
+          [s,~,~,~,~,nm,~] = regexp(rec, "^(?<key>[^= ]+) *=.*$");
+          if !isempty(s)
+            kw = strtrim(nm.key);
+            [v, com] = fits.readKey(fd, kw);
+            keywords(i, 1:3) = { kw, v, com};
 
-	  if strcmp(kw, "XTENSION")
-            exttype = v;
-	  endif
-          if strcmp(kw, "BZERO")
-            intercept = str2num(v);
-          endif
-          if strcmp(kw, "BSCALE")
-            slope = str2num(v);
-          endif
-          if strcmp(kw, "NAXIS1")
-            axis1 = str2num(v);
-          endif
-          if strcmp(kw, "PCOUNT")
-            pcount = str2num(v);
-          endif
-          if strcmp(kw, "GCOUNT")
-            gcount = str2num(v);
-          endif
-
-        else
-	  [~,~,~,~,~,nm,~] = regexp(rec, "^(?<key>[^ ]+)[ ]*(?<value>[^\s].*)$");
-          if !isempty(nm)
-            keywords(i, 1:3) = { nm.key, char([]), nm.value};
+            if strcmp(kw, "XTENSION")
+              exttype = v;
+            endif
+            if strcmp(kw, "BZERO")
+              intercept = str2num(v);
+            endif
+            if strcmp(kw, "BSCALE")
+              slope = str2num(v);
+            endif
+            if strcmp(kw, "NAXIS1")
+              axis1 = str2num(v);
+            endif
+            if strcmp(kw, "PCOUNT")
+              pcount = str2num(v);
+            endif
+            if strcmp(kw, "GCOUNT")
+              gcount = str2num(v);
+            endif
           else
-            keywords(i, 1:3) = { char([]), char([]), char([])};
+            [s,~,~,~,~,nm,~] = regexp(rec, "^(?<key>[^ ]+)[ ]*(?<value>[^\s].*)$");
+            if !isempty(s)
+              keywords(i, 1:3) = { nm.key, char([]), nm.value};
+            else
+              keywords(i, 1:3) = { char([]), char([]), char([])};
+            endif
           endif
         endif
       endfor
@@ -126,10 +127,10 @@ function info = fitsinfo (filename)
 
         [ndims, ~] = fits.readKeyDbl(fd, "NAXIS");
         dims = zeros(1, ndims);
-	for d=1:ndims
+        for d=1:ndims
           [dims(1,d), ~] = fits.readKeyDbl(fd, sprintf("NAXIS%d", d));
           datasize = datasize * dims(1,d);
-	endfor
+        endfor
         hdu.DataSize = datasize/8;
 
         # matlab shows axis as Y, X ... so need swap 1st 2.
@@ -138,7 +139,7 @@ function info = fitsinfo (filename)
           dims(1,1) = dims(1,2);
           dims(1,2) = tmp;
         endif
-	hdu.Size = dims;
+        hdu.Size = dims;
 
         v = fits.getImgType(fd);
         switch (v)
@@ -154,7 +155,7 @@ function info = fitsinfo (filename)
           case "ULONGLONG_IMG", datatype = "uint64";
           otherwise, datatype="UNKNOWN";
         endswitch
-	hdu.DataType = datatype;
+        hdu.DataType = datatype;
 
         # TODO:
         hdu.MissingDataValue = [];
