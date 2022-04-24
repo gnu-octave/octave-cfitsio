@@ -54,7 +54,9 @@ coltype_to_string (int ct)
        case TLONG: return "TLONG";
        //case TINT32BIT: return "TINT32BIT"; // same as TULONG
        case TFLOAT: return "TFLOAT";
+#ifdef TULONGLONG
        case TULONGLONG: return "TULONGLONG";
+#endif
        case TLONGLONG: return "TLONGLONG";
        case TDOUBLE: return "TDOUBLE";
        case TCOMPLEX: return "TCOMPLEX";
@@ -117,10 +119,12 @@ octave_to_type(const octave_value &value)
     {
       return  TLONGLONG;
     }
+#ifdef TULONGLONG
   else if (value.is_uint64_type())
     {
       return  TULONGLONG;
     }
+#endif
   else if (value.OV_ISINTEGER())
     {
       return TINT;
@@ -3239,8 +3243,10 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
     bpp = LONG_IMG;
   else if (bitpix == "longlong_img" || bitpix == "int64")
     bpp = LONGLONG_IMG;
+#ifdef ULONGLONG_IMG
   else if (bitpix == "ulonglong_img" || bitpix == "uint64")
     bpp = ULONGLONG_IMG;
+#endif
   else if (bitpix == "float_img" || bitpix == "single")
     bpp = FLOAT_IMG;
   else if (bitpix == "double_img" || bitpix == "double")
@@ -3346,8 +3352,10 @@ This is the equivalent of the cfitsio fits_insert_imgll function.\n \
     bpp = LONG_IMG;
   else if (bitpix == "longlong_img" || bitpix == "int64")
     bpp = LONGLONG_IMG;
+#ifdef ULONGLONG_IMG
   else if (bitpix == "ulonglong_img" || bitpix == "uint64")
     bpp = ULONGLONG_IMG;
+#endif
   else if (bitpix == "float_img" || bitpix == "single")
     bpp = FLOAT_IMG;
   else if (bitpix == "double_img" || bitpix == "double")
@@ -5343,10 +5351,12 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
     {
       ret = read_numeric_row<int32NDArray,int>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
+#ifdef TULONGLONG
   else if(dtype == TULONGLONG)
     {
       ret = read_numeric_row<uint64NDArray,uint64_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
     }
+#endif
   else if(dtype == TLONGLONG)
     {
       ret = read_numeric_row<int64NDArray,int64_t>(fp, col, dtype,firstrow, nrows, repeat, variable);
