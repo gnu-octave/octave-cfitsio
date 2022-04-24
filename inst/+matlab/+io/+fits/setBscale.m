@@ -14,8 +14,7 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {} {ret =} setBscale ()
-## @deftypefnx {} {} setBscale(@var{file}, @var{bscale}, @var{bzero})
+## @deftypefn {} {} setBscale(@var{file}, @var{bscale}, @var{bzero})
 ## Reset bscale and bzero to be used with reading and writing Images.
 ##
 ## This is the equivalent of the cfitsio fits_set_bscale function.

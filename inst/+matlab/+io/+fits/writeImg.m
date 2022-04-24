@@ -23,7 +23,7 @@
 ## @subsubheading Inputs
 ## @var{file} - opened fits file.
 ##
-## @var{imgedata} - Image data.
+## @var{imagedata} - Image data.
 ##
 ## @var{fpixel} - start pixel to write from.
 ##
