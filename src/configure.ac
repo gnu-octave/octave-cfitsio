@@ -129,13 +129,59 @@ AC_CHECK_HEADERS([octave/interpreter.h],
 )
 
 OF_OCTAVE_LIST_ALT_SYMS([
+
 [dnl
-  [D_NINT],
-  [octave::math::x_nint],
-  [[octave::math::x_nint (1);]],
-  [OCTAVE__D_NINT],
-  [[]],
-  [[]]
+  [is_cellstr],
+  [iscellstr],
+  [[octave_value ().iscellstr ();]],
+  [OV_ISCELLSTR],
+  [],
+  []
+],
+
+[dnl
+  [is_cell],
+  [iscell],
+  [[octave_value ().iscell ();]],
+  [OV_ISCELL],
+  [],
+  []
+],
+
+[dnl
+  [is_integer_type],
+  [isinteger],
+  [[octave_value ().isinteger ();]],
+  [OV_ISINTEGER],
+  [],
+  []
+],
+
+[dnl
+  [is_numeric_type],
+  [isnumeric],
+  [[octave_value ().isnumeric ();]],
+  [OV_ISNUMERIC],
+  [],
+  []
+],
+
+[dnl
+  [is_bool_type],
+  [islogical],
+  [[octave_value ().islogical ();]],
+  [OV_ISLOGICAL],
+  [],
+  []
+],
+
+[dnl
+  [is_empty],
+  [isempty],
+  [[octave_value ().isempty ();]],
+  [OV_ISEMPTY],
+  [],
+  []
 ]
 
 ],[oct-alt-includes.h])

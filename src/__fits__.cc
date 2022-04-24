@@ -19,7 +19,6 @@
 #include <cmath>
 #include <octave/oct.h>
 #include <octave/version.h>
-#include <octave/file-info.h>
 #include <octave/defun-dld.h>
 
 #ifdef HAVE_CONFIG_H
@@ -86,7 +85,7 @@ octave_to_type(const octave_value &value)
     {
       return TSTRING;
     }
-  else if (value.islogical())
+  else if (value.OV_ISLOGICAL())
     {
       return TLOGICAL;
     }
@@ -122,7 +121,7 @@ octave_to_type(const octave_value &value)
     {
       return  TULONGLONG;
     }
-  else if (value.isinteger())
+  else if (value.OV_ISINTEGER())
     {
       return TINT;
     }
@@ -166,8 +165,8 @@ static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow
 
   // TODO: assume only 2 dims here ?
   
-  LONGLONG nrows = arr.size(0);
-  LONGLONG repeat = arr.size(1);
+  LONGLONG nrows = arr.rows();
+  LONGLONG repeat = arr.cols();
 
   int dxtype;
   LONGLONG width;
@@ -182,8 +181,8 @@ static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow
       variable = true;
     }
 
-  nrows = arr.size(0);
-  repeat = arr.size(1);
+  nrows = arr.rows();
+  repeat = arr.cols();
  
   for(LONGLONG i = 0; i<nrows; i++)
     {
@@ -210,7 +209,7 @@ static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow
 static int
 write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Array<std::string> &arr)
 {
-  LONGLONG nrows = arr.size(0);
+  LONGLONG nrows = arr.rows();
   int status = 0;
   char nullval = '\0';
 
@@ -738,7 +737,7 @@ The is the eqivalent of the fits_file_mode function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -793,7 +792,7 @@ The is the eqivalent of the fits_file_name function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -844,7 +843,7 @@ The is the eqivalent of the fits_close_file function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -899,7 +898,7 @@ The is the eqivalent of the fits_delete_file function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -958,7 +957,7 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1010,7 +1009,7 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1074,7 +1073,7 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1127,7 +1126,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1141,7 +1140,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || args (1).isempty())
+  if (! args (1).OV_ISNUMERIC () || args (1).OV_ISEMPTY())
     {
       error ("__cfitsio_movAbsHDU__: expected hdu number");
       return octave_value ();  
@@ -1207,7 +1206,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1221,7 +1220,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || args (1).isempty())
+  if (! args (1).OV_ISNUMERIC () || args (1).OV_ISEMPTY())
     {
       error ("__cfitsio_movRelHDU__: expected hdu number");
       return octave_value ();  
@@ -1289,7 +1288,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1314,7 +1313,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
       return octave_value ();  
     }
 
-  if (! args (3).isnumeric () || args (3).isempty())
+  if (! args (3).OV_ISNUMERIC () || args (3).OV_ISEMPTY())
     {
       error ("__cfitsio_movNamHDU__: expected extver number");
       return octave_value ();  
@@ -1386,7 +1385,7 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1438,7 +1437,7 @@ This is the equivalent of the cfitsio fits_copy_hdu function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1452,7 +1451,7 @@ This is the equivalent of the cfitsio fits_copy_hdu function.\n \
       return octave_value ();
     }
 
-  if (!args (1).isinteger()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISINTEGER()  || !args(1).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1512,7 +1511,7 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1554,7 +1553,7 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
       return octave_value();
     }
 
-  if (args.length() != 1 || !args (0).isinteger()  || !args(0).is_real_scalar())
+  if (args.length() != 1 || !args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1611,7 +1610,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1625,7 +1624,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || args (1).isempty())
+  if (! args (1).OV_ISNUMERIC () || args (1).OV_ISEMPTY())
     {
       error ("__cfitsio_readRecord__: idx should be a value");
       return octave_value ();  
@@ -1676,7 +1675,7 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1690,7 +1689,7 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
       return octave_value ();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("__cfitsio_deleteRecord__: keynum should be a integer");
       return octave_value ();  
@@ -1738,7 +1737,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1803,7 +1802,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1871,7 +1870,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1925,7 +1924,7 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -1997,7 +1996,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2051,7 +2050,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2123,7 +2122,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2198,7 +2197,7 @@ This is the equivalent of the cfitsio fits_write_date function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2249,7 +2248,7 @@ This is the equivalent of the cfitsio fits_write_comment function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2313,7 +2312,7 @@ This is the equivalent of the cfitsio fits_write_history function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2377,7 +2376,7 @@ This is the equivalent of the cfitsio fits_write_key_unit function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2450,7 +2449,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2502,7 +2501,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
           return octave_value ();
         }
     }
-  else if (value.islogical())
+  else if (value.OV_ISLOGICAL())
     {
       int svalue = value.int_value ();
       if (fits_update_key(fp, TLOGICAL, key.c_str(), &svalue, commentp, &status) > 0)
@@ -2565,7 +2564,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
           return octave_value ();
         }
     }
-  else if (value.is_scalar_type() && value.isinteger())
+  else if (value.is_scalar_type() && value.OV_ISINTEGER())
     {
       int svalue = value.int_value ();
       if (fits_update_key(fp, TINT, key.c_str(), &svalue, commentp, &status) > 0)
@@ -2631,7 +2630,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2708,7 +2707,7 @@ Return the value of a known fits constant.\n \
 	  break;
         }
     }
-  if (value.isempty ())
+  if (value.OV_ISEMPTY ())
     {
       error ("__cfitsio_getConstantValue__: Couldnt find constant '%s'", name.c_str());
     }
@@ -2803,7 +2802,7 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2866,7 +2865,7 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -2949,7 +2948,7 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3033,7 +3032,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3204,7 +3203,7 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3311,7 +3310,7 @@ This is the equivalent of the cfitsio fits_insert_imgll function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3416,7 +3415,7 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3507,7 +3506,7 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3521,13 +3520,13 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+  if (! args (1).OV_ISNUMERIC () || !args (1).is_scalar_type())
     {
       error ("__cfitsio_setBscale__: bscale should be numeric");
       return octave_value ();  
     }
 
-  if (! args (2).isnumeric () || !args (1).is_scalar_type())
+  if (! args (2).OV_ISNUMERIC () || !args (1).is_scalar_type())
     {
       error ("__cfitsio_setBscale__: bzero should be numeric");
       return octave_value ();  
@@ -3573,7 +3572,7 @@ Reset scale and zero to be used with reading and writing table data.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3587,19 +3586,19 @@ Reset scale and zero to be used with reading and writing table data.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+  if (! args (1).OV_ISNUMERIC () || !args (1).is_scalar_type())
     {
       error ("__cfitsio_setTscale__: column should be numeric");
       return octave_value ();  
     }
 
-  if (! args (2).isnumeric () || !args (2).is_scalar_type())
+  if (! args (2).OV_ISNUMERIC () || !args (2).is_scalar_type())
     {
       error ("__cfitsio_setTscale__: scale should be numeric");
       return octave_value ();  
     }
 
-  if (! args (3).isnumeric () || !args (3).is_scalar_type())
+  if (! args (3).OV_ISNUMERIC () || !args (3).is_scalar_type())
     {
       error ("__cfitsio_setTscale__: zero should be numeric");
       return octave_value ();  
@@ -3649,7 +3648,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3664,7 +3663,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric() || args (1).isempty())
+    || !args (1).OV_ISNUMERIC() || args (1).OV_ISEMPTY())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -3728,7 +3727,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3743,7 +3742,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric() || args (1).isempty())
+    || !args (1).OV_ISNUMERIC() || args (1).OV_ISEMPTY())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -3796,7 +3795,7 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3825,7 +3824,7 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
   int casesense = 0;
   if (args.length () > 2)
   {
-    if( !args (2).islogical() && !args (2).isnumeric())
+    if( !args (2).OV_ISLOGICAL() && !args (2).OV_ISNUMERIC())
     {
       error ("Expected logical case sense");
       return octave_value ();  
@@ -3877,7 +3876,7 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3892,7 +3891,7 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric())
+    || !args (1).OV_ISNUMERIC())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -3942,7 +3941,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -3957,7 +3956,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
     }
 
   if (args.length () < 2
-    || !args (1).isnumeric())
+    || !args (1).OV_ISNUMERIC())
     {
       error ("Expected numeric col number");
       return octave_value ();  
@@ -4007,7 +4006,7 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4049,7 +4048,7 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4091,7 +4090,7 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4134,7 +4133,7 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4223,7 +4222,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4310,7 +4309,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4346,7 +4345,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
     }
 
   //nrows
-  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+  if (!args (2).OV_ISNUMERIC()  || !args(2).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -4355,7 +4354,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
 
   int ncols = 1;
   // ttype
-  if (!args (3).iscellstr())
+  if (!args (3).OV_ISCELLSTR())
     {
       error ("Expected ttype to be a cell of strings");
       return octave_value ();  
@@ -4369,7 +4368,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
     }
 
   // tform
-  if (!args (4).iscellstr())
+  if (!args (4).OV_ISCELLSTR())
     {
       error ("Expected tform to be a cell of strings");
       return octave_value ();  
@@ -4386,7 +4385,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
   Array<std::string> atunit;
   if ( args.length() > 5)
     {
-      if (!args (5).iscellstr())
+      if (!args (5).OV_ISCELLSTR())
         {
           error ("Expected tunit to be a cell of strings");
           return octave_value ();  
@@ -4477,7 +4476,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4492,7 +4491,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
     }
 
   //nrows
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -4501,7 +4500,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
 
   int ncols = 1;
   // ttype
-  if (!args (2).iscellstr())
+  if (!args (2).OV_ISCELLSTR())
     {
       error ("Expected ttype to be a cell of strings");
       return octave_value ();  
@@ -4515,7 +4514,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
     }
 
   // tform
-  if (!args (3).iscellstr())
+  if (!args (3).OV_ISCELLSTR())
     {
       error ("Expected tform to be a cell of strings");
       return octave_value ();  
@@ -4529,7 +4528,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
     }
 
   // tunit
-  if (!args (4).iscellstr())
+  if (!args (4).OV_ISCELLSTR())
     {
       error ("Expected tunit to be a cell of strings");
       return octave_value ();  
@@ -4558,7 +4557,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
     extname[0] = 0;
 
   // pcount
-  if (!args (6).isnumeric()  || !args(6).is_real_scalar())
+  if (!args (6).OV_ISNUMERIC()  || !args(6).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -4628,7 +4627,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4644,7 +4643,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
 
   // rowlen
   LONGLONG rowlen = 0;
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected rowlen to be a numeric value");
       return octave_value ();  
@@ -4652,7 +4651,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
   rowlen = args(1).int64_value();
 
   //nrows
-  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+  if (!args (2).OV_ISNUMERIC()  || !args(2).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -4661,7 +4660,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
 
   int ncols = 1;
   // ttype
-  if (!args (3).iscellstr())
+  if (!args (3).OV_ISCELLSTR())
     {
       error ("Expected ttype to be a cell of strings");
       return octave_value ();  
@@ -4688,7 +4687,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
     }
 
   // tform
-  if (!args (5).iscellstr())
+  if (!args (5).OV_ISCELLSTR())
     {
       error ("Expected tform to be a cell of strings");
       return octave_value ();  
@@ -4705,7 +4704,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
   Array<std::string> atunit;
   if ( args.length() > 6)
     {
-      if (!args (6).iscellstr())
+      if (!args (6).OV_ISCELLSTR())
         {
           error ("Expected tunit to be a cell of strings");
           return octave_value ();  
@@ -4804,7 +4803,7 @@ This is the equivalent of the cfitsio fits_insert_col function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4819,7 +4818,7 @@ This is the equivalent of the cfitsio fits_insert_col function.\n \
     }
 
   // colnum
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -4887,7 +4886,7 @@ This is the equivalent of the cfitsio fits_delete_col function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4902,7 +4901,7 @@ This is the equivalent of the cfitsio fits_delete_col function.\n \
     }
 
   // colnum
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -4950,7 +4949,7 @@ This is the equivalent of the cfitsio fits_insert_rows function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -4965,7 +4964,7 @@ This is the equivalent of the cfitsio fits_insert_rows function.\n \
     }
 
   // firstrow
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -4973,7 +4972,7 @@ This is the equivalent of the cfitsio fits_insert_rows function.\n \
   long firstrow = args(1).long_value();
 
   // nrows
-  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+  if (!args (2).OV_ISNUMERIC()  || !args(2).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -5029,7 +5028,7 @@ This is the equivalent of the cfitsio fits_delete_rows function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5044,7 +5043,7 @@ This is the equivalent of the cfitsio fits_delete_rows function.\n \
     }
 
   // firstrow
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -5052,7 +5051,7 @@ This is the equivalent of the cfitsio fits_delete_rows function.\n \
   long firstrow = args(1).long_value();
 
   // nrows
-  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+  if (!args (2).OV_ISNUMERIC()  || !args(2).is_real_scalar())
     {
       error ("Expected nrows to be a numeric value");
       return octave_value ();  
@@ -5108,7 +5107,7 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5122,7 +5121,7 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
     }
 
   // colnum
-  if (!args (1).isnumeric()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISNUMERIC()  || !args(1).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -5130,7 +5129,7 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
   int colnum = args(1).int_value();
 
   // firstrow
-  if (!args (2).isnumeric()  || !args(2).is_real_scalar())
+  if (!args (2).OV_ISNUMERIC()  || !args(2).is_real_scalar())
     {
       error ("Expected colnum to be a numeric value");
       return octave_value ();  
@@ -5147,18 +5146,18 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
     }
   if(dtype < 0) dtype = -dtype;
 
-  if (args(3).iscell())
+  if (args(3).OV_ISCELL())
     {
       // TODO: 2nd dim shoud be 1 ? ie: somenumrows x 1
       Cell cell = args(3).cell_value();
 
       // handle each row separately ?
-      for(octave_idx_type idx=0; idx < cell.size(0); idx++)
+      for(octave_idx_type idx=0; idx < cell.rows(); idx++)
         {
           octave_value value = cell(idx, 0);
           if (dtype == TSTRING)
             write_text_row(fp, colnum, TSTRING, firstrow, value.cellstr_value());
-          else if ((value.isnumeric() || value.islogical()))
+          else if ((value.OV_ISNUMERIC() || value.OV_ISLOGICAL()))
             {
               // TODO: size of value should be 1 x somewidth
               if (dtype == TLOGICAL)
@@ -5177,7 +5176,7 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
     }
   else if(dtype == TSTRING)
       write_text_row(fp, colnum, TSTRING, firstrow, args(3).cellstr_value());
-  else if ((args(3).isnumeric() || args(3).islogical()))
+  else if ((args(3).OV_ISNUMERIC() || args(3).OV_ISLOGICAL()))
     {
       if(dtype == TLOGICAL)
         write_numeric_row<boolNDArray,int8_t>(fp, colnum, TLOGICAL, firstrow, args(3).bool_array_value());
@@ -5227,7 +5226,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5241,7 +5240,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
       return octave_value ();
     }
 
-  if (!args (1).isnumeric() || args (1).isempty())
+  if (!args (1).OV_ISNUMERIC() || args (1).OV_ISEMPTY())
     {
       error ("expected numeric col value");
       return octave_value ();  
@@ -5261,7 +5260,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   if (args.length () > 2)
     {
-      if (!args (2).isnumeric() || args (2).isempty())
+      if (!args (2).OV_ISNUMERIC() || args (2).OV_ISEMPTY())
         {
           error ("expected numeric startrow value");
           return octave_value ();  
@@ -5277,7 +5276,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 
   if (args.length () > 3)
     {
-      if (!args (3).isnumeric() || args (3).isempty())
+      if (!args (3).OV_ISNUMERIC() || args (3).OV_ISEMPTY())
         {
           error ("expected numeric numrows value");
           return octave_value ();  
@@ -5464,7 +5463,7 @@ This is the equivalent of the cfitsio fits_set_compression_type function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5537,7 +5536,7 @@ This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5609,7 +5608,7 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5671,7 +5670,7 @@ This is the equivalent of the cfitsio fits_img_compress function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5685,7 +5684,7 @@ This is the equivalent of the cfitsio fits_img_compress function.\n \
       return octave_value ();
     }
 
-  if (!args (1).isinteger()  || !args(1).is_real_scalar())
+  if (!args (1).OV_ISINTEGER()  || !args(1).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5746,7 +5745,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5760,7 +5759,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+  if (! args (1).OV_ISNUMERIC () || !args (1).is_scalar_type())
     {
       error ("__cfitsio_setHCompScale__: scale should be numeric");
       return octave_value ();  
@@ -5805,7 +5804,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
       return octave_value();
     }
 
-  if (!args (0).isinteger()  || !args(0).is_real_scalar())
+  if (!args (0).OV_ISINTEGER()  || !args(0).is_real_scalar())
     {
       error ("Not a fits file");
       return octave_value ();  
@@ -5819,7 +5818,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_smooth function.\n \
       return octave_value ();
     }
 
-  if (! args (1).isnumeric () || !args (1).is_scalar_type())
+  if (! args (1).OV_ISNUMERIC () || !args (1).is_scalar_type())
     {
       error ("__cfitsio_setHCompSmooth__: scale should be numeric");
       return octave_value ();  
