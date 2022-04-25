@@ -3323,7 +3323,7 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 
   if (! args (1).is_matrix_type())
     {
-      error("Not a fits file");
+      error("Invalid image data");
       return octave_value ();
     }
 
@@ -3352,11 +3352,35 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 
   dim_vector dims = imagedata.dims();
   for( int i=0; i<num_axis; i++ )  
-  {
-    lpixel[i] = dims(i);
-  }
+    {
+      lpixel[i] = dims(i);
+    }
 
   // TODO: use fpixel from func input if available
+  if (args.length() > 2)
+    {
+      if (!args (2).is_matrix_type())
+        {
+          error("Expected firstpix as a vector");
+          return octave_value ();
+        }
+      else
+        {
+          Array<double> tdv = args (2).vector_value ();
+          if (tdv.numel() != num_axis)
+	    {
+              error("Expected firstpix vector to contain %d elements", num_axis);
+	    }
+	  // set first pix, inc lpixel to match
+          for( int i=0; i<num_axis; i++ )  
+            {
+	      int idx = i > 1 ? i : ((i+1)&1);
+	      fpixel[idx] = tdv(i);
+              lpixel[idx] = lpixel[idx] + fpixel[idx] - 1; // 1 based
+            }
+
+        }
+    }
 
   double * datap = const_cast<double*>( imagedata.data() );
 
