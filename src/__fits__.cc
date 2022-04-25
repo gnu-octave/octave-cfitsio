@@ -37,117 +37,6 @@ extern "C"
 #include "fits_constants.h"
 
 static std::string
-coltype_to_string (int ct)
-{
-  switch(ct)
-    {
-       case TBIT: return "TBIT";
-       case TBYTE: return "TBYTE";
-       case TSBYTE: return "TSBYTE";
-       case TLOGICAL: return "TLOGICAL";
-       case TSTRING: return "TSTRING";
-       case TUSHORT: return "TUSHORT";
-       case TSHORT: return "TSHORT";
-       case TUINT: return "TUINT";
-       case TINT: return "TINT";
-       case TULONG: return "TULONG";
-       case TLONG: return "TLONG";
-       //case TINT32BIT: return "TINT32BIT"; // same as TULONG
-       case TFLOAT: return "TFLOAT";
-#ifdef TULONGLONG
-       case TULONGLONG: return "TULONGLONG";
-#endif
-       case TLONGLONG: return "TLONGLONG";
-       case TDOUBLE: return "TDOUBLE";
-       case TCOMPLEX: return "TCOMPLEX";
-       case TDBLCOMPLEX: return "TDBLCOMPLEX";
-      }
-  return "TSTRING";
-}
-
-static int
-string_to_coltype (const std::string &s)
-{
-  std::string name = s;
-  std::transform (name.begin(), name.end(), name.begin(), ::toupper);
-  for (int i=i;i<sizeof(fits_constants)/sizeof(fits_constants_type);i++)
-    {
-      if(name == fits_constants[i].name)
-        {
-          return fits_constants[i].value.int_value();
-        }
-    }
-  return TSTRING;
-}
-
-static int
-octave_to_type(const octave_value &value)
-{
-  if (value.is_string())
-    {
-      return TSTRING;
-    }
-  else if (value.OV_ISLOGICAL())
-    {
-      return TLOGICAL;
-    }
-  else if (value.is_uint8_type())
-    {
-      return TBYTE;
-    }
-  else if (value.is_int8_type())
-    {
-      return TSBYTE;
-    }
-  else if (value.is_uint16_type())
-    {
-      return TUSHORT;
-    }
-  else if (value.is_int16_type())
-    {
-      return TSHORT;
-    }
-  else if (value.is_uint32_type())
-    {
-      return TULONG;
-    }
-  else if (value.is_int32_type())
-    {
-      return TLONG;
-    }
-  else if (value.is_int64_type())
-    {
-      return  TLONGLONG;
-    }
-#ifdef TULONGLONG
-  else if (value.is_uint64_type())
-    {
-      return  TULONGLONG;
-    }
-#endif
-  else if (value.OV_ISINTEGER())
-    {
-      return TINT;
-    }
-  else if (value.is_double_type())
-    {
-      return TDOUBLE;
-    }
-  else if (value.is_single_type())
-    {
-      return TFLOAT;
-    }
-  else
-    {
-       error ("couldnt convert this data type");
-    }
-
-  // unknown
-  return 0;
-}
-
-
-static std::string
 get_fits_error (int status)
 {
   char err[32];
@@ -165,10 +54,8 @@ static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow
 {
   DTYPE val;
   int status = 0;
-  bool variable = false;
 
   // TODO: assume only 2 dims here ?
-  
   LONGLONG nrows = arr.rows();
   LONGLONG repeat = arr.cols();
 
@@ -182,7 +69,6 @@ static int write_numeric_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow
   if(dxtype < 0) 
     {
       dxtype = -dxtype;
-      variable = true;
     }
 
   nrows = arr.rows();
@@ -215,7 +101,6 @@ write_text_row(fitsfile *fp, int col, int dtype, LONGLONG firstrow, const Array<
 {
   LONGLONG nrows = arr.rows();
   int status = 0;
-  char nullval = '\0';
 
   for(LONGLONG i = 0; i<nrows; i++)
     {
@@ -259,7 +144,7 @@ read_numeric_row(fitsfile *fp, int col, int dtype,
         {
           if (fits_read_descript(fp, col, i+firstrow, &repeatrow, &offset, &status) > 0)
             {
-              error ("couldnt read descript %lld, %lld: %s", i+firstrow, 1, get_fits_error(status).c_str());
+              error ("couldnt read descript %lld, %d: %s", i+firstrow, 1, get_fits_error(status).c_str());
               return ret;
             }
 
@@ -275,7 +160,7 @@ read_numeric_row(fitsfile *fp, int col, int dtype,
               //if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
               if (fits_read_colnull(fp, dtype, col, i+firstrow, 1, repeatrow, item, nulls, &anynul, &status) > 0)
                 {
-                  error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
+                  error ("couldnt read %d data %lld, %d: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
                   return ret;
                 }
               for(LONGLONG r = 0;r<repeatrow; r++)
@@ -975,7 +860,7 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
       return octave_value ();
     }
 
-  int hdunum, status = 0;
+  int hdunum;
 
   fits_get_hdu_num(fp, &hdunum);
 
@@ -2703,7 +2588,7 @@ Return the value of a known fits constant.\n \
   std::string name = args(0).string_value();
   std::transform (name.begin(), name.end(), name.begin(), ::toupper);
   octave_value value;
-  for (int i=i;i<sizeof(fits_constants)/sizeof(fits_constants_type);i++)
+  for (size_t i=0;i<sizeof(fits_constants)/sizeof(fits_constants_type);i++)
     {
       if(name == fits_constants[i].name)
         {
@@ -2748,7 +2633,7 @@ Return the names of all known fits constants\n \
 
   Cell namelist(1, cnt);
 
-  for(int i=i; i<sizeof(fits_constants)/sizeof(fits_constants_type); i++)
+  for(size_t i=0; i<sizeof(fits_constants)/sizeof(fits_constants_type); i++)
     {
       namelist(0,i) = octave_value (fits_constants[i].name);
     }
@@ -3117,7 +3002,6 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
   std::vector<long> fpixel(num_axis,1);
   std::vector<long> inc(num_axis,1);
   std::vector<long> lpixel(num_axis,1);
-  double nulval = 0;
 
   // if we have start pix, set it
   if (args.length() > 1)
@@ -3474,9 +3358,6 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 
   // TODO: use fpixel from func input if available
 
-  // TODO: convert to class type will be using 
-  int bitperpixel = DOUBLE_IMG;
-  //bitsperpixel = octave_to_type(imagedata);
   double * datap = const_cast<double*>( imagedata.data() );
 
   int status = 0;
@@ -5389,11 +5270,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
     }
   else
     {
-      // TODO: handle variable here ???
-      LONGLONG firstel = 1;
-
       char cdata[FLEN_CARD];
-      char ndata[FLEN_CARD];
       char nullstr[] = "*";
       int anynul;
   
