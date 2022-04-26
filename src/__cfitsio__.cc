@@ -302,7 +302,7 @@ get_fits_file(uint64_t fd)
 %! testfile = file_in_loadpath("demos/tst0012.fits");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_pkg_lock__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_pkg_lock__", "__cfitsio__.oct");
 // PKG_ADD: __cfitsio_pkg_lock__(1);
 // PKG_DEL: __cfitsio_pkg_lock__(0);
 #ifdef DEFMETHOD_DLD
@@ -338,7 +338,7 @@ DEFUN_DLD(__cfitsio_pkg_lock__, args, ,  "internal function")
 }
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getOpenFiles__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getOpenFiles__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getOpenFiles__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{files}]} = __cfitsio_getOpenFiles__()\n \
@@ -393,7 +393,7 @@ Get the file handles of all open fits files.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_createFile__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_createFile__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_createFile__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = __cfitsio_createFile__(@var{filename})\n \
@@ -456,7 +456,7 @@ This is the equivilent of the cfitsio fits_create_file funtion.\n \
 %! delete(filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_openFile__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_openFile__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_openFile__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = __cfitsio_openFile__(@var{filename})\n \
@@ -541,7 +541,7 @@ This is the equivilent of the cfitsio fits_open_file funtion.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_openDiskFile__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_openDiskFile__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_openDiskFile__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{file}]} = __cfitsio_openDiskFile__(@var{filename})\n \
@@ -609,7 +609,7 @@ This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
   return octave_value(octave_uint64 (fd));
 }
 
-// PKG_ADD: autoload ("__cfitsio_fileMode__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_fileMode__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_fileMode__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{mode}} = __cfitsio_fileMode__(@var{file})\n \
@@ -666,7 +666,7 @@ The is the eqivalent of the fits_file_mode function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_fileName__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_fileName__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_fileName__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{name}} = __cfitsio_fileName__(@var{file})\n \
@@ -717,7 +717,7 @@ The is the eqivalent of the fits_file_name function.\n \
 %!error __cfitsio_fileName__([]);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_closeFile__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_closeFile__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_closeFile__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_closeFile__(@var{file})\n \
@@ -770,7 +770,7 @@ The is the eqivalent of the fits_close_file function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_deleteFile__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteFile__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteFile__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_deleteFile__(@var{file})\n \
@@ -830,7 +830,7 @@ The is the eqivalent of the fits_delete_file function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getHDUnum__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getHDUnum__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getHDUnum__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{num}]} = __cfitsio_getHDUnum__(@var{file})\n \
@@ -882,7 +882,7 @@ This is the equivalent of the cfitsio fits_get_hdu_num function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getHDUtype__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getHDUtype__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getHDUtype__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{type}]} = __cfitsio_getHDUtype__(@var{file})\n \
@@ -946,7 +946,7 @@ This is the equivalent of the cfitsio fits_get_hdu_type function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getNumHDUs__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getNumHDUs__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getNumHDUs__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{num}]} = __cfitsio_getNumHDUs__(@var{file})\n \
@@ -997,7 +997,7 @@ This is the equivalent of the cfitsio fits_get_num_hdus function.\n \
 %!error __cfitsio_getNumHDUs__([]);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_movAbsHDU__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_movAbsHDU__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_movAbsHDU__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{type}]} = __cfitsio_movAbsHDU__(@var{file}, @var{hdunum})\n \
@@ -1077,7 +1077,7 @@ This is the equivalent of the cfitsio fits_movabs_hdu function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_movRelHDU__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_movRelHDU__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_movRelHDU__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{type}]} = __cfitsio_movRelHDU__(@var{file}, @var{hdunum})\n \
@@ -1157,7 +1157,7 @@ This is the equivalent of the cfitsio fits_movrel_hdu function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_movNamHDU__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_movNamHDU__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_movNamHDU__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} __cfitsio_movNamHDU__(@var{file}, @var{hdutype}, @var{extname}, @var{extver})\n \
@@ -1257,7 +1257,7 @@ This is the equivalent of the cfitsio fits_movnam_hdu function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_deleteHDU__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteHDU__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteHDU__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{type}]} = __cfitsio_deleteHDU__(@var{file})\n \
@@ -1309,7 +1309,7 @@ This is the equivalent of the cfitsio fits_delete_hdu function.\n \
   return octave_value(name);
 }
 
-// PKG_ADD: autoload ("__cfitsio_copyHDU__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_copyHDU__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_copyHDU__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_copyHDU__(@var{infile}, @var{outfile})\n \
@@ -1383,7 +1383,7 @@ This is the equivalent of the cfitsio fits_copy_hdu function.\n \
 %! delete (filename2);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeChecksum__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeChecksum__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeChecksum__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeChecksum__(@var{file})\n \
@@ -1425,7 +1425,7 @@ This is the equivalent of the cfitsio fits_write_chksum function.\n \
   return octave_value ();
 }
 
-// PKG_ADD: autoload ("__cfitsio_getHdrSpace__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getHdrSpace__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getHdrSpace__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{numkeys}, @var{freekeys}] = } __cfitsio_getHdrSpace__(@var{file})\n \
@@ -1484,7 +1484,7 @@ This is the equivalent of the cfitsio fits_get_hdrspace function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_readRecord__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readRecord__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readRecord__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{rec} = } __cfitsio_readRecord__(@var{file}, @var{recidx})\n \
@@ -1547,7 +1547,7 @@ This is the equivalent of the cfitsio fits_read_record function.\n \
 %!error __cfitsio_readRecord__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_deleteRecord__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteRecord__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteRecord__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_deleteRecord__(@var{file}, @var{keynum})\n \
@@ -1611,7 +1611,7 @@ This is the equivalent of the cfitsio fits_delete_record function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_readCard__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readCard__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readCard__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{card} = } __cfitsio_readCard__(@var{file}, @var{recname})\n \
@@ -1674,7 +1674,7 @@ This is the equivalent of the cfitsio fits_read_card function.\n \
 %!error __cfitsio_readCard__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_readKey__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKey__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKey__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{keyvalue}, @var{keycomment}] = } __cfitsio_readKey__(@var{file}, @var{recname})\n \
@@ -1744,7 +1744,7 @@ This is the equivalent of the cfitsio fits_read_key_str function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_readKeyUnit__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKeyUnit__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKeyUnit__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{keyunit} = } __cfitsio_readKeyUnit__(@var{file}, @var{recname})\n \
@@ -1796,7 +1796,7 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
   return octave_value (buffer);
 }
 
-// PKG_ADD: autoload ("__cfitsio_readKeyDbl__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKeyDbl__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKeyDbl__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyDbl__(@var{file}, @var{recname})\n \
@@ -1868,7 +1868,7 @@ This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 %!error __cfitsio_readKeyDbl__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_readKeyCmplx__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKeyCmplx__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKeyCmplx__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyCmplx__(@var{file}, @var{recname})\n \
@@ -1922,7 +1922,7 @@ This is the equivalent of the cfitsio fits_read_key_dblcmp function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("__cfitsio_readKeyLongLong__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKeyLongLong__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKeyLongLong__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyLongLong__(@var{file}, @var{recname})\n \
@@ -1994,7 +1994,7 @@ This is the equivalent of the cfitsio fits_read_key_lnglng function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_readKeyLongStr__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readKeyLongStr__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readKeyLongStr__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{value}, @var{comment}] = } __cfitsio_readKeyLongStr__(@var{file}, @var{recname})\n \
@@ -2069,7 +2069,7 @@ This is the equivalent of the cfitsio fits_read_key_longstr function.\n \
 %!error __cfitsio_readKeyLongStr__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeDate__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeDate__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeDate__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeDate__(@var{file})\n \
@@ -2120,7 +2120,7 @@ This is the equivalent of the cfitsio fits_write_date function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeComment__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeComment__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeComment__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeComment__(@var{file}, @var{comment})\n \
@@ -2184,7 +2184,7 @@ This is the equivalent of the cfitsio fits_write_comment function.\n \
 %!error __cfitsio_writeComment__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeHistory__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeHistory__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeHistory__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeHistory__(@var{file}, @var{history})\n \
@@ -2248,7 +2248,7 @@ This is the equivalent of the cfitsio fits_write_history function.\n \
 %!error __cfitsio_writeHistory__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeKeyUnit__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeKeyUnit__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeKeyUnit__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeKeyUnit__(@var{file}, @var{key}, @var{unit})\n \
@@ -2319,7 +2319,7 @@ This is the equivalent of the cfitsio fits_write_key_unit function.\n \
 %!error __cfitsio_writeKeyUnit__(1, "VELOCITY", "m/s");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeKey__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeKey__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeKey__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeKey__(@var{file}, @var{key}, @var{value})\n \
@@ -2502,7 +2502,7 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_deleteKey__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteKey__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteKey__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_deleteKey__(@var{file}, @var{key})\n \
@@ -2566,7 +2566,7 @@ This is the equivalent of the cfitsio fits_delete_key function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getConstantValue__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getConstantValue__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getConstantValue__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{value}]} = __cfitsio_getConstantValue__(@var{name})\n \
@@ -2615,7 +2615,7 @@ Return the value of a known fits constant.\n \
 %!error <constant name should be a string> __cfitsio_getConstantValue__(1);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getConstantNames__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getConstantNames__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getConstantNames__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{namelist}]} = __cfitsio_getConstantNames__()\n \
@@ -2647,7 +2647,7 @@ Return the names of all known fits constants\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getVersion__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getVersion__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getVersion__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{ver}} = __cfitsio_getVersion__()\n \
@@ -2674,7 +2674,7 @@ This is the equivalent of the cfitsio fits_get_version function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getHDUoff__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getHDUoff__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getHDUoff__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{headtstart}, @var{datastart}, @var{dataend}]} = __cfitsio_getHDUoff__(@var{file})\n \
@@ -2739,7 +2739,7 @@ This is the equivalent of the cfitsio fits_get_hduoff function.\n \
 %!error __cfitsio_getHDUoff__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getImgSize__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getImgSize__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getImgSize__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{size}} = __cfitsio_getImgSize__(@var{file})\n \
@@ -2822,7 +2822,7 @@ This is the equivalent of the cfitsio fits_get_img_size function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_getImgType__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getImgType__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getImgType__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{type}} = __cfitsio_getImgType__(@var{file})\n \
@@ -2904,7 +2904,7 @@ This is the equivalent of the cfitsio fits_get_img_type function.\n \
 %!error __cfitsio_getImgType__([]);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_readImg__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readImg__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{data}} = __cfitsio_readImg__(@var{file})\n \
@@ -3076,7 +3076,7 @@ This is the equivalent of the cfitsio fits_read_subset function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_createImg__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_createImg__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_createImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_createImg__(@var{file}, @var{bitpix}, @var{naxis})\n \
@@ -3185,7 +3185,7 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
 %!error __cfitsio_createImg__("");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_insertImg__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_insertImg__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_insertImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_insertImg__(@var{file}, @var{bitpix}, @var{naxis})\n \
@@ -3291,7 +3291,7 @@ This is the equivalent of the cfitsio fits_insert_imgll function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeImg__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeImg__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeImg__(@var{file}, @var{data})\n \
@@ -3404,7 +3404,7 @@ This is the equivalent of the cfitsio fits_write_subset function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setBscale__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setBscale__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setBscale__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setBscale__(@var{file}, @var{bscale}, @var{bzero})\n \
@@ -3470,7 +3470,7 @@ Reset bscale and bzero to be used with reading and writing Images.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setTscale__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setTscale__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setTscale__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setTscale__(@var{file}, @var{col}, @var{scale}, @var{zero})\n \
@@ -3544,7 +3544,7 @@ Reset scale and zero to be used with reading and writing table data.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getAColParms__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getAColParms__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getAColParms__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = __cfitsio_getAColParms__(@var{file}, @var{colnum})\n \
@@ -3623,7 +3623,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getBColParms__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getBColParms__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getBColParms__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{ttype},@var{tunit},@var{typechar},@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = getBColParms(@var{file}, @var{colnum})\n \
@@ -3691,7 +3691,7 @@ This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("__cfitsio_getColName__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getColName__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getColName__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{colnum},@var{colname}]} = __cfitsio_getColName__(@var{file}, @var{template}, @var{casesens})\n \
@@ -3772,7 +3772,7 @@ This is the equivalent of the cfitsio  fits_get_colname function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getColType__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getColType__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getColType__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = __cfitsio_getColType__(@var{file}, @var{colnum})\n \
@@ -3837,7 +3837,7 @@ This is the equivalent of the cfitsio  fits_get_coltypell function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getEqColType__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getEqColType__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getEqColType__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{dtype},@var{repeat},@var{width}]} = __cfitsio_getEqColType__(@var{file}, @var{colnum})\n \
@@ -3903,7 +3903,7 @@ This is the equivalent of the cfitsio  fits_get_eqcoltypell function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_getNumCols__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getNumCols__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getNumCols__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{ncols}} = __cfitsio_getNumCols__(@var{file})\n \
@@ -3945,7 +3945,7 @@ This is the equivalent of the cfitsio  fits_get_num_cols function.\n \
   return octave_value(ncols);
 }
 
-// PKG_ADD: autoload ("__cfitsio_getNumRows__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getNumRows__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getNumRows__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{nrows}} = __cfitsio_getNumRows__(@var{file})\n \
@@ -3987,7 +3987,7 @@ This is the equivalent of the cfitsio  fits_get_numrowsll function.\n \
   return octave_value(nrows);
 }
 
-// PKG_ADD: autoload ("__cfitsio_getRowSize__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_getRowSize__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_getRowSize__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{nrows}} = __cfitsio_getRowSize__(@var{file})\n \
@@ -4029,7 +4029,7 @@ This is the equivalent of the cfitsio  fits_get_rowsize function.\n \
   return octave_value(rowsize);
 }
 
-// PKG_ADD: autoload ("__cfitsio_readATblHdr__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readATblHdr__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readATblHdr__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{rowlen}, @var{nrows}, @var{ttype},@var{tbcol},@var{tform},@var{tunit},@var{extname}]} = __cfitsio_readATblHdr__(@var{file})\n \
@@ -4118,7 +4118,7 @@ This is the equivalent of the cfitsio  fits_read_atablhdrll function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("__cfitsio_readBTblHdr__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readBTblHdr__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readBTblHdr__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{nrows}, @var{ttype},@var{tform},@var{tunit},@var{extname}, @var{pcount}]} = __cfitsio_readBTblHdr__(@var{file})\n \
@@ -4202,7 +4202,7 @@ This is the equivalent of the cfitsio  fits_read_btablhdrll function.\n \
   return ret;
 }
 
-// PKG_ADD: autoload ("__cfitsio_createTbl__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_createTbl__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_createTbl__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_createTbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tform})\n \
@@ -4372,7 +4372,7 @@ This is the equivalent of the cfitsio fits_create_tbl function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_insertBTbl__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_insertBTbl__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_insertBTbl__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_insertBTbl__(@var{file}, @var{nrows}, @var{ttype}, @var{tform}, @var{tunit}, @var{extname}, @var{pcount})\n \
@@ -4522,7 +4522,7 @@ This is the equivalent of the cfitsio fits_insert_btbl function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_insertATbl__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_insertATbl__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_insertATbl__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_insertATbl__(@var{file}, @var{tbltype}, @var{nrows}, @var{ttype}, @var{tbcol}, @var{tform}, @var{tunit}, @var{extname})\n \
@@ -4699,7 +4699,7 @@ This is the equivalent of the cfitsio fits_insert_atbl function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_insertCol__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_insertCol__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_insertCol__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_insertCol__(@var{file}, @var{colnum}, @var{ttype}, @var{tform})\n \
@@ -4782,7 +4782,7 @@ This is the equivalent of the cfitsio fits_insert_col function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_deleteCol__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteCol__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteCol__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_deleteCol__(@var{file}, @var{colnum})\n \
@@ -4845,7 +4845,7 @@ This is the equivalent of the cfitsio fits_delete_col function.\n \
 #endif
 
 
-// PKG_ADD: autoload ("__cfitsio_insertRows__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_insertRows__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_insertRows__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_insertRows__(@var{file}, @var{firstrow}, @var{numrows})\n \
@@ -4924,7 +4924,7 @@ This is the equivalent of the cfitsio fits_insert_rows function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_deleteRows__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_deleteRows__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_deleteRows__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_deleteRows__(@var{file}, @var{firstrow}, @var{numrows})\n \
@@ -5003,7 +5003,7 @@ This is the equivalent of the cfitsio fits_delete_rows function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_writeCol__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_writeCol__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_writeCol__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_writeCol__(@var{file}, @var{colnum}, @var{firstrow}, @var{data})\n \
@@ -5121,7 +5121,7 @@ This is the equivalent of the cfitsio fits_write_col function.\n \
 %!error __cfitsio_writeKeyUnit__(1, "VELOCITY", "m/s");
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_readCol__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_readCol__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_readCol__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{coldata}, @var{nullval}]} = __cfitsio_readCol__(@var{file}, @var{colnum})\n \
@@ -5355,7 +5355,7 @@ This is the equivalent of the cfitsio  fits_read_col function.\n \
 %! __cfitsio_closeFile__(fd);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setCompressionType__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setCompressionType__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setCompressionType__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setCompressionType__(@var{file}, @var{comptype})\n \
@@ -5430,7 +5430,7 @@ This is the equivalent of the cfitsio fits_set_compression_type function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setTileDim__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setTileDim__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setTileDim__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setTileDim__(@var{file}, @var{tiledims})\n \
@@ -5502,7 +5502,7 @@ This is the equivalent of the cfitsio fits_set_tile_dim function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_isCompressedImg__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_isCompressedImg__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_isCompressedImg__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {@var{yes} = } __cfitsio_isCompressedImg__(@var{file})\n \
@@ -5564,7 +5564,7 @@ This is the equivalent of the cfitsio fits_is_compressed_image function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_imgCompress__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_imgCompress__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_imgCompress__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_imgCompress__(@var{infile}, @var{outfile})\n \
@@ -5639,7 +5639,7 @@ This is the equivalent of the cfitsio fits_img_compress function.\n \
 %! delete (filename2);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setHCompScale__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setHCompScale__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setHCompScale__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setHCompScale__(@var{file}, @var{scale})\n \
@@ -5698,7 +5698,7 @@ This is the equivalent of the cfitsio fits_set_hcomp_scale function.\n \
 %! delete (filename);
 #endif
 
-// PKG_ADD: autoload ("__cfitsio_setHCompSmooth__", "__fits__.oct");
+// PKG_ADD: autoload ("__cfitsio_setHCompSmooth__", "__cfitsio__.oct");
 DEFUN_DLD(__cfitsio_setHCompSmooth__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {} __cfitsio_setHCompSmooth__(@var{file}, @var{smooth})\n \
