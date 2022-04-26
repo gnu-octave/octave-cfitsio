@@ -1,6 +1,6 @@
 Name: octave-cfitsio
 Version: 0.0.1
-Date: 2020-12-06
+Date: 2022-04-26
 Author: John Donoghue
 Maintainer: John Donoghue <john.donoghue@ieee.org>
 Title: File I/O for FITS files.
@@ -10,4 +10,4 @@ Depends: octave (>= 4.0.0)
 BuildRequires: libcfitsio-dev
 SystemRequirements: libcfitsio
 License: GPLv3+
-Url: http://octave.sf.net
+Url: https://sourceforge.net/projects/octave-cfitsio/

@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 #
-### Copyright (C) 2019 John Donoghue <john.donoghue@ieee.org>
+### Copyright (C) 2019-2022 John Donoghue <john.donoghue@ieee.org>
 ###
 ### This program is free software; you can redistribute it and/or
 ### modify it under the terms of the GNU General Public License as
@@ -18,7 +18,7 @@
 ### <http://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.67])
-AC_INIT([fits], [1.0.7])
+AC_INIT([fits], [0.0.1])
 AC_CONFIG_HEADERS([config.h])
 
 # Avoid warnings for redefining AH-generated preprocessor symbols of
