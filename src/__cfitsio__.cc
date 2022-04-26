@@ -128,7 +128,6 @@ read_numeric_row(fitsfile *fp, int col, int dtype,
   LONGLONG firstrow, LONGLONG nrows, LONGLONG repeat, bool variable)
 {
   DTYPE val;
-  DTYPE nulval = 1;
   int anynul;
   int status = 0;
   long repeatrow = repeat;
@@ -157,7 +156,6 @@ read_numeric_row(fitsfile *fp, int col, int dtype,
               DTYPE * item = new DTYPE[repeatrow];
 	      char * nulls = new char[repeatrow];
               anynul = 0;
-              //if (fits_read_col(fp, dtype, col, i+firstrow, 1, repeatrow, &nulval, item, &anynul, &status) > 0)
               if (fits_read_colnull(fp, dtype, col, i+firstrow, 1, repeatrow, item, nulls, &anynul, &status) > 0)
                 {
                   error ("couldnt read %d data %lld, %d: %s", dtype, i+firstrow, 1, get_fits_error(status).c_str());
@@ -192,7 +190,6 @@ read_numeric_row(fitsfile *fp, int col, int dtype,
           for(LONGLONG r = 0;r<repeat; r++)
             {
               anynul = 0;
-              //if (fits_read_col(fp, dtype, col, i+firstrow, r+1, 1, &nulval, &val, &anynul, &status) > 0)
               if (fits_read_colnull(fp, dtype, col, i+firstrow, r+1, 1, &val, &nulls, &anynul, &status) > 0)
                 {
                   error ("couldnt read %d data %lld, %lld: %s", dtype, i+firstrow, r+1, get_fits_error(status).c_str());
