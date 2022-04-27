@@ -1,4 +1,7 @@
+Version 0.0.2 released 2022-04-27
+===================================
+ * rename package from octave-cfitsio to cfitsio
+
 Version 0.0.1 released 2022-04-26
 ===================================
  * Initial release
-
