@@ -18,7 +18,7 @@
 ### <http://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.67])
-AC_INIT([fits], [0.0.1])
+AC_INIT([cfitsio], [0.0.1])
 AC_CONFIG_HEADERS([config.h])
 
 # Avoid warnings for redefining AH-generated preprocessor symbols of
@@ -50,7 +50,7 @@ if [ test "$OCTAVE_CONFIG" = "none" ]; then
 fi
 
 
-# checks for cfitsio
+# checks for libcfitsio
 FITSIO_CXXFLAGS=`$PKG_CONFIG --cflags cfitsio`
 FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
 FITSIO_INCPATH=`$PKG_CONFIG --variable=includedir cfitsio`

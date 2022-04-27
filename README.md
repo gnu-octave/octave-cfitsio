@@ -36,7 +36,7 @@ Usage:
 ======
 
 1. Load the package.
-   pkg load octave-cfitsio
+   pkg load cfitsio
    (Required each time Octave is started)
 
 2. Use the high-level function calls fitsread, fitswrite, fitsinfo to read and write FITS files.

@@ -102,7 +102,7 @@ The toolkit must be then be loaded once per each @acronym{GNU} Octave session in
 If running in Windows, the package may already be installed, to check run:
 
 @example
-pkg list octave-cfitsio
+pkg list cfitsio
 @end example
 
 Otherwise it can be installed by installing the requirements and then using the online or offline install method.
@@ -133,7 +133,7 @@ Regardless of the method of installing the toolkit, in order to use its function
 the toolkit must be loaded using the pkg load command:
 
 @example
-pkg load octave-cfitsio
+pkg load cfitsio
 @end example
 
 The toolkit must be loaded on each @acronym{GNU} Octave session.
@@ -172,7 +172,7 @@ import matlab.io.fits;
 
 The package must be loaded each time a @acronym{GNU} Octave session is started:
 @example
-pkg load octave-cfitsio
+pkg load cfitsio
 @end example
 
 After loading the toolkit, the toolkit functions are available.

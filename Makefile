@@ -39,12 +39,13 @@ endif
 ## http://stackoverflow.com/a/448939/1609556
 package := $(shell $(GREP) "^Name: " DESCRIPTION | $(CUT) -f2 -d" " | \
 $(TR) '[:upper:]' '[:lower:]')
+packageprefix := octave-
 version := $(shell $(GREP) "^Version: " DESCRIPTION | $(CUT) -f2 -d" ")
 
 ## These are the paths that will be created for the releases.
 target_dir       := target
-release_dir      := $(target_dir)/$(package)-$(version)
-release_tarball  := $(target_dir)/$(package)-$(version).tar.gz
+release_dir      := $(target_dir)/$(packageprefix)$(package)-$(version)
+release_tarball  := $(target_dir)/$(packageprefix)$(package)-$(version).tar.gz
 html_dir         := $(target_dir)/$(package)-html
 html_tarball     := $(target_dir)/$(package)-html.tar.gz
 ## Using $(realpath ...) avoids problems with symlinks due to bug
@@ -259,27 +260,27 @@ check: $(install_stamp)
 ## Docs
 ##
 .PHONY: docs
-docs: doc/$(package).pdf doc/$(package).qhc
+docs: doc/$(packageprefix)$(package).pdf doc/$(packageprefix)$(package).qhc
 
 clean-docs:
-	$(RM) -f doc/$(package).info
-	$(RM) -f doc/$(package).pdf
+	$(RM) -f doc/$(packageprefix)$(package).info
+	$(RM) -f doc/$(packageprefix)$(package).pdf
 	$(RM) -f doc/functions.texi
-	$(RM) -f doc/$(PACKAGE).qhc doc/$(PACKAGE).qch
+	$(RM) -f doc/$(packageprefix)$(package).qhc doc/$(packageprefix)$(package).qch
 
-doc/$(package).pdf: doc/$(package).texi doc/functions.texi
-	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(package).texi
+doc/$(packageprefix)$(package).pdf: doc/$(packageprefix)$(package).texi doc/functions.texi
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(packageprefix)$(package).texi
 	# remove temp files
-	cd doc && $(RM) -f $(package).aux  $(package).cp  $(package).cps  $(package).fn  $(package).fns  $(package).log  $(package).toc
+	cd doc && $(RM) -f $(packageprefix)$(package).aux  $(packageprefix)$(package).cp  $(packageprefix)$(package).cps  $(packageprefix)$(package).fn  $(packageprefix)$(package).fns  $(packageprefix)$(package).log  $(packageprefix)$(package).toc
 
 doc/functions.texi:
 	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
-doc/$(package).qhc: doc/$(package).texi doc/functions.texi
+doc/$(packageprefix)$(package).qhc: doc/$(packageprefix)$(package).texi doc/functions.texi
 	# try also create qch file if can
-	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(package).css  --no-split --output=${package}.html $(package).texi
-	cd doc && ./mkqhcp.py $(package) && $(QHELPGENERATOR) $(package).qhcp -o $(package).qhc
-	cd doc && $(RM) -f $(package).html $(package).qhcp $(package).qhp
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css  --no-split --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
+	cd doc && ./mkqhcp.py $(packageprefix)$(package) && $(QHELPGENERATOR) $(packageprefix)$(package).qhcp -o $(packageprefix)$(package).qhc
+	cd doc && $(RM) -f $(packageprefix)$(package).html $(packageprefix)$(package).qhcp $(packageprefix)$(package).qhp
 ##
 ## CLEAN
 ##
