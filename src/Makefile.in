@@ -40,12 +40,18 @@ archtests: $(TST_SOURCES)
 	@(      echo "## Generated from $<"; \
 	        $(GREP) '^%!' "$<") > "$@"
 
-fits_constants.h: $(FITSIO_INCPATH)/fitsio.h
+fits_constants.h: $(FITSIO_INCPATH)/fitsio.h Makefile.in
 	@echo "Generating $@"
 	@(      echo "// Generated from $<"; \
 		echo "typedef struct { const char *name; octave_value value; }  fits_constants_type;"; \
 		echo "fits_constants_type fits_constants [] = {"; \
-	        $(SED) -n 's|^#define \([A-Z_][A-Z0-9_]*\)[ ]\+\([-0-9][0-9\.]*\).*$$| { "\1", \1 },|p' "$<"; \
+		echo " // handle potential non float version value"; \
+		echo "#ifdef CFITSIO_MICRO"; \
+		echo ' { "CFITSIO_VERSION", (float)CFITSIO_MAJOR + (float)(.01*CFITSIO_MINOR) + (float)(.0001*CFITSIO_MICRO },'; \
+		echo "#else"; \
+		echo ' { "CFITSIO_VERSION", (float)CFITSIO_MAJOR + (float)(.01*CFITSIO_MINOR) },'; \
+		echo "#endif"; \
+	        $(SED) -n 's|^#define \([A-Z_][A-Z0-9_]*\)[ ]\+\([-0-9][0-9\.]*\).*$$| { "\1", \1 },|p' "$<" | $(GREP) -v CFITSIO_VERSION; \
 		echo ' { "", 0 }'; \
 		echo "};"; \
 	) > "$@"
