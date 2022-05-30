@@ -1,3 +1,8 @@
+Version 0.0.2+ released TBD
+===================================
+
+ * handle 3 digit versions in cfitsio 4.X+
+
 Version 0.0.2 released 2022-04-27
 ===================================
  * rename package from octave-cfitsio to cfitsio
