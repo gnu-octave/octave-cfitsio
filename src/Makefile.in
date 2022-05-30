@@ -7,6 +7,10 @@ FITSIO_INCPATH := @FITSIO_INCPATH@
 LIBS      := @LIBS@ @FITSIO_LIBS@
 LDFLAGS   := @LDFLAGS@
 
+PWD := $(shell pwd)
+TOP_BUILD_DIR := @abs_builddir@
+TOP_DIR := @abs_srcdir@
+
 OCT_FILES =__cfitsio__.oct
 
 ARCHTESTS = archtests
@@ -17,7 +21,7 @@ CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
 TST_SOURCES := $(patsubst %.cc,../inst/$(ARCHDIR)/%.cc-tst,$(CC_TST_SOURCES))
 
 .PHONY: all
-all: $(OCT_FILES) $(ARCHTESTS)
+all: $(OCT_FILES) $(ARCHTESTS) | Makefile
 	
 %.o: %.cc fits_constants.h
 	$(MKOCTFILE) -c $< $(CXXFLAGS)
@@ -55,6 +59,15 @@ fits_constants.h: $(FITSIO_INCPATH)/fitsio.h Makefile.in
 		echo ' { "", 0 }'; \
 		echo "};"; \
 	) > "$@"
+
+$(TOP_DIR)/configure: $(TOP_DIR)/configure.ac
+	cd $(TOP_DIR) && autoconf
+
+config.status: $(TOP_DIR)/configure
+	$(SHELL) ./config.status --recheck
+
+Makefile: $(TOP_DIR)/Makefile.in config.status
+	$(SHELL) ./config.status Makefile
 
 .PHONY: prebuild
 prebuild:
