@@ -49,10 +49,27 @@ if [ test "$OCTAVE_CONFIG" = "none" ]; then
   AC_MSG_ERROR([octave-config required to install $PACKAGE_NAME])
 fi
 
+# Check for Windows
+AC_MSG_CHECKING([for windows])
+have_windows=no
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+   #include <windows.h>
+   #ifndef __WIN32__
+     #error "Not windows!"
+   #endif
+  ]], [])],
+ [AC_MSG_RESULT([yes])
+  have_windows=yes],
+ [AC_MSG_RESULT([no])])
 
 # checks for libcfitsio
 FITSIO_CXXFLAGS=`$PKG_CONFIG --cflags cfitsio`
-FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
+if test $have_windows = yes; then
+  # in windows we need to know and link in dependant libs as well, so use static
+  FITSIO_LIBS=`$PKG_CONFIG --static --libs cfitsio`
+else
+  FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
+fi
 FITSIO_INCPATH=`$PKG_CONFIG --variable=includedir cfitsio`
 
 save_CPPFLAGS="$CPPFLAGS"
