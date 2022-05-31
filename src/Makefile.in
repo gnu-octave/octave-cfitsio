@@ -51,7 +51,7 @@ fits_constants.h: $(FITSIO_INCPATH)/fitsio.h Makefile.in
 		echo "fits_constants_type fits_constants [] = {"; \
 		echo " // handle potential non float version value"; \
 		echo "#ifdef CFITSIO_MICRO"; \
-		echo ' { "CFITSIO_VERSION", (float)CFITSIO_MAJOR + (float)(.01*CFITSIO_MINOR) + (float)(.0001*CFITSIO_MICRO },'; \
+		echo ' { "CFITSIO_VERSION", (float)CFITSIO_MAJOR + (float)(.01*CFITSIO_MINOR) + (float)(.0001*CFITSIO_MICRO) },'; \
 		echo "#else"; \
 		echo ' { "CFITSIO_VERSION", (float)CFITSIO_MAJOR + (float)(.01*CFITSIO_MINOR) },'; \
 		echo "#endif"; \
