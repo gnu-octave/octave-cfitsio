@@ -30,7 +30,7 @@ function ret = getConstantValue (name)
 endfunction
 
 %!test
-%! assert(matlab.io.fits.getVersion(), matlab.io.fits.getConstantValue("CFITSIO_VERSION"), 1e-07);
+%! assert(matlab.io.fits.getVersion(), matlab.io.fits.getConstantValue("CFITSIO_VERSION"), 1e-05);
 %! assert(matlab.io.fits.getConstantValue("IMAGE_HDU"), 0);
 %! assert(matlab.io.fits.getConstantValue("ASCII_TBL"), 1);
 %! assert(matlab.io.fits.getConstantValue("BINARY_TBL"), 2);

@@ -2601,7 +2601,7 @@ Return the value of a known fits constant.\n \
 }
 #if 0
 %!test
-%! assert(__cfitsio_getVersion__(), __cfitsio_getConstantValue__("CFITSIO_VERSION"), 1e-07);
+%! assert(__cfitsio_getVersion__(), __cfitsio_getConstantValue__("CFITSIO_VERSION"), 1e-05);
 %! assert(__cfitsio_getConstantValue__("IMAGE_HDU"), 0);
 %! assert(__cfitsio_getConstantValue__("ASCII_TBL"), 1);
 %! assert(__cfitsio_getConstantValue__("BINARY_TBL"), 2);
