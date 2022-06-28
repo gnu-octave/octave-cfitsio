@@ -1,7 +1,9 @@
-Version 0.0.2+ released TBD
+Version 0.0.3 released 2022-06-28
 ===================================
 
  * handle 3 digit versions in cfitsio 4.X+
+
+ * add better lib detection in windows
 
 Version 0.0.2 released 2022-04-27
 ===================================
