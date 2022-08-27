@@ -3,10 +3,10 @@
 @c Octave cfitsio - Octave FITS file I/O.
 
 @c For manually generating the documentation use
-@c   LANGUAGE=en makeinfo --html --no-split audio.texi
+@c   LANGUAGE=en makeinfo --html --no-split octave-cfitsio.texi
 
 @c %*** Start of HEADER
-@setfilename audio.info
+@setfilename octave-cfitsio.info
 @settitle Octave CFITSIO - FITS File I/O Toolkit for GNU octave
 @afourpaper
 @paragraphindent 0
@@ -145,7 +145,7 @@ The toolkit must be loaded on each @acronym{GNU} Octave session.
 
 @section Overview
 @cindex Overview
-The octave-cfitsio tookkit provides high and level functionality for reading and
+The octave-cfitsio toolkit provides high and level functionality for reading and
 writing FITS format files.
 
 The high level functions provide base read and write of data to octave.
@@ -198,17 +198,17 @@ To read information about the content in a fits file, use the fitsinfo functions
 @subsection Low level functionality
 @cindex  Low level functionality
 Where functionality is required that is not met be the high level functions, 
-most of the cfitsio functsions are available in the matlab.io.fits namespace.
+most of the cfitsio functions are available in the matlab.io.fits namespace.
 
 
 @example
-  # import the fits functions so dont have to use the full namespace each time
+  # import the fits functions so don't have to use the full namespace each time
   import_fits;
 
   # open the file
   fd = fits.openFile('tst0012.fits');
 
-  # get num of hdus in the file
+  # get number of hdus in the file
   n = fits.getNumHDUs (fd);
 
   # for each hdu, go to it, print out the type
