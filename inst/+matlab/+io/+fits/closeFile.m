@@ -17,7 +17,7 @@
 ## @deftypefn {} {} closeFile(@var{file})
 ## Close the opened fits file
 ## 
-## This is the eqivalent of the fits_close_file function.
+## This is the equivalent of the fits_close_file function.
 ##
 ## @subsubheading Inputs
 ## @var{file} - opened file returned from openFile or createFile.

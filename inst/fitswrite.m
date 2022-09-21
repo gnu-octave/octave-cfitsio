@@ -16,7 +16,7 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {} fitswrite(@var{data}, @var{filename})
 ## @deftypefnx {} {} fitswrite(@var{data}, @var{filename}, @var{propertyname}, @var{propertyvalue})
-## Write image data @var{data}  to FITS file @var{filename}. If the fie already exists, overwrte it.
+## Write image data @var{data}  to FITS file @var{filename}. If the fie already exists, overwrite it.
 ##
 ## @subsubheading Inputs
 ## @var{data} - imagedata to write to a file.

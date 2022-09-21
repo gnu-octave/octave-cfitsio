@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{type} =} movAbsHDU(@var{file}, @var{hdunum})
-## Goto absolute HDU index @var{hdunum}
+## Go to absolute HDU index @var{hdunum}
 ##
 ## Returns the newly current HDU type as a string.
 ##

@@ -17,7 +17,7 @@
 ## @deftypefn {} {@var{filename}} = fileName(@var{file})
 ## Return the file name of the opened fits file.
 ##
-## The is the eqivalent of the fits_file_name function.
+## The is the equivalent of the fits_file_name function.
 ##
 ## @subsubheading Inputs
 ## @var{file} - opened fits file.

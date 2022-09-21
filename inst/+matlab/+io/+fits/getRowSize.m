@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{nrows}} = getRowSize(@var{file})
-## Get optinum number of rows to read/write at one time.
+## Get optimum number of rows to read/write at one time.
 ##
 ## This is the equivalent of the cfitsio  fits_get_rowsize function.
 ##

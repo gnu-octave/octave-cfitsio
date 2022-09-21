@@ -17,7 +17,7 @@
 ## @deftypefn {} {} deleteFile(@var{file})
 ## Force a close and delete of a fits file.
 ##
-## The is the eqivalent of the fits_delete_file function.
+## The is the equivalent of the fits_delete_file function.
 ##
 ## @subsubheading Inputs
 ## @var{file} - opened fits file.

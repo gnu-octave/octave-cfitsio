@@ -54,7 +54,7 @@ Low Level Utility Functions
  matlab.io.fits.getConstantNames
  matlab.io.fits.getVersion
  matlab.io.fits.getOpenFiles
-Low Level Commpression Functions
+Low Level Compression Functions
  matlab.io.fits.isCompressedImg
  matlab.io.fits.setCompressionType
  matlab.io.fits.setTileDim

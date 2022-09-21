@@ -18,7 +18,7 @@
 ## @deftypefnx {} {@var{file}} = openFile(@var{filename}, @var{mode})
 ## Attempt to open a file of the given input name.
 ## 
-## This is the equivilent of the cfitsio fits_open_file funtion.
+## This is the equivalent of the cfitsio fits_open_file function.
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.

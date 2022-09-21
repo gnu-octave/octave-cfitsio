@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {[@var{ttype},@var{tunit},@var{typechar},@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = getBColParms(@var{file}, @var{colnum})
-## Get binary table paramaters.
+## Get binary table parameters.
 ##
 ## This is the equivalent of the cfitsio  fits_get_bcolparms function.
 ##

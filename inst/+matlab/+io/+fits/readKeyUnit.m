@@ -25,7 +25,7 @@
 ## @var{recname} - keyword name.
 ##
 ## @subsubheading Outputs
-## @var{keyunit} - inits value of record.
+## @var{keyunit} - units value of record.
 ## @end deftypefn
 function ret = readKeyUnit (file, recname)
   ret = __cfitsio_readKeyUnit__ (file, recname);

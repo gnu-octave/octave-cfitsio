@@ -161,7 +161,7 @@ Running the statement:
 import_fits
 @end example
 
-Is the eqivalent of running in matlab:
+Is the equivalent of running in matlab:
 @example
 import matlab.io.fits;
 @end example

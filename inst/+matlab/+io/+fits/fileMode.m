@@ -17,7 +17,7 @@
 ## @deftypefn {} {@var{mode}} = fileMode(@var{file})
 ## Return the file mode of the opened fits file.
 ##
-## The is the eqivalent of the fits_file_mode function.
+## The is the equivalent of the fits_file_mode function.
 ##
 ## @subsubheading Inputs
 ## @var{file} - opened fits file.

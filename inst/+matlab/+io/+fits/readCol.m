@@ -28,7 +28,7 @@
 ## @var{numrows} - Number of rows to read
 ##
 ## @subsubheading Outputs
-## @var{coldata} - the colmn data rows
+## @var{coldata} - the column data rows
 ##
 ## @var{nulldata} - the null value flags
 ## @subsubheading Examples
@@ -39,7 +39,7 @@
 ## filename = file_in_loadpath("demos/tst0012.fits");
 ## fd = fits.openFile(filename);
 ##
-## # move to binary table and gte column for flux
+## # move to binary table and get column for flux
 ## fits.movAbsHDU(fd, 2);
 ## colnum = fits.getColName(fd, 'flux');
 ##

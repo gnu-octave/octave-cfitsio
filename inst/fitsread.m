@@ -19,7 +19,7 @@
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname})
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, @var{extname}, @var{index})
 ## @deftypefnx {} {@var{data}} = fitsread(@var{filename}, ____, @var{propertyname}, @var{propertyvalue})
-## Read the primary data, or specifed extension data. It scales the data and applied Nan to any undefined values.
+## Read the primary data, or specified extension data. It scales the data and applied Nan to any undefined values.
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.
@@ -55,13 +55,13 @@
 ## # read the primary image data
 ## imagedata = fitsread(filename);
 ##
-## # read the 1st non primaty image
+## # read the 1st non primary image
 ## imagedata = fitsread(filename, "image");
 ##
 ## # read the first binary table, selected columns
 ## tbldata = fitsread(filename, "binarytable", "TableColumns", [1 2 11]);
 ##
-## # read the first acsii table
+## # read the first ascii table
 ## atbldata = fitsread(filename, "asciitable");
 ## @end example
 ## @end deftypefn

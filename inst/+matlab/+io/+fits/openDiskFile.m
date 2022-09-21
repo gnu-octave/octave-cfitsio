@@ -18,7 +18,7 @@
 ## @deftypefnx {} {@var{file}} = openDiskFile(@var{filename}, @var{mode})
 ## Attempt to open a file of the given input name, ignoring any special processing of the filename.
 ##
-## This is the equivilent of the cfitsio fits_open_diskfile funtion.
+## This is the equivalent of the cfitsio fits_open_diskfile function.
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.

@@ -20,7 +20,7 @@
 ## If the filename starts with ! and the file exists, it will create a new file, otherwise, if the
 ## file exists, the create will fail.
 ##
-## This is the equivilent of the cfitsio fits_create_file funtion.
+## This is the equivalent of the cfitsio fits_create_file function.
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.
