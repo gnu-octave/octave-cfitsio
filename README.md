@@ -42,7 +42,7 @@ Usage:
 2. Use the high-level function calls fitsread, fitswrite, fitsinfo to read and write FITS files.
    or use the low-level functions for custom file manipulation.
 
-Documentation of functions are availible in octave after install and loading.
+Documentation of functions are available in octave after install and loading.
 
 Known limitations and bugs
 ==========================
