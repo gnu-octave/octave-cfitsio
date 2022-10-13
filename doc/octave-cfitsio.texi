@@ -116,6 +116,12 @@ octave-cfitsio using the following command within @acronym{GNU} Octave:
 pkg install https://sourceforge.net/projects/octave-cfitsio/files/v@value{VERSION}/octave-cfitsio-@value{VERSION}.tar.gz/download
 @end example
 
+On @acronym{GNU} Octave 7 and higher, the package can be installed in the simpler form of:
+
+@example
+pkg install -forge cfitsio
+@end example
+
 The latest released version of the toolkit will be downloaded and installed.
 
 @section Off-line install
@@ -129,7 +135,7 @@ pkg install octave-cfitsio-@value{VERSION}.tar.gz
 
 @section Loading
 @cindex Loading
-Regardless of the method of installing the toolkit, in order to use its functions,
+Regardless of the method of installing the toolkit, in order to use its functions
 the toolkit must be loaded using the pkg load command:
 
 @example
@@ -215,7 +221,7 @@ most of the cfitsio functions are available in the matlab.io.fits namespace.
   for j = 1:n
     hdutype = fits.movAbsHDU (fd, j);
     printf ('HDU %d:  "%s"\n', j, hdutype);
-  endif
+  endfor
 
   # close the file
   fits.closeFile (fd);

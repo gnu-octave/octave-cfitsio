@@ -14,9 +14,8 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {@var{hdutype} =} movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})
+## @deftypefn {} {@var{hdutype} =} movNamHDU(@var{file}, @var{hdutype}, @var{extname}, @var{extver})
 ## Go to HDU matching @var{hdutype}, @var{extname}, @var{extver}.
-##
 ##
 ## This is the equivalent of the cfitsio fits_movnam_hdu function.
 ##
