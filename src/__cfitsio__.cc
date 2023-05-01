@@ -401,7 +401,7 @@ Attempt to create  a file of the given input name.\n \
 If the filename starts with ! and the file exists, it will create a new file, otherwise, if the\n \
 file exists, the create will fail.\n \
 \n \
-This is the equivilent of the cfitsio fits_create_file funtion.\n \
+This is the equivalent of the cfitsio fits_create_file function.\n \
 @seealso {__cfitsio_openFile__}\n \
 @end deftypefn")
 {
@@ -460,9 +460,9 @@ DEFUN_DLD(__cfitsio_openFile__, args, nargout,
 @deftypefnx {Function File} {[@var{file}]} = __cfitsio_openFile__(@var{filename}, @var{mode})\n \
 Attempt to open a file of the given input name.\n \
 \n \
-If the opion mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
+If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
-This is the equivilent of the cfitsio fits_open_file funtion.\n \
+This is the equivalent of the cfitsio fits_open_file function.\n \
 @seealso {__cfitsio_openDiskFile__, __cfitsio_createFile__}\n \
 @end deftypefn")
 {
@@ -547,7 +547,7 @@ Attempt to open a file of the given input name, ignoring any special processing 
 \n \
 If the option mode string 'READONLY' (default) or 'READWRITE' is provided, open the file using that mode.\n \
 \n \
-This is the equivilent of the cfitsio fits_open_diskfile funtion.\n \
+This is the equivalent of the cfitsio fits_open_diskfile function.\n \
 @seealso {__cfitsio_openFile__, __cfitsio_createFile__}\n \
 @end deftypefn")
 {
@@ -614,7 +614,7 @@ Return the file mode of the opened fits file\n \
 \n \
 The mode will return as a string 'READWRITE' or 'READONLY'\n \
 \n \
-The is the eqivalent of the fits_file_mode function.\n \
+The is the equivalent of the fits_file_mode function.\n \
 @end deftypefn")
 {
   if ( args.length() != 1)
@@ -669,7 +669,7 @@ DEFUN_DLD(__cfitsio_fileName__, args, nargout,
 @deftypefn {Function File} {@var{name}} = __cfitsio_fileName__(@var{file})\n \
 Return the file name of the opened fits file\n \
 \n \
-The is the eqivalent of the fits_file_name function.\n \
+The is the equivalent of the fits_file_name function.\n \
 @end deftypefn")
 {
   if ( args.length() != 1)
@@ -720,7 +720,7 @@ DEFUN_DLD(__cfitsio_closeFile__, args, nargout,
 @deftypefn {Function File} {} __cfitsio_closeFile__(@var{file})\n \
 Close the opened fits file\n \
 \n \
-The is the eqivalent of the fits_close_file function.\n \
+The is the equivalent of the fits_close_file function.\n \
 @end deftypefn")
 {
   if ( args.length() != 1)
@@ -773,7 +773,7 @@ DEFUN_DLD(__cfitsio_deleteFile__, args, nargout,
 @deftypefn {Function File} {} __cfitsio_deleteFile__(@var{file})\n \
 Force a close and delete of a fits file.\n \
 \n \
-The is the eqivalent of the fits_delete_file function.\n \
+The is the equivalent of the fits_delete_file function.\n \
 @end deftypefn")
 {
   octave_value retval;  // create object to store return values
@@ -3545,7 +3545,7 @@ Reset scale and zero to be used with reading and writing table data.\n \
 DEFUN_DLD(__cfitsio_getAColParms__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{ttype},@var{tbcol},@var{tunit},@var{tform},@var{scale},@var{zero},@var{nulstr},@var{tdisp}]} = __cfitsio_getAColParms__(@var{file}, @var{colnum})\n \
-Get ASCII table paramaters\n \
+Get ASCII table parameters\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 @end deftypefn")
@@ -3624,7 +3624,7 @@ This is the equivalent of the cfitsio  fits_get_acolparms function.\n \
 DEFUN_DLD(__cfitsio_getBColParms__, args, nargout,
 "-*- texinfo -*-\n \
 @deftypefn {Function File} {[@var{ttype},@var{tunit},@var{typechar},@var{repeat},@var{scale},@var{zero},@var{nulval},@var{tdisp}]} = getBColParms(@var{file}, @var{colnum})\n \
-Get binary table paramaters\n \
+Get binary table parameters\n \
 \n \
 This is the equivalent of the cfitsio  fits_get_bcolparms function.\n \
 @end deftypefn")
