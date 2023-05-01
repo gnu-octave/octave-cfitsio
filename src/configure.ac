@@ -63,14 +63,16 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
  [AC_MSG_RESULT([no])])
 
 # checks for libcfitsio
-FITSIO_CXXFLAGS=`$PKG_CONFIG --cflags cfitsio`
-if test $have_windows = yes; then
-  # in windows we need to know and link in dependant libs as well, so use static
-  FITSIO_LIBS=`$PKG_CONFIG --static --libs cfitsio`
-else
-  FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
+if [ "x$PKG_CONFIG" != "x" ]; then
+  FITSIO_CXXFLAGS=`$PKG_CONFIG --cflags cfitsio`
+  if test $have_windows = yes; then
+    # in windows we need to know and link in dependant libs as well, so use static
+    FITSIO_LIBS=`$PKG_CONFIG --static --libs cfitsio`
+  else
+    FITSIO_LIBS=`$PKG_CONFIG --libs cfitsio`
+  fi
+  FITSIO_INCPATH=`$PKG_CONFIG --variable=includedir cfitsio`
 fi
-FITSIO_INCPATH=`$PKG_CONFIG --variable=includedir cfitsio`
 
 save_CPPFLAGS="$CPPFLAGS"
 save_LDFLAGS=$LDFLAGS
