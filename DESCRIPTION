@@ -10,4 +10,5 @@ Depends: octave (>= 4.0.0)
 BuildRequires: libcfitsio-dev
 SystemRequirements: libcfitsio
 License: GPLv3+
-Url: https://sourceforge.net/projects/octave-cfitsio/
+Url: https://gnu-octave.github.io/octave-cfitsio/
+Repository: https://github.com/gnu-octave/octave-cfitsio/

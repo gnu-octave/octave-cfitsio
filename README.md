@@ -25,7 +25,7 @@ To install, run the octave package manager:
    type pkg list, to view the installed packages.
 
 2. To install from internet:
-   pkg install pkg install https://sourceforge.net/projects/octave-cfitsio/files/vXXXXXX/raspi-XXXXXX.tar.gz/download
+   pkg install pkg install -forge cfitsio
 
 3. To install from a local tarball.
    pkg install octave-cfitsio-XXXXXXX.tar.gz
