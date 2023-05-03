@@ -69,23 +69,23 @@ MKOCTFILE ?= mkoctfile
 ## Command used to set permissions before creating tarballs
 FIX_PERMISSIONS ?= chmod -R a+rX,u+w,go-w,ug-s
 
-HG           := hg
-HG_CMD        = $(HG) --config alias.$(1)=$(1) --config defaults.$(1)= $(1)
-HG_ID        := $(shell $(call HG_CMD,identify) --id | sed -e 's/+//' )
-HG_TIMESTAMP := $(firstword $(shell $(call HG_CMD,log) --rev $(HG_ID) --template '{date|hgdate}'))
-
-TAR_REPRODUCIBLE_OPTIONS := --sort=name --mtime="@$(HG_TIMESTAMP)" --owner=0 --group=0 --numeric-owner
-TAR_OPTIONS  := --format=ustar $(TAR_REPRODUCIBLE_OPTIONS)
-
 ## Detect which VCS is used
 vcs := $(if $(wildcard .hg),hg,$(if $(wildcard .git),git,unknown))
 ifeq ($(vcs),hg)
 release_dir_dep := .hg/dirstate
+HG           := hg
+HG_CMD        = $(HG) --config alias.$(1)=$(1) --config defaults.$(1)= $(1)
+HG_ID        := $(shell $(call HG_CMD,identify) --id | sed -e 's/+//' )
+REPO_TIMESTAMP := $(firstword $(shell $(call HG_CMD,log) --rev $(HG_ID) --template '{date|hgdate}'))
 endif
 ifeq ($(vcs),git)
 release_dir_dep := .git/index
+GIT          := git
+REPO_TIMESTAMP := $(firstword $(shell $(GIT) log -n1 --date=unix --format="%ad"))
 endif
 
+TAR_REPRODUCIBLE_OPTIONS := --sort=name --mtime="@$(REPO_TIMESTAMP)" --owner=0 --group=0 --numeric-owner
+TAR_OPTIONS  := --format=ustar $(TAR_REPRODUCIBLE_OPTIONS)
 
 ## .PHONY indicates targets that are not filenames
 ## (https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html)
@@ -271,7 +271,7 @@ clean-docs:
 	$(RM) -f doc/$(packageprefix)$(package).qhc doc/$(packageprefix)$(package).qch
 
 doc/$(packageprefix)$(package).pdf: doc/$(packageprefix)$(package).texi doc/functions.texi
-	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(packageprefix)$(package).texi
+	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(TEXI2PDF) $(packageprefix)$(package).texi
 	# remove temp files
 	cd doc && $(RM) -f $(packageprefix)$(package).aux  $(packageprefix)$(package).cp  $(packageprefix)$(package).cps  $(packageprefix)$(package).fn  $(packageprefix)$(package).fns  $(packageprefix)$(package).log  $(packageprefix)$(package).toc
 
@@ -279,7 +279,7 @@ doc/functions.texi:
 	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
 doc/$(packageprefix)$(package).html: doc/$(packageprefix)$(package).texi doc/functions.texi
-	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css  --no-split --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
+	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css  --no-split --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
 
 doc/$(packageprefix)$(package).qhc: doc/$(packageprefix)$(package).html
 	# try also create qch file if can
