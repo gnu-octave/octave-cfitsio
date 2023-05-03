@@ -1,0 +1,41 @@
+---
+layout: "default"
+permalink: "/functions/8_fitsinfo/"
+pkg_name: "cfitsio"
+pkg_version: "0.0.4"
+pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
+title: "Cfitsio Toolkit - fitsinfo"
+category: "High Level File Functions"
+func_name: "fitsinfo"
+navigation:
+- id: "overview"
+  name: "Overview"
+  url: "/index"
+- id: "Functions"
+  name: "Function Reference"
+  url: "/functions"
+- id: "news"
+  name: "News"
+  url: "/news"
+- id: "manual"
+  name: "Manual"
+  url: "/manual"
+---
+<dl class="def">
+<dt id="index-_003d"><span class="category">: </span><span><em><var>info</var></em> <strong>=</strong> <em>fitsinfo(<var>filename</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dd><p>Read information about fits format file
+ </p><span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
+<p><var>filename</var> - filename to open.
+</p>
+<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<p><var>info</var> - a struct containing the structure and information about
+ the fits file.
+</p>
+<span id="Examples"></span><h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"> filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;);
+
+ info = fitsinfo(filename);
+ </pre></div>
+
+</dd></dl>
