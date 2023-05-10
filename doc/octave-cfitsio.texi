@@ -44,7 +44,7 @@ The @acronym{GNU} Octave CFITSIO package is @dfn{free} software.
 Free software is a matter of the users' freedom to run, copy, distribute,
 study, change and improve the software.
 This means that everyone is free to use it and free to redistribute it
-on certain conditions.  The @acronym{GNU} Octave Audio package
+on certain conditions.  The @acronym{GNU} Octave CFITSIO package
 is not, however, in the public domain.  It is copyrighted and there are
 restrictions on its distribution, but the restrictions are designed to
 ensure that others will have the same freedom to use and redistribute
@@ -74,7 +74,7 @@ The @acronym{GNU} Octave CFITSIO toolkit is a set of functions for manipulating 
 @menu
 * Installing and loading::    Installing and loading the toolkit
 * Basic Usage Overview::      Basic Usage Overview
-* Function Reference::        Audio toolkit functions
+* Function Reference::        CFITSIO toolkit functions
 * Copying::                   Copying
 * Index::                     Index
 @end menu
@@ -151,7 +151,7 @@ The toolkit must be loaded on each @acronym{GNU} Octave session.
 
 @section Overview
 @cindex Overview
-The octave-cfitsio toolkit provides high and level functionality for reading and
+The octave-cfitsio toolkit provides high and low level functionality for reading and
 writing FITS format files.
 
 The high level functions provide base read and write of data to octave.
