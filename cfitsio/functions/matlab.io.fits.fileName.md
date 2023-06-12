@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/23_matlabiofitsfileName/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.4"
+pkg_version: "0.0.5"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.fileName"
 category: "Low Level File Functions"
@@ -52,7 +52,7 @@ navigation:
 <dt id="index-_003d"><span class="category">: </span><span><em><var>filename</var></em> <strong>=</strong> <em>fileName(<var>file</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
 <dd><p>Return the file name of the opened fits file.
 </p>
-<p>The is the equivalent of the fits_file_name function.
+<p>This is the equivalent of the fits_file_name function.
 </p>
 <span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
 <p><var>file</var> - opened fits file.

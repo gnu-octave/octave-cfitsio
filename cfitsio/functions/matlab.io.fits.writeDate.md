@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitswriteDate/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.4"
+pkg_version: "0.0.5"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.writeDate"
 category: "Low Level Keyword Functions"

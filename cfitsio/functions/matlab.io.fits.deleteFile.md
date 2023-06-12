@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsdeleteFile/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.4"
+pkg_version: "0.0.5"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.deleteFile"
 category: "Low Level File Functions"
@@ -52,7 +52,7 @@ navigation:
 <dt id="index-deleteFile_0028file_0029"><span class="category">: </span><span><em></em> <strong>deleteFile(<var>file</var>)</strong><a href='#index-deleteFile_0028file_0029' class='copiable-anchor'></a></span></dt>
 <dd><p>Force a close and delete of a fits file.
 </p>
-<p>The is the equivalent of the fits_delete_file function.
+<p>This is the equivalent of the fits_delete_file function.
 </p>
 <span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
 <p><var>file</var> - opened fits file.

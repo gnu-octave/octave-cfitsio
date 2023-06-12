@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitsmovNamHDU/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.4"
+pkg_version: "0.0.5"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.movNamHDU"
 category: "Low Level HDU Functions"
@@ -49,10 +49,9 @@ navigation:
   url: "/manual"
 ---
 <dl class="def">
-<dt id="index-movNamHDU_0028file_002c"><span class="category">Function File: </span><span><em><var>hdutype</var> =</em> <strong>movNamHDU(<var>file</var>,</strong> <em><var>hdutype</var>, <var>extname</var>, <var>extver</var>)</em><a href='#index-movNamHDU_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dt id="index-movNamHDU_0028file_002c"><span class="category">: </span><span><em><var>hdutype</var> =</em> <strong>movNamHDU(<var>file</var>,</strong> <em><var>hdutype</var>, <var>extname</var>, <var>extver</var>)</em><a href='#index-movNamHDU_0028file_002c' class='copiable-anchor'></a></span></dt>
 <dd><p>Go to HDU matching <var>hdutype</var>, <var>extname</var>, <var>extver</var>.
 </p>
-
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.
 </p>
 <span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>

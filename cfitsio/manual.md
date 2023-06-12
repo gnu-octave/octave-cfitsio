@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/manual/"
 title: "Cfitsio Toolkit - Manual"
 pkg_name: "cfitsio"
-version: "0.0.4"
+version: "0.0.5"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 navigation:
 - id: "overview"
@@ -211,7 +211,12 @@ to successfully install the <acronym>GNU</acronym> Octave toolkit.
 octave-cfitsio using the following command within <acronym>GNU</acronym> Octave:
 </p>
 <div class="example">
-<pre class="example">pkg install https://sourceforge.net/projects/octave-cfitsio/files/v0.0.4/octave-cfitsio-0.0.4.tar.gz/download
+<pre class="example">pkg install https://sourceforge.net/projects/octave-cfitsio/files/v0.0.5/octave-cfitsio-0.0.5.tar.gz/download
+</pre></div>
+<p>On <acronym>GNU</acronym> Octave 7 and higher, the package can be installed in the simpler form of:
+</p>
+<div class="example">
+<pre class="example">pkg install -forge cfitsio
 </pre></div>
 <p>The latest released version of the toolkit will be downloaded and installed.
 </p>
@@ -223,13 +228,13 @@ octave-cfitsio using the following command within <acronym>GNU</acronym> Octave:
 <acronym>GNU</acronym> Octave, the package can be installed using the following command within <acronym>GNU</acronym> Octave:
 </p>
 <div class="example">
-<pre class="example">pkg install octave-cfitsio-0.0.4.tar.gz
+<pre class="example">pkg install octave-cfitsio-0.0.5.tar.gz
 </pre></div>
 </div>
 <div class="section" id="Loading">
 <h3 class="section">1.4 Loading</h3>
 <span id="index-Loading"></span>
-<p>Regardless of the method of installing the toolkit, in order to use its functions,
+<p>Regardless of the method of installing the toolkit, in order to use its functions
 the toolkit must be loaded using the pkg load command:
 </p>
 <div class="example">
@@ -254,7 +259,7 @@ Next: <a href="#Function-Reference" accesskey="n" rel="next">Function Reference<
 <div class="section" id="Overview">
 <h3 class="section">2.1 Overview</h3>
 <span id="index-Overview"></span>
-<p>The octave-cfitsio toolkit provides high and level functionality for reading and
+<p>The octave-cfitsio toolkit provides high and low level functionality for reading and
 writing FITS format files.
 </p>
 <p>The high level functions provide base read and write of data to octave.
@@ -323,7 +328,7 @@ most of the cfitsio functions are available in the matlab.io.fits namespace.
   for j = 1:n
     hdutype = fits.movAbsHDU (fd, j);
     printf ('HDU %d:  &quot;%s&quot;\n', j, hdutype);
-  endif
+  endfor
   # close the file
   fits.closeFile (fd);
 </pre></div>
@@ -592,7 +597,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <dt id="index-deleteFile_0028file_0029"><span class="category">: </span><span><em></em> <strong>deleteFile(<var>file</var>)</strong><a href='#index-deleteFile_0028file_0029' class='copiable-anchor'></a></span></dt>
 <dd><p>Force a close and delete of a fits file.
 </p>
-<p>The is the equivalent of the fits_delete_file function.
+<p>This is the equivalent of the fits_delete_file function.
 </p>
 <span id="Inputs-6"></span><h4 class="subsubheading">Inputs</h4>
 <p><var>file</var> - opened fits file.
@@ -608,7 +613,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <dt id="index-_003d-9"><span class="category">: </span><span><em><var>mode</var></em> <strong>=</strong> <em>fileMode(<var>file</var>)</em><a href='#index-_003d-9' class='copiable-anchor'></a></span></dt>
 <dd><p>Return the file mode of the opened fits file.
 </p>
-<p>The is the equivalent of the fits_file_mode function.
+<p>This is the equivalent of the fits_file_mode function.
 </p>
 <span id="Inputs-7"></span><h4 class="subsubheading">Inputs</h4>
 <p><var>file</var> - opened fits file.
@@ -624,7 +629,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <dt id="index-_003d-10"><span class="category">: </span><span><em><var>filename</var></em> <strong>=</strong> <em>fileName(<var>file</var>)</em><a href='#index-_003d-10' class='copiable-anchor'></a></span></dt>
 <dd><p>Return the file name of the opened fits file.
 </p>
-<p>The is the equivalent of the fits_file_name function.
+<p>This is the equivalent of the fits_file_name function.
 </p>
 <span id="Inputs-8"></span><h4 class="subsubheading">Inputs</h4>
 <p><var>file</var> - opened fits file.
@@ -862,7 +867,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.8 matlab.io.fits.movNamHDU</h4>
 <span id="index-movNamHDU"></span>
 <dl class="def">
-<dt id="index-movNamHDU_0028file_002c"><span class="category">Function File: </span><span><em><var>hdutype</var> =</em> <strong>movNamHDU(<var>file</var>,</strong> <em><var>hdutype</var>, <var>extname</var>, <var>extver</var>)</em><a href='#index-movNamHDU_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dt id="index-movNamHDU_0028file_002c"><span class="category">: </span><span><em><var>hdutype</var> =</em> <strong>movNamHDU(<var>file</var>,</strong> <em><var>hdutype</var>, <var>extname</var>, <var>extver</var>)</em><a href='#index-movNamHDU_0028file_002c' class='copiable-anchor'></a></span></dt>
 <dd><p>Go to HDU matching <var>hdutype</var>, <var>extname</var>, <var>extver</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.

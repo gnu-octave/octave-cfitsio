@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitsgetAColParms/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.4"
+pkg_version: "0.0.5"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getAColParms"
 category: "Low Level Binary and ASCII Tables"
