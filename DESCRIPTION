@@ -1,6 +1,6 @@
 Name: cfitsio
-Version: 0.0.4
-Date: 2022-09-21
+Version: 0.0.5
+Date: 2023-06-12
 Author: John Donoghue
 Maintainer: John Donoghue <john.donoghue@ieee.org>
 Title: File I/O for FITS files.
