@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/30_matlabiofitsisCompressedImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.isCompressedImg"
 category: "Low Level Compression Functions"
@@ -48,15 +48,15 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-isCompressedImg_0028file_0029"><span class="category">: </span><span><em><var>comp</var> =</em> <strong>isCompressedImg(<var>file</var>)</strong><a href='#index-isCompressedImg_0028file_0029' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-isCompressedImg_0028file_0029"><span class="category-def">: </span><span><code class="def-type"><var class="var">comp</var> =</code> <strong class="def-name">isCompressedImg(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-isCompressedImg_0028file_0029'></a></span></dt>
 <dd><p>Return true if image is compressed.
 </p>
 <p>This is the equivalent of the cfitsio fits_is_compressed_image function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>comp</var> - boolean for whether image is compressed or not. 
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">comp</var> - boolean for whether image is compressed or not. 
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitscloseFile/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.closeFile"
 category: "Low Level File Functions"
@@ -48,21 +48,21 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-closeFile_0028file_0029"><span class="category">: </span><span><em></em> <strong>closeFile(<var>file</var>)</strong><a href='#index-closeFile_0028file_0029' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-closeFile_0028file_0029"><span class="category-def">: </span><span><strong class="def-name">closeFile(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-closeFile_0028file_0029'></a></span></dt>
 <dd><p>Close the opened fits file
 </p> 
 <p>This is the equivalent of the fits_close_file function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened file returned from openFile or createFile.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened file returned from openFile or createFile.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
 </p>
-<span id="Examples"></span><h4 class="subsubheading">Examples</h4>
+<h4 class="subsubheading" id="Examples">Examples</h4>
 <div class="example">
-<pre class="example"> import_fits;
+<pre class="example-preformatted"> import_fits;
  filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;)
 
  fd = fits.openFile(filename);

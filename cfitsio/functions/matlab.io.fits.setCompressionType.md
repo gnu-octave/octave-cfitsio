@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/33_matlabiofitssetCompressionType/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setCompressionType"
 category: "Low Level Compression Functions"
@@ -48,18 +48,18 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-setCompressionType_0028file_002c"><span class="category">: </span><span><em></em> <strong>setCompressionType(<var>file</var>,</strong> <em><var>comptype</var>)</em><a href='#index-setCompressionType_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-setCompressionType_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setCompressionType(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comptype</var>)</code><a class="copiable-link" href='#index-setCompressionType_0028file_002c'></a></span></dt>
 <dd><p>Set compression type for writing FITS images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_compression_type function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>comptype</var> - compression type.
+<p><var class="var">comptype</var> - compression type.
  Valid comptype values are: &rsquo;GZIP&rsquo;, &rsquo;GZIP2&rsquo;, &rsquo;RICE&rsquo;, &rsquo;PLIO&rsquo;, &rsquo;HCOMPRESS&rsquo; or &rsquo;NOCOMPRESS&rsquo;.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>

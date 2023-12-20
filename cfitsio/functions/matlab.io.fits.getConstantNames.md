@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/31_matlabiofitsgetConstantNames/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getConstantNames"
 category: "Low Level Utility Functions"
@@ -48,14 +48,14 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em><var>namelist</var></em> <strong>=</strong> <em>getConstantNames()</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">namelist</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantNames()</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
 <dd><p>Return the names of all known fits constants.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
 <p>None
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>namelist</var> - cell array of all known fits constant names
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">namelist</var> - cell array of all known fits constant names
 </p>
 </dd></dl>

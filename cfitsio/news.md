@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/news/"
 title: "Cfitsio Toolkit - News"
 pkg_name: "cfitsio"
-version: "0.0.5"
+version: "0.0.6"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 navigation:
 - id: "overview"
@@ -19,6 +19,13 @@ navigation:
   url: "/manual"
 ---
 <pre>
+Version 0.0.6 released 2023-12-20
+===================================
+
+ * minor documentation updates
+
+ * handle spaces in windows path during configuration
+
 Version 0.0.5 released 2023-06-12
 ===================================
 
@@ -40,9 +47,11 @@ Version 0.0.3 released 2022-06-28
 
 Version 0.0.2 released 2022-04-27
 ===================================
+
  * rename package from octave-cfitsio to cfitsio
 
 Version 0.0.1 released 2022-04-26
 ===================================
+
  * Initial release
 </pre>

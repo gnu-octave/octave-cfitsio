@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/22_matlabiofitsreadImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.readImg"
 category: "Low Level Image Manipulation"
@@ -48,28 +48,28 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em><var>data</var></em> <strong>=</strong> <em>readImg(<var>file</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
-<dt id="index-_003d-1"><span class="category">: </span><span><em><var>data</var></em> <strong>=</strong> <em>readImg(<var>file</var>, <var>firstpix</var>, <var>lastpix</var>)</em><a href='#index-_003d-1' class='copiable-anchor'></a></span></dt>
-<dt id="index-_003d-2"><span class="category">: </span><span><em><var>data</var></em> <strong>=</strong> <em>readImg(<var>file</var>, <var>firstpix</var>, <var>lastpix</var>, <var>inc</var>)</em><a href='#index-_003d-2' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-1"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>)</code><a class="copiable-link" href='#index-_003d-1'></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-2"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>, <var class="var">inc</var>)</code><a class="copiable-link" href='#index-_003d-2'></a></span></dt>
 <dd><p>Read Image data.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_subset function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>firstpix</var> - first pile coordinate
+<p><var class="var">firstpix</var> - first pile coordinate
 </p>
-<p><var>lastpix</var> - last pixel coordinate
+<p><var class="var">lastpix</var> - last pixel coordinate
 </p>
-<p><var>inc</var> -  pixel increment
+<p><var class="var">inc</var> -  pixel increment
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>data</var> - image data read
- </p><span id="Examples"></span><h4 class="subsubheading">Examples</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">data</var> - image data read
+ </p><h4 class="subsubheading" id="Examples">Examples</h4>
 <div class="example">
-<pre class="example"> import_fits;
+<pre class="example-preformatted"> import_fits;
  filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;);
  fd = fits.openFile(filename);
  # read the image

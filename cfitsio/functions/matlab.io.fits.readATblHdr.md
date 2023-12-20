@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/26_matlabiofitsreadATblHdr/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.readATblHdr"
 category: "Low Level Binary and ASCII Tables"
@@ -48,15 +48,15 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em>[<var>rowlen</var>,<var>nrows</var>,<var>ttype</var>,<var>tbcol</var>,<var>tform</var>,<var>tunit</var>,<var>extname</var>]</em> <strong>=</strong> <em>readATblHdr(<var>file</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">rowlen</var>,<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readATblHdr(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
 <dd><p>Get ASCII table parameters.
 </p>
 <p>This is the equivalent of the cfitsio  fits_read_atablhdrll function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>rowlen</var>,<var>nrows</var>,<var>ttype</var>,<var>tbcol</var>,<var>tform</var>,<var>tunit</var>,<var>extname</var> - table properties
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">rowlen</var>,<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var> - table properties
  </p></dd></dl>

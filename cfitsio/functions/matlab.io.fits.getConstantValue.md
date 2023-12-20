@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/31_matlabiofitsgetConstantValue/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getConstantValue"
 category: "Low Level Utility Functions"
@@ -48,14 +48,14 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em><var>value</var></em> <strong>=</strong> <em>getConstantValue(<var>name</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">value</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantValue(<var class="var">name</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
 <dd><p>Return the value of a known fits constant.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>name</var> - name of the constant to retrieve value of.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">name</var> - name of the constant to retrieve value of.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>value</var> - value of the constant
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">value</var> - value of the constant
 </p>
 </dd></dl>

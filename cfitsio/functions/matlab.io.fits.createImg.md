@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitscreateImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.createImg"
 category: "Low Level Image Manipulation"
@@ -48,26 +48,26 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-createImg_0028file_002c"><span class="category">: </span><span><em></em> <strong>createImg(<var>file</var>,</strong> <em><var>bitpix</var>, <var>naxis</var>)</em><a href='#index-createImg_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-createImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href='#index-createImg_0028file_002c'></a></span></dt>
 <dd><p>create a new primary image or image extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_imgll function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - file previously opened with openFile, openDiskFile
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - file previously opened with openFile, openDiskFile
  or createFile.
 </p>
-<p><var>bitpix</var> - type for the data as a string in either matlab or cfitsio naming.
+<p><var class="var">bitpix</var> - type for the data as a string in either matlab or cfitsio naming.
 </p>
-<p><var>naxis</var> - axis values for the image.
+<p><var class="var">naxis</var> - axis values for the image.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
 </p>
-<span id="Examples"></span><h4 class="subsubheading">Examples</h4>
+<h4 class="subsubheading" id="Examples">Examples</h4>
 <div class="example">
-<pre class="example"> import_fits;
+<pre class="example-preformatted"> import_fits;
  fd = fits.createFile(&quot;test.fits&quot;);
  fits.createImg(fd,'int16',[10 20]);
  fits.close(fd);

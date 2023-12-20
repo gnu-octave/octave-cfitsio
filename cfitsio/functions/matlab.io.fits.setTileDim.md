@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitssetTileDim/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setTileDim"
 category: "Low Level Compression Functions"
@@ -48,17 +48,17 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-setTileDim_0028file_002c"><span class="category">: </span><span><em></em> <strong>setTileDim(<var>file</var>,</strong> <em><var>tiledims</var>)</em><a href='#index-setTileDim_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-setTileDim_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setTileDim(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tiledims</var>)</code><a class="copiable-link" href='#index-setTileDim_0028file_002c'></a></span></dt>
 <dd><p>Set compression tile dims for writing FITS images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_tile_dim function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>tiledims</var> - tile dimensions
+<p><var class="var">tiledims</var> - tile dimensions
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitsgetEqColType/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getEqColType"
 category: "Low Level Binary and ASCII Tables"
@@ -48,17 +48,17 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em>[<var>dtype</var>,<var>repeat</var>,<var>width</var>]</em> <strong>=</strong> <em>getEqColType(<var>file</var>, <var>colnum</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getEqColType(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
 <dd><p>Get column type.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_eqcoltypell function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>colnum</var> - Column number.
+<p><var class="var">colnum</var> - Column number.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>dtype</var>,<var>repeat</var>,<var>width</var> - column type
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var> - column type
  </p></dd></dl>

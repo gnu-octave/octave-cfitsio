@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/8_fitsinfo/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - fitsinfo"
 category: "High Level File Functions"
@@ -48,19 +48,19 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-_003d"><span class="category">: </span><span><em><var>info</var></em> <strong>=</strong> <em>fitsinfo(<var>filename</var>)</em><a href='#index-_003d' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsinfo(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
 <dd><p>Read information about fits format file
- </p><span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>filename</var> - filename to open.
+ </p><h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">filename</var> - filename to open.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>info</var> - a struct containing the structure and information about
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">info</var> - a struct containing the structure and information about
  the fits file.
 </p>
-<span id="Examples"></span><h4 class="subsubheading">Examples</h4>
+<h4 class="subsubheading" id="Examples">Examples</h4>
 <div class="example">
-<pre class="example"> filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;);
+<pre class="example-preformatted"> filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;);
 
  info = fitsinfo(filename);
  </pre></div>

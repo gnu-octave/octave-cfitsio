@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitsmovNamHDU/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.movNamHDU"
 category: "Low Level HDU Functions"
@@ -48,20 +48,20 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-movNamHDU_0028file_002c"><span class="category">: </span><span><em><var>hdutype</var> =</em> <strong>movNamHDU(<var>file</var>,</strong> <em><var>hdutype</var>, <var>extname</var>, <var>extver</var>)</em><a href='#index-movNamHDU_0028file_002c' class='copiable-anchor'></a></span></dt>
-<dd><p>Go to HDU matching <var>hdutype</var>, <var>extname</var>, <var>extver</var>.
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-movNamHDU_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">hdutype</var> =</code> <strong class="def-name">movNamHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>)</code><a class="copiable-link" href='#index-movNamHDU_0028file_002c'></a></span></dt>
+<dd><p>Go to HDU matching <var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>hdutype</var> - HDU number to move to.
+<p><var class="var">hdutype</var> - HDU number to move to.
  Valid hdutype values are &rsquo;IMAGE_HDU&rsquo;, &rsquo;ASCII_TBL&rsquo;, &rsquo;BINARY_TBL&rsquo;, &rsquo;ANY_HDU&rsquo;.
 </p>
-<p><var>extname</var>, <var>extver</var> - EXTNAME and EXTVER keywords to match.
+<p><var class="var">extname</var>, <var class="var">extver</var> - EXTNAME and EXTVER keywords to match.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>hdutype</var> - hdu type of the now current HDU. 
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">hdutype</var> - hdu type of the now current HDU. 
  </p></dd></dl>

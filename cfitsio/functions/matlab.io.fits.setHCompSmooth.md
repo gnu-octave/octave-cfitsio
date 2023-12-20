@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/29_matlabiofitssetHCompSmooth/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setHCompSmooth"
 category: "Low Level Compression Functions"
@@ -48,17 +48,17 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-setHCompSmooth_0028file_002c"><span class="category">: </span><span><em></em> <strong>setHCompSmooth(<var>file</var>,</strong> <em><var>smooth</var>)</em><a href='#index-setHCompSmooth_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-setHCompSmooth_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setHCompSmooth(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">smooth</var>)</code><a class="copiable-link" href='#index-setHCompSmooth_0028file_002c'></a></span></dt>
 <dd><p>Set smooth value to be used with HCOMPRESS compression.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_hcomp_smooth function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>smooth</var> - smooth value
+<p><var class="var">smooth</var> - smooth value
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitssetTscale/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setTscale"
 category: "Low Level Image Manipulation"
@@ -48,21 +48,21 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-setTscale_0028file_002c"><span class="category">: </span><span><em></em> <strong>setTscale(<var>file</var>,</strong> <em><var>col</var>, <var>scale</var>, <var>zero</var>)</em><a href='#index-setTscale_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-setTscale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setTscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">col</var>, <var class="var">scale</var>, <var class="var">zero</var>)</code><a class="copiable-link" href='#index-setTscale_0028file_002c'></a></span></dt>
 <dd><p>Reset scale and zero to be used with reading and writing table data.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_tscale function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>col</var> - column number
+<p><var class="var">col</var> - column number
 </p>
-<p><var>scale</var> - scale value
+<p><var class="var">scale</var> - scale value
 </p>
-<p><var>zero</var> - zero value
+<p><var class="var">zero</var> - zero value
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>

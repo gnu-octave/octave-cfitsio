@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsinsertBTbl/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.insertBTbl"
 category: "Low Level Binary and ASCII Tables"
@@ -48,29 +48,29 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-insertBTbl_0028file_002c"><span class="category">: </span><span><em></em> <strong>insertBTbl(<var>file</var>,</strong> <em><var>nrows</var>, <var>ttype</var>, <var>tform</var>, <var>tunit</var>, <var>extname</var>, <var>pcount</var>)</em><a href='#index-insertBTbl_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-insertBTbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertBTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>, <var class="var">pcount</var>)</code><a class="copiable-link" href='#index-insertBTbl_0028file_002c'></a></span></dt>
 <dd><p>Insert a new bintable extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_btbl function.
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>nrows</var> - initial number of rows (normally 0)
+<p><var class="var">nrows</var> - initial number of rows (normally 0)
 </p>
-<p><var>ttype</var> - cell array of column type
+<p><var class="var">ttype</var> - cell array of column type
 </p>
-<p><var>tform</var> - cell array of column format
+<p><var class="var">tform</var> - cell array of column format
 </p>
-<p><var>tunit</var> - cell array of column units
+<p><var class="var">tunit</var> - cell array of column units
 </p>
-<p><var>extname</var> - optional extension name
+<p><var class="var">extname</var> - optional extension name
 </p>
-<p><var>pcount</var> - heap size.
+<p><var class="var">pcount</var> - heap size.
 </p>
-<p><var>ttype</var>, <var>tform</var>, <var>tunit</var> are expected to be the same size.
+<p><var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var> are expected to be the same size.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>

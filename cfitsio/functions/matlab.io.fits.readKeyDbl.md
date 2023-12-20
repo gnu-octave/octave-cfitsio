@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsreadKeyDbl/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.readKeyDbl"
 category: "Low Level Keyword Functions"
@@ -48,19 +48,19 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-readKeyDbl_0028file_002c"><span class="category">Function File: </span><span><em>[<var>value</var>, <var>comment</var>] =</em> <strong>readKeyDbl(<var>file</var>,</strong> <em><var>recname</var>)</em><a href='#index-readKeyDbl_0028file_002c' class='copiable-anchor'></a></span></dt>
-<dd><p>Read the key value <var>recname</var> as a double.
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-readKeyDbl_0028file_002c"><span class="category-def">Function File: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyDbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyDbl_0028file_002c'></a></span></dt>
+<dd><p>Read the key value <var class="var">recname</var> as a double.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 </p>
-<span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>recname</var> - keyword name.
+<p><var class="var">recname</var> - keyword name.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
-<p><var>value</var> - double value of record.
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<p><var class="var">value</var> - double value of record.
 </p>
-<p><var>comment</var> - comment string
+<p><var class="var">comment</var> - comment string
  </p></dd></dl>

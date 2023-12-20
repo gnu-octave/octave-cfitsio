@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitswriteHistory/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.5"
+pkg_version: "0.0.6"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.writeHistory"
 category: "Low Level Keyword Functions"
@@ -48,16 +48,16 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<dl class="def">
-<dt id="index-writeHistory_0028file_002c"><span class="category">: </span><span><em></em> <strong>writeHistory(<var>file</var>,</strong> <em><var>history</var>)</em><a href='#index-writeHistory_0028file_002c' class='copiable-anchor'></a></span></dt>
+<dl class="first-deftypefn">
+<dt class="deftypefn" id="index-writeHistory_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeHistory(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">history</var>)</code><a class="copiable-link" href='#index-writeHistory_0028file_002c'></a></span></dt>
 <dd><p>Append a history to to the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_history function.
- </p><span id="Inputs"></span><h4 class="subsubheading">Inputs</h4>
-<p><var>file</var> - opened fits file.
+ </p><h4 class="subsubheading" id="Inputs">Inputs</h4>
+<p><var class="var">file</var> - opened fits file.
 </p>
-<p><var>history</var> - history string.
+<p><var class="var">history</var> - history string.
 </p>
-<span id="Outputs"></span><h4 class="subsubheading">Outputs</h4>
+<h4 class="subsubheading" id="Outputs">Outputs</h4>
 <p>None
  </p></dd></dl>
