@@ -166,7 +166,8 @@ endif
 	  $(MAKE) distclean && $(RM) Makefile
 	$(MAKE) -C "$@" docs
 	cd "$@" && mv testdata inst/demos
-	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" && $(RM) -f doc/mkfuncdocs.py doc/mkqhcp.py
+	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" 
+	# && $(RM) -f doc/mkfuncdocs.py doc/mkqhcp.py
 ##
 	${FIX_PERMISSIONS} "$@"
 
