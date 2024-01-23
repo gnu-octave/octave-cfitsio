@@ -154,9 +154,10 @@ The toolkit must be loaded on each @acronym{GNU} Octave session.
 The octave-cfitsio toolkit provides high and low level functionality for reading and
 writing FITS format files.
 
-The high level functions provide base read and write of data to octave.
+The high level functions provide base read and write of data to octave using the functions
+fitsdisp, fitsinfo, fitsread and fitswrite.
 
-The low level functions almost direct access to the cfitsio API and 
+The low level functions provide direct access to the cfitsio API and 
 are provided under the matlab.io.fits namespace.
 
 Since @acronym{GNU} Octave does not support the matlab import command, a import_fits function
