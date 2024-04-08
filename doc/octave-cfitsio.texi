@@ -53,7 +53,7 @@ Octave that you have.  The precise conditions can be found in the
 Octave CFITSIO package and that also appears in @ref{Copying}.
 
 To download a copy of the @acronym{GNU} Octave CFITSIO package, please visit
-@url{https://gnu-octave.github.io/octave-cfitsio//index}.
+@url{https://gnu-octave.github.io/octave-cfitsio/index}.
 
 @end titlepage
 @c %*** End of TITLEPAGE
@@ -68,7 +68,8 @@ To download a copy of the @acronym{GNU} Octave CFITSIO package, please visit
 @ifnottex
 @node Top
 @top Introduction
-The @acronym{GNU} Octave CFITSIO toolkit is a set of functions for manipulating FITS files for GNU Octave
+The @acronym{GNU} Octave CFITSIO toolkit is a set of functions for manipulating Flexible Image Transport
+System (FITS) files for GNU Octave.
 @end ifnottex
 
 @menu
@@ -155,12 +156,11 @@ The octave-cfitsio toolkit provides high and low level functionality for reading
 writing FITS format files.
 
 The high level functions provide base read and write of data to octave using the functions
-fitsdisp, fitsinfo, fitsread and fitswrite.
+fitsdisp, fitsinfo, fitsread and fitswrite.  The low level functions provide direct access to the cfitsio API and 
+are provided under the matlab.io.fits namespace. The low level functions provide access to the low level
+API of the CFITSIO C library (@url{https://heasarc.gsfc.nasa.gov/fitsio/}).
 
-The low level functions provide direct access to the cfitsio API and 
-are provided under the matlab.io.fits namespace.
-
-Since @acronym{GNU} Octave does not support the matlab import command, a import_fits function
+Since @acronym{GNU} Octave does not support the matlab import command, an import_fits function
 is provided.
 
 Running the statement:
@@ -204,9 +204,10 @@ To read information about the content in a fits file, use the fitsinfo functions
 
 @subsection Low level functionality
 @cindex  Low level functionality
-Where functionality is required that is not met be the high level functions, 
+Where functionality is required that is not met by the high level functions, 
 most of the cfitsio functions are available in the matlab.io.fits namespace.
 
+Knowledge of the CFITSIO c library is beneficial in using the low level functions.
 
 @example
   # import the fits functions so don't have to use the full namespace each time
