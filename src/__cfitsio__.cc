@@ -3114,7 +3114,7 @@ This is the equivalent of the cfitsio fits_create_imgll function.\n \
   
   if (bitpix == "byte_img" || bitpix == "uint8")
     bpp = BYTE_IMG;
-  if (bitpix == "sbyte_img" || bitpix == "int8")
+  else if (bitpix == "sbyte_img" || bitpix == "int8")
     bpp = SBYTE_IMG;
   else if (bitpix == "short_img" || bitpix == "int16")
     bpp = SHORT_IMG;
