@@ -19,6 +19,7 @@ CUT ?= cut
 TR ?= tr
 TEXI2PDF  ?= texi2pdf -q
 MAKEINFO  ?= makeinfo
+MAKEINFO_HTML_OPTIONS := --no-headers --set-customization-variable 'COPIABLE_LINKS 0' --set-customization-variable 'COPIABLE_ANCHORS 0' --no-split 
 
 # work out a possible help generator
 ifeq ($(strip $(QHELPGENERATOR)),)
@@ -289,12 +290,16 @@ doc/functions.texi: $(release_dir_dep)
 	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
 doc/$(packageprefix)$(package).html: doc/$(packageprefix)$(package).texi doc/functions.texi doc/version.texi
-	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css  --no-split --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
+	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css $(MAKEINFO_HTML_OPTIONS) --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
 
 doc/$(packageprefix)$(package).qhc: doc/$(packageprefix)$(package).html
+ifeq ($(QHELPGENERATOR),true)
+	$(warning No QHELPGENERATOR ... skipping QT doc build)
+else
 	# try also create qch file if can
 	cd doc && ./mkqhcp.py $(packageprefix)$(package) && $(QHELPGENERATOR) $(packageprefix)$(package).qhcp -o $(packageprefix)$(package).qhc
 	cd doc && $(RM) -f $(packageprefix)$(package).qhcp $(packageprefix)$(package).qhp
+endif
 ##
 ## CLEAN
 ##
