@@ -2,7 +2,7 @@
 ## Copyright 2015-2016 Oliver Heimlich
 ## Copyright 2017 Julien Bect <jbect@users.sf.net>
 ## Copyright 2017 Olaf Till <i7tiol@t-online.de>
-## Copyright 2018-2019 John Donoghue <john.donoghue@ieee.org>
+## Copyright 2018-2024 John Donoghue <john.donoghue@ieee.org>
 ##
 ## Copying and distribution of this file, with or without modification,
 ## are permitted in any medium without royalty provided the copyright
@@ -44,6 +44,7 @@ $(TR) '[:upper:]' '[:lower:]')
 packageprefix := octave-
 version := $(shell $(GREP) "^Version: " DESCRIPTION | $(CUT) -f2 -d" ")
 pkg_date := $(shell $(GREP) "^Date: " DESCRIPTION | $(CUT) -f2 -d" ")
+pkg_year := $(shell $(GREP) "^Date: " DESCRIPTION | $(CUT) -f2 -d" " | $(CUT) -f1 -d"-")
 
 ## These are the paths that will be created for the releases.
 target_dir       := target
@@ -280,6 +281,7 @@ doc/version.texi: $(release_dir_dep)
 	@echo "@set VERSION $(version)" >> $@
 	@echo "@set PACKAGE $(package)" >> $@
 	@echo "@set DATE $(pkg_date)" >> $@
+	@echo "@set YEAR $(pkg_year)" >> $@
 
 doc/$(packageprefix)$(package).pdf: doc/$(packageprefix)$(package).texi doc/functions.texi doc/version.texi
 	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(TEXI2PDF) $(packageprefix)$(package).texi
