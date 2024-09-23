@@ -3,7 +3,7 @@ layout: "function_list"
 permalink: "/functions/"
 title: "Cfitsio Toolkit - Functions"
 pkg_name: "cfitsio"
-version: "0.0.6"
+version: "0.0.7"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 categories:
 - id: "25_HighLevelFileFunctions"

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitsmovNamHDU/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.movNamHDU"
 category: "Low Level HDU Functions"
@@ -49,12 +49,12 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-movNamHDU_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">hdutype</var> =</code> <strong class="def-name">movNamHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>)</code><a class="copiable-link" href='#index-movNamHDU_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-movNamHDU_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">hdutype</var> =</code> <strong class="def-name">movNamHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>)</code><a class="copiable-link" href="#index-movNamHDU_0028file_002c"></a></span></dt>
 <dd><p>Go to HDU matching <var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">hdutype</var> - HDU number to move to.
@@ -62,6 +62,6 @@ navigation:
 </p>
 <p><var class="var">extname</var>, <var class="var">extver</var> - EXTNAME and EXTVER keywords to match.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p><var class="var">hdutype</var> - hdu type of the now current HDU. 
  </p></dd></dl>

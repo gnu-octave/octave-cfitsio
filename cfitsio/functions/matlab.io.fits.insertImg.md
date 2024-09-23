@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitsinsertImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.insertImg"
 category: "Low Level Image Manipulation"
@@ -49,12 +49,12 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href='#index-insertImg_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href="#index-insertImg_0028file_002c"></a></span></dt>
 <dd><p>Insert a new primary image or image extension at current HDU position.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_imgll function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - file previously opened with openFile, openDiskFile
  or createFile.
 </p>
@@ -62,6 +62,6 @@ navigation:
 </p>
 <p><var class="var">naxis</var> - axis values for the image.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p>None
  </p></dd></dl>

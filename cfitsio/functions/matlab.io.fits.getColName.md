@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsgetColName/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getColName"
 category: "Low Level Binary and ASCII Tables"
@@ -49,25 +49,25 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-1"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>, <var class="var">casesens</var>)</code><a class="copiable-link" href='#index-_003d-1'></a></span></dt>
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>)</code><a class="copiable-link" href="#index-_003d"></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-1"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>, <var class="var">casesens</var>)</code><a class="copiable-link" href="#index-_003d-1"></a></span></dt>
 <dd><p>Get column name.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_colname function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">template</var> - template string for matching column name.
 </p>
 <p><var class="var">casesens</var> - boolean whether to be case sensitive in match.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p><var class="var">colnum</var> - column number of match.
 </p>
 <p><var class="var">colname</var> - column name of match.
 </p>
-<h4 class="subsubheading" id="Examples">Examples</h4>
+<h4 class="subsubheading" id="Examples"><span>Examples<a class="copiable-link" href="#Examples"></a></span></h4>
 <div class="example">
 <pre class="example-preformatted"> import_fits;
  filename = file_in_loadpath(&quot;demos/tst0012.fits&quot;);

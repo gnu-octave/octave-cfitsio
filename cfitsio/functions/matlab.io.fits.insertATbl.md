@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsinsertATbl/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.insertATbl"
 category: "Low Level Binary and ASCII Tables"
@@ -49,14 +49,14 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertATbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-2"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c-2'></a></span></dt>
+<dt class="deftypefn" id="index-insertATbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>)</code><a class="copiable-link" href="#index-insertATbl_0028file_002c"></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code><a class="copiable-link" href="#index-insertATbl_0028file_002c-1"></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-2"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code><a class="copiable-link" href="#index-insertATbl_0028file_002c-2"></a></span></dt>
 <dd><p>Insert a new ASCII table after current HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_atbl function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">rowlen</var> - row length. If set to 0, the function will calculate size based on 
@@ -74,7 +74,7 @@ navigation:
 </p>
 <p><var class="var">extname</var> - optional extension name
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p>None
 </p>
 </dd></dl>

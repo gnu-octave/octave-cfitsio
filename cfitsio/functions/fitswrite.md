@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/9_fitswrite/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - fitswrite"
 category: "High Level File Functions"
@@ -49,11 +49,11 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-fitswrite_0028data_002c"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>)</code><a class="copiable-link" href='#index-fitswrite_0028data_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-fitswrite_0028data_002c-1"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code><a class="copiable-link" href='#index-fitswrite_0028data_002c-1'></a></span></dt>
+<dt class="deftypefn" id="index-fitswrite_0028data_002c"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>)</code><a class="copiable-link" href="#index-fitswrite_0028data_002c"></a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-fitswrite_0028data_002c-1"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code><a class="copiable-link" href="#index-fitswrite_0028data_002c-1"></a></span></dt>
 <dd><p>Write image data <var class="var">data</var>  to FITS file <var class="var">filename</var>. If the fie already exists, overwrite it.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">data</var> - imagedata to write to a file.
 </p>
 <p><var class="var">filename</var> - filename to write to.
@@ -72,10 +72,10 @@ navigation:
  </p></dd>
 </dl>
 
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p>None
 </p>
-<h4 class="subsubheading" id="Examples">Examples</h4>
+<h4 class="subsubheading" id="Examples"><span>Examples<a class="copiable-link" href="#Examples"></a></span></h4>
 <div class="example">
 <pre class="example-preformatted"> filename = tempname();
  X =  double([1:3;4:6]);

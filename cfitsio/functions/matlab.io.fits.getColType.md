@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsgetColType/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getColType"
 category: "Low Level Binary and ASCII Tables"
@@ -49,16 +49,16 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColType(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColType(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href="#index-_003d"></a></span></dt>
 <dd><p>Get column type.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_coltypell function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">colnum</var> - Column to delete from current table.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p><var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var> - column information.
  </p></dd></dl>

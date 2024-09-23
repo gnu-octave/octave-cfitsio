@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/manual/"
 title: "Cfitsio Toolkit - Manual"
 pkg_name: "cfitsio"
-version: "0.0.6"
+version: "0.0.7"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 navigation:
 - id: "overview"
@@ -17,14 +17,20 @@ navigation:
   url: "/news"
 - id: "manual"
   name: "Manual"
+- id: "Installing-and-loading-1"
+  name: "&nbsp;&nbsp; Installing and loading"
+  url: "/manual/#Installing-and-loading-1"
+- id: "Basic-Usage-Overview-1"
+  name: "&nbsp;&nbsp; Basic Usage Overview"
+  url: "/manual/#Basic-Usage-Overview-1"
+- id: "Function-Reference-1"
+  name: "&nbsp;&nbsp; Function Reference"
+  url: "/manual/#Function-Reference-1"
 ---
 <div class="top-level-extent" id="Top">
-<div class="nav-panel">
-<p>
-Next: <a href="#Installing-and-loading" accesskey="n" rel="next">Installing and loading</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h1 class="top" id="Introduction">Introduction</h1>
-<p>The <abbr class="acronym">GNU</abbr> Octave CFITSIO toolkit is a set of functions for manipulating FITS files for GNU Octave
+<p>The <abbr class="acronym">GNU</abbr> Octave CFITSIO toolkit is a set of functions for manipulating Flexible Image Transport
+System (FITS) files for GNU Octave.
 </p>
 <div class="element-contents" id="SEC_Contents">
 <h2 class="contents-heading">Table of Contents</h2>
@@ -159,10 +165,6 @@ Next: <a href="#Installing-and-loading" accesskey="n" rel="next">Installing and 
 </div>
 <hr>
 <div class="chapter-level-extent" id="Installing-and-loading">
-<div class="nav-panel">
-<p>
-Next: <a href="#Basic-Usage-Overview" accesskey="n" rel="next">Basic Usage Overview</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Introduction</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Installing-and-loading-1">1 Installing and loading</h2>
 <a class="index-entry-id" id="index-Installing-and-loading"></a>
 <p>The <abbr class="acronym">GNU</abbr> Octave CFITSIO toolkit must be installed and then loaded to be used.
@@ -177,12 +179,6 @@ to successfully install the <abbr class="acronym">GNU</abbr> Octave toolkit.
 </p>
 <p>The toolkit must be then be loaded once per each <abbr class="acronym">GNU</abbr> Octave session in order to use its functionality.
 </p>
-<ul class="mini-toc">
-<li><a href="#Windows-install" accesskey="1">Windows install</a></li>
-<li><a href="#Online-Direct-install" accesskey="2">Online Direct install</a></li>
-<li><a href="#Off_002dline-install" accesskey="3">Off-line install</a></li>
-<li><a href="#Loading" accesskey="4">Loading</a></li>
-</ul>
 <div class="section-level-extent" id="Windows-install">
 <h3 class="section">1.1 Windows install</h3>
 <a class="index-entry-id" id="index-Windows-install"></a>
@@ -201,7 +197,7 @@ to successfully install the <abbr class="acronym">GNU</abbr> Octave toolkit.
 octave-cfitsio using the following command within <abbr class="acronym">GNU</abbr> Octave:
 </p>
 <div class="example">
-<pre class="example-preformatted">pkg install https://sourceforge.net/projects/octave-cfitsio/files/v0.0.6/octave-cfitsio-0.0.6.tar.gz/download
+<pre class="example-preformatted">pkg install &quot;https://github.com/gnu-octave/octave-/cfitsioreleases/download/v0.0.7/octave-cfitsio-0.0.7.tar.gz&quot;
 </pre></div>
 <p>On <abbr class="acronym">GNU</abbr> Octave 7 and higher, the package can be installed in the simpler form of:
 </p>
@@ -218,7 +214,7 @@ octave-cfitsio using the following command within <abbr class="acronym">GNU</abb
 <abbr class="acronym">GNU</abbr> Octave, the package can be installed using the following command within <abbr class="acronym">GNU</abbr> Octave:
 </p>
 <div class="example">
-<pre class="example-preformatted">pkg install octave-cfitsio-0.0.6.tar.gz
+<pre class="example-preformatted">pkg install octave-cfitsio-0.0.7.tar.gz
 </pre></div>
 </div>
 <div class="section-level-extent" id="Loading">
@@ -236,28 +232,20 @@ the toolkit must be loaded using the pkg load command:
 </div>
 </div>
 <div class="chapter-level-extent" id="Basic-Usage-Overview">
-<div class="nav-panel">
-<p>
-Next: <a href="#Function-Reference" accesskey="n" rel="next">Function Reference</a>, Previous: <a href="#Installing-and-loading" accesskey="p" rel="prev">Installing and loading</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Basic-Usage-Overview-1">2 Basic Usage Overview</h2>
 <a class="index-entry-id" id="index-Basic-Usage-Overview"></a>
-<ul class="mini-toc">
-<li><a href="#Overview" accesskey="1">Overview</a></li>
-<li><a href="#Using-the-toolkit" accesskey="2">Using the toolkit</a></li>
-</ul>
 <div class="section-level-extent" id="Overview">
 <h3 class="section">2.1 Overview</h3>
 <a class="index-entry-id" id="index-Overview"></a>
 <p>The octave-cfitsio toolkit provides high and low level functionality for reading and
 writing FITS format files.
 </p>
-<p>The high level functions provide base read and write of data to octave.
+<p>The high level functions provide base read and write of data to octave using the functions
+fitsdisp, fitsinfo, fitsread and fitswrite.  The low level functions provide direct access to the cfitsio API and 
+are provided under the matlab.io.fits namespace. The low level functions provide access to the low level
+API of the CFITSIO C library (<a class="url" href="https://heasarc.gsfc.nasa.gov/fitsio/">https://heasarc.gsfc.nasa.gov/fitsio/</a>).
 </p>
-<p>The low level functions almost direct access to the cfitsio API and 
-are provided under the matlab.io.fits namespace.
-</p>
-<p>Since <abbr class="acronym">GNU</abbr> Octave does not support the matlab import command, a import_fits function
+<p>Since <abbr class="acronym">GNU</abbr> Octave does not support the matlab import command, an import_fits function
 is provided.
 </p>
 <p>Running the statement:
@@ -278,11 +266,6 @@ is provided.
 </pre></div>
 <p>After loading the toolkit, the toolkit functions are available.
 </p>
-<ul class="mini-toc">
-<li><a href="#Reading-Data" accesskey="1">Reading Data</a></li>
-<li><a href="#Reading-Information" accesskey="2">Reading Information</a></li>
-<li><a href="#Low-level-functionality" accesskey="3">Low level functionality</a></li>
-</ul>
 <div class="subsection-level-extent" id="Reading-Data">
 <h4 class="subsection">2.2.1 Reading Data</h4>
 <a class="index-entry-id" id="index-Reading-Data"></a>
@@ -304,8 +287,10 @@ is provided.
 <div class="subsection-level-extent" id="Low-level-functionality">
 <h4 class="subsection">2.2.3 Low level functionality</h4>
 <a class="index-entry-id" id="index-Low-level-functionality"></a>
-<p>Where functionality is required that is not met be the high level functions, 
+<p>Where functionality is required that is not met by the high level functions, 
 most of the cfitsio functions are available in the matlab.io.fits namespace.
+</p>
+<p>Knowledge of the CFITSIO c library is beneficial in using the low level functions.
 </p>
 <div class="example">
 <pre class="example-preformatted">  # import the fits functions so don't have to use the full namespace each time
@@ -327,45 +312,20 @@ most of the cfitsio functions are available in the matlab.io.fits namespace.
 </div>
 </div>
 <div class="chapter-level-extent" id="Function-Reference">
-<div class="nav-panel">
-<p>
-Next: <a href="#Copying" accesskey="n" rel="next">GNU General Public License</a>, Previous: <a href="#Basic-Usage-Overview" accesskey="p" rel="prev">Basic Usage Overview</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Function-Reference-1">3 Function Reference</h2>
 <a class="index-entry-id" id="index-Function-Reference"></a>
 <p>The functions currently available in the toolkit are described below:
 </p>
-<ul class="mini-toc">
-<li><a href="#High-Level-File-Functions" accesskey="1">High Level File Functions</a></li>
-<li><a href="#Low-Level-File-Functions" accesskey="2">Low Level File Functions</a></li>
-<li><a href="#Low-Level-HDU-Functions" accesskey="3">Low Level HDU Functions</a></li>
-<li><a href="#Low-Level-Keyword-Functions" accesskey="4">Low Level Keyword Functions</a></li>
-<li><a href="#Low-Level-Image-Manipulation" accesskey="5">Low Level Image Manipulation</a></li>
-<li><a href="#Low-Level-Utility-Functions" accesskey="6">Low Level Utility Functions</a></li>
-<li><a href="#Low-Level-Compression-Functions" accesskey="7">Low Level Compression Functions</a></li>
-<li><a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="8">Low Level Binary and ASCII Tables</a></li>
-<li><a href="#Import-functions" accesskey="9">Import functions</a></li>
-</ul>
 <hr>
 <div class="section-level-extent" id="High-Level-File-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-File-Functions" accesskey="n" rel="next">Low Level File Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="High-Level-File-Functions-1">3.1 High Level File Functions</h3>
 <a class="index-entry-id" id="index-High-Level-File-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#fitsdisp" accesskey="1">fitsdisp</a></li>
-<li><a href="#fitsinfo" accesskey="2">fitsinfo</a></li>
-<li><a href="#fitsread" accesskey="3">fitsread</a></li>
-<li><a href="#fitswrite" accesskey="4">fitswrite</a></li>
-</ul>
 <div class="subsection-level-extent" id="fitsdisp">
 <h4 class="subsection">3.1.1 fitsdisp</h4>
 <a class="index-entry-id" id="index-fitsdisp"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-1"><span class="category-def">: </span><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code><a class="copiable-link" href='#index-_003d-1'></a></span></dt>
+<dt class="deftypefn" id="index-_003d"><span class="category-def">: </span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-1"><span class="category-def">: </span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code></dt>
 <dd><p>Display metadata about fits format file
 </p>
 <h4 class="subsubheading" id="Inputs">Inputs</h4>
@@ -401,7 +361,7 @@ Next: <a href="#Low-Level-File-Functions" accesskey="n" rel="next">Low Level Fil
 <h4 class="subsection">3.1.2 fitsinfo</h4>
 <a class="index-entry-id" id="index-fitsinfo"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-2"><span class="category-def">: </span><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsinfo(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d-2'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-2"><span class="category-def">: </span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsinfo(<var class="var">filename</var>)</code></dt>
 <dd><p>Read information about fits format file
 </p><h4 class="subsubheading" id="Inputs-1">Inputs</h4>
 <p><var class="var">filename</var> - filename to open.
@@ -421,11 +381,11 @@ Next: <a href="#Low-Level-File-Functions" accesskey="n" rel="next">Low Level Fil
 <h4 class="subsection">3.1.3 fitsread</h4>
 <a class="index-entry-id" id="index-fitsread"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-3"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d-3'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-4"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, 'raw')</code><a class="copiable-link" href='#index-_003d-4'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-5"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, <var class="var">extname</var>)</code><a class="copiable-link" href='#index-_003d-5'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-6"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, <var class="var">extname</var>, <var class="var">index</var>)</code><a class="copiable-link" href='#index-_003d-6'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-7"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, ____, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code><a class="copiable-link" href='#index-_003d-7'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-3"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-4"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, 'raw')</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-5"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, <var class="var">extname</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-6"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, <var class="var">extname</var>, <var class="var">index</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-7"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsread(<var class="var">filename</var>, ____, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code></dt>
 <dd><p>Read the primary data, or specified extension data. It scales the data and applied Nan to any undefined values.
 </p>
 <h4 class="subsubheading" id="Inputs-2">Inputs</h4>
@@ -476,8 +436,8 @@ Next: <a href="#Low-Level-File-Functions" accesskey="n" rel="next">Low Level Fil
 <h4 class="subsection">3.1.4 fitswrite</h4>
 <a class="index-entry-id" id="index-fitswrite"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-fitswrite_0028data_002c"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>)</code><a class="copiable-link" href='#index-fitswrite_0028data_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-fitswrite_0028data_002c-1"><span class="category-def">: </span><span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code><a class="copiable-link" href='#index-fitswrite_0028data_002c-1'></a></span></dt>
+<dt class="deftypefn" id="index-fitswrite_0028data_002c"><span class="category-def">: </span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-fitswrite_0028data_002c-1"><span class="category-def">: </span><strong class="def-name">fitswrite(<var class="var">data</var>,</strong> <code class="def-code-arguments"><var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code></dt>
 <dd><p>Write image data <var class="var">data</var>  to FITS file <var class="var">filename</var>. If the fie already exists, overwrite it.
 </p>
 <h4 class="subsubheading" id="Inputs-3">Inputs</h4>
@@ -512,26 +472,13 @@ Next: <a href="#Low-Level-File-Functions" accesskey="n" rel="next">Low Level Fil
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-File-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU Functions</a>, Previous: <a href="#High-Level-File-Functions" accesskey="p" rel="prev">High Level File Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-File-Functions-1">3.2 Low Level File Functions</h3>
 <a class="index-entry-id" id="index-Low-Level-File-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002ecloseFile" accesskey="1">matlab.io.fits.closeFile</a></li>
-<li><a href="#matlab_002eio_002efits_002ecreateFile" accesskey="2">matlab.io.fits.createFile</a></li>
-<li><a href="#matlab_002eio_002efits_002edeleteFile" accesskey="3">matlab.io.fits.deleteFile</a></li>
-<li><a href="#matlab_002eio_002efits_002efileMode" accesskey="4">matlab.io.fits.fileMode</a></li>
-<li><a href="#matlab_002eio_002efits_002efileName" accesskey="5">matlab.io.fits.fileName</a></li>
-<li><a href="#matlab_002eio_002efits_002eopenDiskFile" accesskey="6">matlab.io.fits.openDiskFile</a></li>
-<li><a href="#matlab_002eio_002efits_002eopenFile" accesskey="7">matlab.io.fits.openFile</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002ecloseFile">
 <h4 class="subsection">3.2.1 matlab.io.fits.closeFile</h4>
 <a class="index-entry-id" id="index-closeFile"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-closeFile_0028file_0029"><span class="category-def">: </span><span><strong class="def-name">closeFile(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-closeFile_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-closeFile_0028file_0029"><span class="category-def">: </span><strong class="def-name">closeFile(<var class="var">file</var>)</strong></dt>
 <dd><p>Close the opened fits file
 </p>
 <p>This is the equivalent of the fits_close_file function.
@@ -556,7 +503,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.2 matlab.io.fits.createFile</h4>
 <a class="index-entry-id" id="index-createFile"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-8"><span class="category-def">: </span><span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">createFile(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d-8'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-8"><span class="category-def">: </span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">createFile(<var class="var">filename</var>)</code></dt>
 <dd><p>Attempt to create  a file of the given input name.
 </p>
 <p>If the filename starts with ! and the file exists, it will create a new file, otherwise, if the
@@ -584,7 +531,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.3 matlab.io.fits.deleteFile</h4>
 <a class="index-entry-id" id="index-deleteFile"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-deleteFile_0028file_0029"><span class="category-def">: </span><span><strong class="def-name">deleteFile(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-deleteFile_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-deleteFile_0028file_0029"><span class="category-def">: </span><strong class="def-name">deleteFile(<var class="var">file</var>)</strong></dt>
 <dd><p>Force a close and delete of a fits file.
 </p>
 <p>This is the equivalent of the fits_delete_file function.
@@ -600,7 +547,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.4 matlab.io.fits.fileMode</h4>
 <a class="index-entry-id" id="index-fileMode"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-9"><span class="category-def">: </span><span><code class="def-type"><var class="var">mode</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileMode(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-9'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-9"><span class="category-def">: </span><code class="def-type"><var class="var">mode</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileMode(<var class="var">file</var>)</code></dt>
 <dd><p>Return the file mode of the opened fits file.
 </p>
 <p>This is the equivalent of the fits_file_mode function.
@@ -616,7 +563,7 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.5 matlab.io.fits.fileName</h4>
 <a class="index-entry-id" id="index-fileName"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-10"><span class="category-def">: </span><span><code class="def-type"><var class="var">filename</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileName(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-10'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-10"><span class="category-def">: </span><code class="def-type"><var class="var">filename</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileName(<var class="var">file</var>)</code></dt>
 <dd><p>Return the file name of the opened fits file.
 </p>
 <p>This is the equivalent of the fits_file_name function.
@@ -632,8 +579,8 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.6 matlab.io.fits.openDiskFile</h4>
 <a class="index-entry-id" id="index-openDiskFile"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-11"><span class="category-def">: </span><span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openDiskFile(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d-11'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-12"><span class="category-def">: </span><span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openDiskFile(<var class="var">filename</var>, <var class="var">mode</var>)</code><a class="copiable-link" href='#index-_003d-12'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-11"><span class="category-def">: </span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openDiskFile(<var class="var">filename</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-12"><span class="category-def">: </span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openDiskFile(<var class="var">filename</var>, <var class="var">mode</var>)</code></dt>
 <dd><p>Attempt to open a file of the given input name, ignoring any special processing of the filename.
 </p>
 <p>This is the equivalent of the cfitsio fits_open_diskfile function.
@@ -661,8 +608,8 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 <h4 class="subsection">3.2.7 matlab.io.fits.openFile</h4>
 <a class="index-entry-id" id="index-openFile"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-13"><span class="category-def">: </span><span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openFile(<var class="var">filename</var>)</code><a class="copiable-link" href='#index-_003d-13'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-14"><span class="category-def">: </span><span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openFile(<var class="var">filename</var>, <var class="var">mode</var>)</code><a class="copiable-link" href='#index-_003d-14'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-13"><span class="category-def">: </span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openFile(<var class="var">filename</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-14"><span class="category-def">: </span><code class="def-type"><var class="var">file</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">openFile(<var class="var">filename</var>, <var class="var">mode</var>)</code></dt>
 <dd><p>Attempt to open a file of the given input name.
 </p>
 <p>This is the equivalent of the cfitsio fits_open_file function.
@@ -689,29 +636,13 @@ Next: <a href="#Low-Level-HDU-Functions" accesskey="n" rel="next">Low Level HDU 
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-HDU-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level Keyword Functions</a>, Previous: <a href="#Low-Level-File-Functions" accesskey="p" rel="prev">Low Level File Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-HDU-Functions-1">3.3 Low Level HDU Functions</h3>
 <a class="index-entry-id" id="index-Low-Level-HDU-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002ecopyHDU" accesskey="1">matlab.io.fits.copyHDU</a></li>
-<li><a href="#matlab_002eio_002efits_002edeleteHDU" accesskey="2">matlab.io.fits.deleteHDU</a></li>
-<li><a href="#matlab_002eio_002efits_002egetHDUnum" accesskey="3">matlab.io.fits.getHDUnum</a></li>
-<li><a href="#matlab_002eio_002efits_002egetHDUoff" accesskey="4">matlab.io.fits.getHDUoff</a></li>
-<li><a href="#matlab_002eio_002efits_002egetHDUtype" accesskey="5">matlab.io.fits.getHDUtype</a></li>
-<li><a href="#matlab_002eio_002efits_002egetNumHDUs" accesskey="6">matlab.io.fits.getNumHDUs</a></li>
-<li><a href="#matlab_002eio_002efits_002emovAbsHDU" accesskey="7">matlab.io.fits.movAbsHDU</a></li>
-<li><a href="#matlab_002eio_002efits_002emovNamHDU" accesskey="8">matlab.io.fits.movNamHDU</a></li>
-<li><a href="#matlab_002eio_002efits_002emovRelHDU" accesskey="9">matlab.io.fits.movRelHDU</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteChecksum">matlab.io.fits.writeChecksum</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002ecopyHDU">
 <h4 class="subsection">3.3.1 matlab.io.fits.copyHDU</h4>
 <a class="index-entry-id" id="index-copyHDU"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-copyHDU_0028infile_002c"><span class="category-def">: </span><span><strong class="def-name">copyHDU(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code><a class="copiable-link" href='#index-copyHDU_0028infile_002c'></a></span></dt>
+<dt class="deftypefn" id="index-copyHDU_0028infile_002c"><span class="category-def">: </span><strong class="def-name">copyHDU(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code></dt>
 <dd><p>Copy current HDU from one infile to another.
 </p>
 <p>This is the equivalent of the cfitsio fits_copy_hdu function.
@@ -746,7 +677,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.2 matlab.io.fits.deleteHDU</h4>
 <a class="index-entry-id" id="index-deleteHDU"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-15"><span class="category-def">: </span><span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">deleteHDU(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-15'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-15"><span class="category-def">: </span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">deleteHDU(<var class="var">file</var>)</code></dt>
 <dd><p>Delete the current HDU and go to next HDU.
 </p>
 <p>Returns the newly current HDU type as a string.
@@ -765,7 +696,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.3 matlab.io.fits.getHDUnum</h4>
 <a class="index-entry-id" id="index-getHDUnum"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-16"><span class="category-def">: </span><span><code class="def-type"><var class="var">num</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUnum(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-16'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-16"><span class="category-def">: </span><code class="def-type"><var class="var">num</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUnum(<var class="var">file</var>)</code></dt>
 <dd><p>Return the index of the current HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hdu_num function.
@@ -781,7 +712,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.4 matlab.io.fits.getHDUoff</h4>
 <a class="index-entry-id" id="index-getHDUoff"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-17"><span class="category-def">: </span><span><code class="def-type">[<var class="var">headtstart</var>, <var class="var">datastart</var>, <var class="var">dataend</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUoff(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-17'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-17"><span class="category-def">: </span><code class="def-type">[<var class="var">headtstart</var>, <var class="var">datastart</var>, <var class="var">dataend</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUoff(<var class="var">file</var>)</code></dt>
 <dd><p>Return offsets of the current HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hduoff function.
@@ -797,7 +728,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.5 matlab.io.fits.getHDUtype</h4>
 <a class="index-entry-id" id="index-getHDUtype"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-18"><span class="category-def">: </span><span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUtype(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-18'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-18"><span class="category-def">: </span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getHDUtype(<var class="var">file</var>)</code></dt>
 <dd><p>Return the current HDUs type as a string.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hdu_type function.
@@ -813,7 +744,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.6 matlab.io.fits.getNumHDUs</h4>
 <a class="index-entry-id" id="index-getNumHDUs"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-19"><span class="category-def">: </span><span><code class="def-type"><var class="var">num</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumHDUs(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-19'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-19"><span class="category-def">: </span><code class="def-type"><var class="var">num</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumHDUs(<var class="var">file</var>)</code></dt>
 <dd><p>Return the count of HDUs in the file.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_num_hdus function.
@@ -837,7 +768,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.7 matlab.io.fits.movAbsHDU</h4>
 <a class="index-entry-id" id="index-movAbsHDU"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-movAbsHDU_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">type</var> =</code> <strong class="def-name">movAbsHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdunum</var>)</code><a class="copiable-link" href='#index-movAbsHDU_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-movAbsHDU_0028file_002c"><span class="category-def">: </span><code class="def-type"><var class="var">type</var> =</code> <strong class="def-name">movAbsHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdunum</var>)</code></dt>
 <dd><p>Go to absolute HDU index <var class="var">hdunum</var>
 </p>
 <p>Returns the newly current HDU type as a string.
@@ -857,7 +788,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.8 matlab.io.fits.movNamHDU</h4>
 <a class="index-entry-id" id="index-movNamHDU"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-movNamHDU_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">hdutype</var> =</code> <strong class="def-name">movNamHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>)</code><a class="copiable-link" href='#index-movNamHDU_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-movNamHDU_0028file_002c"><span class="category-def">: </span><code class="def-type"><var class="var">hdutype</var> =</code> <strong class="def-name">movNamHDU(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>)</code></dt>
 <dd><p>Go to HDU matching <var class="var">hdutype</var>, <var class="var">extname</var>, <var class="var">extver</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.
@@ -878,7 +809,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.9 matlab.io.fits.movRelHDU</h4>
 <a class="index-entry-id" id="index-movRelHDU"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-20"><span class="category-def">: </span><span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">movRelHDU(<var class="var">file</var>, <var class="var">hdunum</var>)</code><a class="copiable-link" href='#index-_003d-20'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-20"><span class="category-def">: </span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">movRelHDU(<var class="var">file</var>, <var class="var">hdunum</var>)</code></dt>
 <dd><p>Go to relative HDU index <var class="var">hdunum</var>.
 </p>
 <p>Returns the newly current HDU type as a string.
@@ -898,7 +829,7 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.3.10 matlab.io.fits.writeChecksum</h4>
 <a class="index-entry-id" id="index-writeChecksum"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeChecksum_0028file_0029"><span class="category-def">: </span><span><strong class="def-name">writeChecksum(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-writeChecksum_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-writeChecksum_0028file_0029"><span class="category-def">: </span><strong class="def-name">writeChecksum(<var class="var">file</var>)</strong></dt>
 <dd><p>Recalculate the HDU checksum and if required, write the new value.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_chksum function.
@@ -913,35 +844,13 @@ Next: <a href="#Low-Level-Keyword-Functions" accesskey="n" rel="next">Low Level 
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-Keyword-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level Image Manipulation</a>, Previous: <a href="#Low-Level-HDU-Functions" accesskey="p" rel="prev">Low Level HDU Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-Keyword-Functions-1">3.4 Low Level Keyword Functions</h3>
 <a class="index-entry-id" id="index-Low-Level-Keyword-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002edeleteKey" accesskey="1">matlab.io.fits.deleteKey</a></li>
-<li><a href="#matlab_002eio_002efits_002edeleteRecord" accesskey="2">matlab.io.fits.deleteRecord</a></li>
-<li><a href="#matlab_002eio_002efits_002egetHdrSpace" accesskey="3">matlab.io.fits.getHdrSpace</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadCard" accesskey="4">matlab.io.fits.readCard</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKey" accesskey="5">matlab.io.fits.readKey</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKeyCmplx" accesskey="6">matlab.io.fits.readKeyCmplx</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKeyDbl" accesskey="7">matlab.io.fits.readKeyDbl</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKeyLongLong" accesskey="8">matlab.io.fits.readKeyLongLong</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKeyLongStr" accesskey="9">matlab.io.fits.readKeyLongStr</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadKeyUnit">matlab.io.fits.readKeyUnit</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadRecord">matlab.io.fits.readRecord</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteComment">matlab.io.fits.writeComment</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteDate">matlab.io.fits.writeDate</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteHistory">matlab.io.fits.writeHistory</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteKey">matlab.io.fits.writeKey</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteKeyUnit">matlab.io.fits.writeKeyUnit</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002edeleteKey">
 <h4 class="subsection">3.4.1 matlab.io.fits.deleteKey</h4>
 <a class="index-entry-id" id="index-deleteKey"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-deleteKey_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">deleteKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>)</code><a class="copiable-link" href='#index-deleteKey_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-deleteKey_0028file_002c"><span class="category-def">: </span><strong class="def-name">deleteKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>)</code></dt>
 <dd><p>Delete a key in the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_key function.
@@ -960,7 +869,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.2 matlab.io.fits.deleteRecord</h4>
 <a class="index-entry-id" id="index-deleteRecord"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-deleteRecord_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">deleteRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">keynum</var>)</code><a class="copiable-link" href='#index-deleteRecord_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-deleteRecord_0028file_002c"><span class="category-def">: </span><strong class="def-name">deleteRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">keynum</var>)</code></dt>
 <dd><p>Delete a key in the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_record function.
@@ -978,7 +887,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.3 matlab.io.fits.getHdrSpace</h4>
 <a class="index-entry-id" id="index-getHdrSpace"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-getHdrSpace_0028file_0029"><span class="category-def">: </span><span><code class="def-type">[<var class="var">numkeys</var>, <var class="var">freekeys</var>] =</code> <strong class="def-name">getHdrSpace(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-getHdrSpace_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-getHdrSpace_0028file_0029"><span class="category-def">: </span><code class="def-type">[<var class="var">numkeys</var>, <var class="var">freekeys</var>] =</code> <strong class="def-name">getHdrSpace(<var class="var">file</var>)</strong></dt>
 <dd><p>Get the number of keyword records used and available.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hdrspace function.
@@ -996,7 +905,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.4 matlab.io.fits.readCard</h4>
 <a class="index-entry-id" id="index-readCard"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readCard_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">card</var> =</code> <strong class="def-name">readCard(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readCard_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readCard_0028file_002c"><span class="category-def">: </span><code class="def-type"><var class="var">card</var> =</code> <strong class="def-name">readCard(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the keyword card for name <var class="var">recname</var>
 </p>
 <p>This is the equivalent of the cfitsio fits_read_card function.
@@ -1014,7 +923,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.5 matlab.io.fits.readKey</h4>
 <a class="index-entry-id" id="index-readKey"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKey_0028file_002c"><span class="category-def">: </span><span><code class="def-type">[<var class="var">keyvalue</var>, <var class="var">keycomment</var>] =</code> <strong class="def-name">readKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKey_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKey_0028file_002c"><span class="category-def">: </span><code class="def-type">[<var class="var">keyvalue</var>, <var class="var">keycomment</var>] =</code> <strong class="def-name">readKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the keyword value and comment for name <var class="var">recname</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_str function.
@@ -1034,7 +943,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.6 matlab.io.fits.readKeyCmplx</h4>
 <a class="index-entry-id" id="index-readKeyCmplx"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKeyCmplx_0028file_002c"><span class="category-def">: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyCmplx(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyCmplx_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKeyCmplx_0028file_002c"><span class="category-def">: </span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyCmplx(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the key value <var class="var">recname</var> as a complex double.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_dblcmp function.
@@ -1054,7 +963,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.7 matlab.io.fits.readKeyDbl</h4>
 <a class="index-entry-id" id="index-readKeyDbl"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKeyDbl_0028file_002c"><span class="category-def">Function File: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyDbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyDbl_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKeyDbl_0028file_002c"><span class="category-def">Function File: </span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyDbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the key value <var class="var">recname</var> as a double.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
@@ -1074,7 +983,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.8 matlab.io.fits.readKeyLongLong</h4>
 <a class="index-entry-id" id="index-readKeyLongLong"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKeyLongLong_0028file_002c"><span class="category-def">: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongLong(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyLongLong_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKeyLongLong_0028file_002c"><span class="category-def">: </span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongLong(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the key value <var class="var">recname</var> as a long long.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_lnglng function.
@@ -1094,7 +1003,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.9 matlab.io.fits.readKeyLongStr</h4>
 <a class="index-entry-id" id="index-readKeyLongStr"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKeyLongStr_0028file_002c"><span class="category-def">: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongStr(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyLongStr_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKeyLongStr_0028file_002c"><span class="category-def">: </span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongStr(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the key value <var class="var">recname</var> as a string.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_longstr function.
@@ -1114,7 +1023,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.10 matlab.io.fits.readKeyUnit</h4>
 <a class="index-entry-id" id="index-readKeyUnit"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readKeyUnit_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">keyunit</var> =</code> <strong class="def-name">readKeyUnit(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href='#index-readKeyUnit_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readKeyUnit_0028file_002c"><span class="category-def">: </span><code class="def-type"><var class="var">keyunit</var> =</code> <strong class="def-name">readKeyUnit(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></dt>
 <dd><p>Read the physical key units value <var class="var">recname</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_unit function.
@@ -1132,7 +1041,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.11 matlab.io.fits.readRecord</h4>
 <a class="index-entry-id" id="index-readRecord"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-readRecord_0028file_002c"><span class="category-def">: </span><span><code class="def-type"><var class="var">rec</var> =</code> <strong class="def-name">readRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recidx</var>)</code><a class="copiable-link" href='#index-readRecord_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-readRecord_0028file_002c"><span class="category-def">: </span><code class="def-type"><var class="var">rec</var> =</code> <strong class="def-name">readRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recidx</var>)</code></dt>
 <dd><p>Read the keyword record at <var class="var">recidx</var>.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_record function.
@@ -1150,7 +1059,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.12 matlab.io.fits.writeComment</h4>
 <a class="index-entry-id" id="index-writeComment"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeComment_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeComment(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comment</var>)</code><a class="copiable-link" href='#index-writeComment_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-writeComment_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeComment(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comment</var>)</code></dt>
 <dd><p>Append a comment to to the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_comment function.
@@ -1168,7 +1077,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.13 matlab.io.fits.writeDate</h4>
 <a class="index-entry-id" id="index-writeDate"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeDate_0028file_0029"><span class="category-def">: </span><span><strong class="def-name">writeDate(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-writeDate_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-writeDate_0028file_0029"><span class="category-def">: </span><strong class="def-name">writeDate(<var class="var">file</var>)</strong></dt>
 <dd><p>Write the date keyword.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_date function.
@@ -1184,7 +1093,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.14 matlab.io.fits.writeHistory</h4>
 <a class="index-entry-id" id="index-writeHistory"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeHistory_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeHistory(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">history</var>)</code><a class="copiable-link" href='#index-writeHistory_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-writeHistory_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeHistory(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">history</var>)</code></dt>
 <dd><p>Append a history to to the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_history function.
@@ -1201,9 +1110,9 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.15 matlab.io.fits.writeKey</h4>
 <a class="index-entry-id" id="index-writeKey"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeKey_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>)</code><a class="copiable-link" href='#index-writeKey_0028file_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-writeKey_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>)</code><a class="copiable-link" href='#index-writeKey_0028file_002c-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-writeKey_0028file_002c-2"><span class="category-def">: </span><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>, <var class="var">decimals</var>)</code><a class="copiable-link" href='#index-writeKey_0028file_002c-2'></a></span></dt>
+<dt class="deftypefn" id="index-writeKey_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-writeKey_0028file_002c-1"><span class="category-def">: </span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-writeKey_0028file_002c-2"><span class="category-def">: </span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>, <var class="var">decimals</var>)</code></dt>
 <dd><p>Append or replace a key in the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_key and fits_update_key function.
@@ -1226,7 +1135,7 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 <h4 class="subsection">3.4.16 matlab.io.fits.writeKeyUnit</h4>
 <a class="index-entry-id" id="index-writeKeyUnit"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeKeyUnit_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeKeyUnit(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">unit</var>)</code><a class="copiable-link" href='#index-writeKeyUnit_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-writeKeyUnit_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeKeyUnit(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">unit</var>)</code></dt>
 <dd><p>Write a key unit to the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_key_unit function.
@@ -1244,27 +1153,13 @@ Next: <a href="#Low-Level-Image-Manipulation" accesskey="n" rel="next">Low Level
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-Image-Manipulation">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level Utility Functions</a>, Previous: <a href="#Low-Level-Keyword-Functions" accesskey="p" rel="prev">Low Level Keyword Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-Image-Manipulation-1">3.5 Low Level Image Manipulation</h3>
 <a class="index-entry-id" id="index-Low-Level-Image-Manipulation"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002ecreateImg" accesskey="1">matlab.io.fits.createImg</a></li>
-<li><a href="#matlab_002eio_002efits_002egetImgSize" accesskey="2">matlab.io.fits.getImgSize</a></li>
-<li><a href="#matlab_002eio_002efits_002egetImgType" accesskey="3">matlab.io.fits.getImgType</a></li>
-<li><a href="#matlab_002eio_002efits_002einsertImg" accesskey="4">matlab.io.fits.insertImg</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadImg" accesskey="5">matlab.io.fits.readImg</a></li>
-<li><a href="#matlab_002eio_002efits_002esetBscale" accesskey="6">matlab.io.fits.setBscale</a></li>
-<li><a href="#matlab_002eio_002efits_002esetTscale" accesskey="7">matlab.io.fits.setTscale</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteImg" accesskey="8">matlab.io.fits.writeImg</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002ecreateImg">
 <h4 class="subsection">3.5.1 matlab.io.fits.createImg</h4>
 <a class="index-entry-id" id="index-createImg"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-createImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href='#index-createImg_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-createImg_0028file_002c"><span class="category-def">: </span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code></dt>
 <dd><p>create a new primary image or image extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_imgll function.
@@ -1293,7 +1188,7 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.2 matlab.io.fits.getImgSize</h4>
 <a class="index-entry-id" id="index-getImgSize"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-21"><span class="category-def">: </span><span><code class="def-type"><var class="var">size</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgSize(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-21'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-21"><span class="category-def">: </span><code class="def-type"><var class="var">size</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgSize(<var class="var">file</var>)</code></dt>
 <dd><p>Return size of a Image HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_img_size function.
@@ -1309,7 +1204,7 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.3 matlab.io.fits.getImgType</h4>
 <a class="index-entry-id" id="index-getImgType"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-22"><span class="category-def">: </span><span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgType(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-22'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-22"><span class="category-def">: </span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgType(<var class="var">file</var>)</code></dt>
 <dd><p>Return datatype of a Image HDU
 </p>
 <p>This is the equivalent of the cfitsio fits_get_img_type function.
@@ -1325,7 +1220,7 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.4 matlab.io.fits.insertImg</h4>
 <a class="index-entry-id" id="index-insertImg"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href='#index-insertImg_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertImg_0028file_002c"><span class="category-def">: </span><strong class="def-name">insertImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code></dt>
 <dd><p>Insert a new primary image or image extension at current HDU position.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_imgll function.
@@ -1346,9 +1241,9 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.5 matlab.io.fits.readImg</h4>
 <a class="index-entry-id" id="index-readImg"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-23"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-23'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-24"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>)</code><a class="copiable-link" href='#index-_003d-24'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-25"><span class="category-def">: </span><span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>, <var class="var">inc</var>)</code><a class="copiable-link" href='#index-_003d-25'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-23"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-24"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-25"><span class="category-def">: </span><code class="def-type"><var class="var">data</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">readImg(<var class="var">file</var>, <var class="var">firstpix</var>, <var class="var">lastpix</var>, <var class="var">inc</var>)</code></dt>
 <dd><p>Read Image data.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_subset function.
@@ -1381,7 +1276,7 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.6 matlab.io.fits.setBscale</h4>
 <a class="index-entry-id" id="index-setBscale"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setBscale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setBscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bscale</var>, <var class="var">bzero</var>)</code><a class="copiable-link" href='#index-setBscale_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setBscale_0028file_002c"><span class="category-def">: </span><strong class="def-name">setBscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bscale</var>, <var class="var">bzero</var>)</code></dt>
 <dd><p>Reset bscale and bzero to be used with reading and writing Images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_bscale function.
@@ -1401,7 +1296,7 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.7 matlab.io.fits.setTscale</h4>
 <a class="index-entry-id" id="index-setTscale"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setTscale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setTscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">col</var>, <var class="var">scale</var>, <var class="var">zero</var>)</code><a class="copiable-link" href='#index-setTscale_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setTscale_0028file_002c"><span class="category-def">: </span><strong class="def-name">setTscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">col</var>, <var class="var">scale</var>, <var class="var">zero</var>)</code></dt>
 <dd><p>Reset scale and zero to be used with reading and writing table data.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_tscale function.
@@ -1423,8 +1318,8 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 <h4 class="subsection">3.5.8 matlab.io.fits.writeImg</h4>
 <a class="index-entry-id" id="index-writeImg"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>)</code><a class="copiable-link" href='#index-writeImg_0028file_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-writeImg_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>, <var class="var">fpixel</var>)</code><a class="copiable-link" href='#index-writeImg_0028file_002c-1'></a></span></dt>
+<dt class="deftypefn" id="index-writeImg_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-writeImg_0028file_002c-1"><span class="category-def">: </span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>, <var class="var">fpixel</var>)</code></dt>
 <dd><p>write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc
 </p>
 <p>This is the equivalent of the cfitsio fits_write_subset function.
@@ -1459,23 +1354,13 @@ Next: <a href="#Low-Level-Utility-Functions" accesskey="n" rel="next">Low Level 
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-Utility-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-Compression-Functions" accesskey="n" rel="next">Low Level Compression Functions</a>, Previous: <a href="#Low-Level-Image-Manipulation" accesskey="p" rel="prev">Low Level Image Manipulation</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-Utility-Functions-1">3.6 Low Level Utility Functions</h3>
 <a class="index-entry-id" id="index-Low-Level-Utility-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002egetConstantNames" accesskey="1">matlab.io.fits.getConstantNames</a></li>
-<li><a href="#matlab_002eio_002efits_002egetConstantValue" accesskey="2">matlab.io.fits.getConstantValue</a></li>
-<li><a href="#matlab_002eio_002efits_002egetOpenFiles" accesskey="3">matlab.io.fits.getOpenFiles</a></li>
-<li><a href="#matlab_002eio_002efits_002egetVersion" accesskey="4">matlab.io.fits.getVersion</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002egetConstantNames">
 <h4 class="subsection">3.6.1 matlab.io.fits.getConstantNames</h4>
 <a class="index-entry-id" id="index-getConstantNames"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-26"><span class="category-def">: </span><span><code class="def-type"><var class="var">namelist</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantNames()</code><a class="copiable-link" href='#index-_003d-26'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-26"><span class="category-def">: </span><code class="def-type"><var class="var">namelist</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantNames()</code></dt>
 <dd><p>Return the names of all known fits constants.
 </p>
 <h4 class="subsubheading" id="Inputs-45">Inputs</h4>
@@ -1491,7 +1376,7 @@ Next: <a href="#Low-Level-Compression-Functions" accesskey="n" rel="next">Low Le
 <h4 class="subsection">3.6.2 matlab.io.fits.getConstantValue</h4>
 <a class="index-entry-id" id="index-getConstantValue"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-27"><span class="category-def">: </span><span><code class="def-type"><var class="var">value</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantValue(<var class="var">name</var>)</code><a class="copiable-link" href='#index-_003d-27'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-27"><span class="category-def">: </span><code class="def-type"><var class="var">value</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getConstantValue(<var class="var">name</var>)</code></dt>
 <dd><p>Return the value of a known fits constant.
 </p>
 <h4 class="subsubheading" id="Inputs-46">Inputs</h4>
@@ -1507,7 +1392,7 @@ Next: <a href="#Low-Level-Compression-Functions" accesskey="n" rel="next">Low Le
 <h4 class="subsection">3.6.3 matlab.io.fits.getOpenFiles</h4>
 <a class="index-entry-id" id="index-getOpenFiles"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-28"><span class="category-def">: </span><span><code class="def-type"><var class="var">files</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getOpenFiles()</code><a class="copiable-link" href='#index-_003d-28'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-28"><span class="category-def">: </span><code class="def-type"><var class="var">files</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getOpenFiles()</code></dt>
 <dd><p>Get the file handles of all open fits files.
 </p>
 <h4 class="subsubheading" id="Inputs-47">Inputs</h4>
@@ -1523,7 +1408,7 @@ Next: <a href="#Low-Level-Compression-Functions" accesskey="n" rel="next">Low Le
 <h4 class="subsection">3.6.4 matlab.io.fits.getVersion</h4>
 <a class="index-entry-id" id="index-getVersion"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-29"><span class="category-def">: </span><span><code class="def-type"><var class="var">ver</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getVersion()</code><a class="copiable-link" href='#index-_003d-29'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-29"><span class="category-def">: </span><code class="def-type"><var class="var">ver</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getVersion()</code></dt>
 <dd><p>Return the version number of the cfitsio library used.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_version function.
@@ -1538,25 +1423,13 @@ Next: <a href="#Low-Level-Compression-Functions" accesskey="n" rel="next">Low Le
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-Compression-Functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low Level Binary and ASCII Tables</a>, Previous: <a href="#Low-Level-Utility-Functions" accesskey="p" rel="prev">Low Level Utility Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-Compression-Functions-1">3.7 Low Level Compression Functions</h3>
 <a class="index-entry-id" id="index-Low-Level-Compression-Functions"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002eimgCompress" accesskey="1">matlab.io.fits.imgCompress</a></li>
-<li><a href="#matlab_002eio_002efits_002eisCompressedImg" accesskey="2">matlab.io.fits.isCompressedImg</a></li>
-<li><a href="#matlab_002eio_002efits_002esetCompressionType" accesskey="3">matlab.io.fits.setCompressionType</a></li>
-<li><a href="#matlab_002eio_002efits_002esetHCompScale" accesskey="4">matlab.io.fits.setHCompScale</a></li>
-<li><a href="#matlab_002eio_002efits_002esetHCompSmooth" accesskey="5">matlab.io.fits.setHCompSmooth</a></li>
-<li><a href="#matlab_002eio_002efits_002esetTileDim" accesskey="6">matlab.io.fits.setTileDim</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002eimgCompress">
 <h4 class="subsection">3.7.1 matlab.io.fits.imgCompress</h4>
 <a class="index-entry-id" id="index-imgCompress"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-imgCompress_0028infile_002c"><span class="category-def">: </span><span><strong class="def-name">imgCompress(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code><a class="copiable-link" href='#index-imgCompress_0028infile_002c'></a></span></dt>
+<dt class="deftypefn" id="index-imgCompress_0028infile_002c"><span class="category-def">: </span><strong class="def-name">imgCompress(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code></dt>
 <dd><p>Copy HDU and image data from one infile to another, using the outfiles compression type.
 </p>
 <p>This is the equivalent of the cfitsio fits_img_compress function.
@@ -1574,7 +1447,7 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 <h4 class="subsection">3.7.2 matlab.io.fits.isCompressedImg</h4>
 <a class="index-entry-id" id="index-isCompressedImg"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-isCompressedImg_0028file_0029"><span class="category-def">: </span><span><code class="def-type"><var class="var">comp</var> =</code> <strong class="def-name">isCompressedImg(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-isCompressedImg_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-isCompressedImg_0028file_0029"><span class="category-def">: </span><code class="def-type"><var class="var">comp</var> =</code> <strong class="def-name">isCompressedImg(<var class="var">file</var>)</strong></dt>
 <dd><p>Return true if image is compressed.
 </p>
 <p>This is the equivalent of the cfitsio fits_is_compressed_image function.
@@ -1590,7 +1463,7 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 <h4 class="subsection">3.7.3 matlab.io.fits.setCompressionType</h4>
 <a class="index-entry-id" id="index-setCompressionType"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setCompressionType_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setCompressionType(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comptype</var>)</code><a class="copiable-link" href='#index-setCompressionType_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setCompressionType_0028file_002c"><span class="category-def">: </span><strong class="def-name">setCompressionType(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comptype</var>)</code></dt>
 <dd><p>Set compression type for writing FITS images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_compression_type function.
@@ -1609,7 +1482,7 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 <h4 class="subsection">3.7.4 matlab.io.fits.setHCompScale</h4>
 <a class="index-entry-id" id="index-setHCompScale"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setHCompScale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setHCompScale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">scale</var>)</code><a class="copiable-link" href='#index-setHCompScale_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setHCompScale_0028file_002c"><span class="category-def">: </span><strong class="def-name">setHCompScale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">scale</var>)</code></dt>
 <dd><p>Set scale to be used with HCOMPRESS compression.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_hcomp_scale function.
@@ -1626,7 +1499,7 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 <h4 class="subsection">3.7.5 matlab.io.fits.setHCompSmooth</h4>
 <a class="index-entry-id" id="index-setHCompSmooth"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setHCompSmooth_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setHCompSmooth(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">smooth</var>)</code><a class="copiable-link" href='#index-setHCompSmooth_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setHCompSmooth_0028file_002c"><span class="category-def">: </span><strong class="def-name">setHCompSmooth(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">smooth</var>)</code></dt>
 <dd><p>Set smooth value to be used with HCOMPRESS compression.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_hcomp_smooth function.
@@ -1644,7 +1517,7 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 <h4 class="subsection">3.7.6 matlab.io.fits.setTileDim</h4>
 <a class="index-entry-id" id="index-setTileDim"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setTileDim_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setTileDim(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tiledims</var>)</code><a class="copiable-link" href='#index-setTileDim_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-setTileDim_0028file_002c"><span class="category-def">: </span><strong class="def-name">setTileDim(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tiledims</var>)</code></dt>
 <dd><p>Set compression tile dims for writing FITS images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_tile_dim function.
@@ -1661,40 +1534,15 @@ Next: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="n" rel="next">Low 
 </div>
 </div>
 <div class="section-level-extent" id="Low-Level-Binary-and-ASCII-Tables">
-<div class="nav-panel">
-<p>
-Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>, Previous: <a href="#Low-Level-Compression-Functions" accesskey="p" rel="prev">Low Level Compression Functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Low-Level-Binary-and-ASCII-Tables-1">3.8 Low Level Binary and ASCII Tables</h3>
 <a class="index-entry-id" id="index-Low-Level-Binary-and-ASCII-Tables"></a>
-<ul class="mini-toc">
-<li><a href="#matlab_002eio_002efits_002ecreateTbl" accesskey="1">matlab.io.fits.createTbl</a></li>
-<li><a href="#matlab_002eio_002efits_002edeleteCol" accesskey="2">matlab.io.fits.deleteCol</a></li>
-<li><a href="#matlab_002eio_002efits_002edeleteRows" accesskey="3">matlab.io.fits.deleteRows</a></li>
-<li><a href="#matlab_002eio_002efits_002egetAColParms" accesskey="4">matlab.io.fits.getAColParms</a></li>
-<li><a href="#matlab_002eio_002efits_002egetBColParms" accesskey="5">matlab.io.fits.getBColParms</a></li>
-<li><a href="#matlab_002eio_002efits_002egetColName" accesskey="6">matlab.io.fits.getColName</a></li>
-<li><a href="#matlab_002eio_002efits_002egetColType" accesskey="7">matlab.io.fits.getColType</a></li>
-<li><a href="#matlab_002eio_002efits_002egetEqColType" accesskey="8">matlab.io.fits.getEqColType</a></li>
-<li><a href="#matlab_002eio_002efits_002egetNumCols" accesskey="9">matlab.io.fits.getNumCols</a></li>
-<li><a href="#matlab_002eio_002efits_002egetNumRows">matlab.io.fits.getNumRows</a></li>
-<li><a href="#matlab_002eio_002efits_002egetRowSize">matlab.io.fits.getRowSize</a></li>
-<li><a href="#matlab_002eio_002efits_002einsertATbl">matlab.io.fits.insertATbl</a></li>
-<li><a href="#matlab_002eio_002efits_002einsertBTbl">matlab.io.fits.insertBTbl</a></li>
-<li><a href="#matlab_002eio_002efits_002einsertCol">matlab.io.fits.insertCol</a></li>
-<li><a href="#matlab_002eio_002efits_002einsertRows">matlab.io.fits.insertRows</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadATblHdr">matlab.io.fits.readATblHdr</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadBTblHdr">matlab.io.fits.readBTblHdr</a></li>
-<li><a href="#matlab_002eio_002efits_002ereadCol">matlab.io.fits.readCol</a></li>
-<li><a href="#matlab_002eio_002efits_002ewriteCol">matlab.io.fits.writeCol</a></li>
-</ul>
 <div class="subsection-level-extent" id="matlab_002eio_002efits_002ecreateTbl">
 <h4 class="subsection">3.8.1 matlab.io.fits.createTbl</h4>
 <a class="index-entry-id" id="index-createTbl"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-createTbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>)</code><a class="copiable-link" href='#index-createTbl_0028file_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-createTbl_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code><a class="copiable-link" href='#index-createTbl_0028file_002c-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-createTbl_0028file_002c-2"><span class="category-def">: </span><span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code><a class="copiable-link" href='#index-createTbl_0028file_002c-2'></a></span></dt>
+<dt class="deftypefn" id="index-createTbl_0028file_002c"><span class="category-def">: </span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-createTbl_0028file_002c-1"><span class="category-def">: </span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-createTbl_0028file_002c-2"><span class="category-def">: </span><strong class="def-name">createTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code></dt>
 <dd><p>Create a new ASCII or bintable extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_tbl function.
@@ -1735,7 +1583,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.2 matlab.io.fits.deleteCol</h4>
 <a class="index-entry-id" id="index-deleteCol"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-deleteCol_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">deleteCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>)</code><a class="copiable-link" href='#index-deleteCol_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-deleteCol_0028file_002c"><span class="category-def">: </span><strong class="def-name">deleteCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>)</code></dt>
 <dd><p>Delete a column from a table.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_col function.
@@ -1753,7 +1601,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.3 matlab.io.fits.deleteRows</h4>
 <a class="index-entry-id" id="index-deleteRows"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-deleteRows_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">deleteRows(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">firstrow</var>, <var class="var">numrows</var>)</code><a class="copiable-link" href='#index-deleteRows_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-deleteRows_0028file_002c"><span class="category-def">: </span><strong class="def-name">deleteRows(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">firstrow</var>, <var class="var">numrows</var>)</code></dt>
 <dd><p>Insert a rows into a table.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_rows function.
@@ -1773,7 +1621,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.4 matlab.io.fits.getAColParms</h4>
 <a class="index-entry-id" id="index-getAColParms"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-30"><span class="category-def">: </span><span><code class="def-type">[<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tunit</var>,<var class="var">tform</var>,<var class="var">scale</var>,<var class="var">zero</var>,<var class="var">nulstr</var>,<var class="var">tdisp</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getAColParms(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d-30'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-30"><span class="category-def">: </span><code class="def-type">[<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tunit</var>,<var class="var">tform</var>,<var class="var">scale</var>,<var class="var">zero</var>,<var class="var">nulstr</var>,<var class="var">tdisp</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getAColParms(<var class="var">file</var>, <var class="var">colnum</var>)</code></dt>
 <dd><p>Get ASCII table parameters.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_acolparms function.
@@ -1792,7 +1640,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.5 matlab.io.fits.getBColParms</h4>
 <a class="index-entry-id" id="index-getBColParms"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-31"><span class="category-def">: </span><span><code class="def-type">[<var class="var">ttype</var>,<var class="var">tunit</var>,<var class="var">typechar</var>,<var class="var">repeat</var>,<var class="var">scale</var>,<var class="var">zero</var>,<var class="var">nulval</var>,<var class="var">tdisp</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getBColParms(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d-31'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-31"><span class="category-def">: </span><code class="def-type">[<var class="var">ttype</var>,<var class="var">tunit</var>,<var class="var">typechar</var>,<var class="var">repeat</var>,<var class="var">scale</var>,<var class="var">zero</var>,<var class="var">nulval</var>,<var class="var">tdisp</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getBColParms(<var class="var">file</var>, <var class="var">colnum</var>)</code></dt>
 <dd><p>Get binary table parameters.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_bcolparms function.
@@ -1811,8 +1659,8 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.6 matlab.io.fits.getColName</h4>
 <a class="index-entry-id" id="index-getColName"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-32"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>)</code><a class="copiable-link" href='#index-_003d-32'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-33"><span class="category-def">: </span><span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>, <var class="var">casesens</var>)</code><a class="copiable-link" href='#index-_003d-33'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-32"><span class="category-def">: </span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-33"><span class="category-def">: </span><code class="def-type">[<var class="var">colnum</var>,<var class="var">colname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColName(<var class="var">file</var>, <var class="var">template</var>, <var class="var">casesens</var>)</code></dt>
 <dd><p>Get column name.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_colname function.
@@ -1845,7 +1693,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.7 matlab.io.fits.getColType</h4>
 <a class="index-entry-id" id="index-getColType"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-34"><span class="category-def">: </span><span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColType(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d-34'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-34"><span class="category-def">: </span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getColType(<var class="var">file</var>, <var class="var">colnum</var>)</code></dt>
 <dd><p>Get column type.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_coltypell function.
@@ -1863,7 +1711,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.8 matlab.io.fits.getEqColType</h4>
 <a class="index-entry-id" id="index-getEqColType"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-35"><span class="category-def">: </span><span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getEqColType(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d-35'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-35"><span class="category-def">: </span><code class="def-type">[<var class="var">dtype</var>,<var class="var">repeat</var>,<var class="var">width</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">getEqColType(<var class="var">file</var>, <var class="var">colnum</var>)</code></dt>
 <dd><p>Get column type.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_eqcoltypell function.
@@ -1881,7 +1729,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.9 matlab.io.fits.getNumCols</h4>
 <a class="index-entry-id" id="index-getNumCols"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-36"><span class="category-def">: </span><span><code class="def-type"><var class="var">ncols</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumCols(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-36'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-36"><span class="category-def">: </span><code class="def-type"><var class="var">ncols</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumCols(<var class="var">file</var>)</code></dt>
 <dd><p>Get number of columns.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_num_cols function.
@@ -1897,7 +1745,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.10 matlab.io.fits.getNumRows</h4>
 <a class="index-entry-id" id="index-getNumRows"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-37"><span class="category-def">: </span><span><code class="def-type"><var class="var">nrows</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumRows(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-37'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-37"><span class="category-def">: </span><code class="def-type"><var class="var">nrows</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getNumRows(<var class="var">file</var>)</code></dt>
 <dd><p>Get number of rows.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_numrowsll function.
@@ -1913,7 +1761,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.11 matlab.io.fits.getRowSize</h4>
 <a class="index-entry-id" id="index-getRowSize"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-38"><span class="category-def">: </span><span><code class="def-type"><var class="var">nrows</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getRowSize(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-38'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-38"><span class="category-def">: </span><code class="def-type"><var class="var">nrows</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getRowSize(<var class="var">file</var>)</code></dt>
 <dd><p>Get optimum number of rows to read/write at one time.
 </p>
 <p>This is the equivalent of the cfitsio  fits_get_rowsize function.
@@ -1929,9 +1777,9 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.12 matlab.io.fits.insertATbl</h4>
 <a class="index-entry-id" id="index-insertATbl"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertATbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-1"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-2"><span class="category-def">: </span><span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code><a class="copiable-link" href='#index-insertATbl_0028file_002c-2'></a></span></dt>
+<dt class="deftypefn" id="index-insertATbl_0028file_002c"><span class="category-def">: </span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-1"><span class="category-def">: </span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">rowlen</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-insertATbl_0028file_002c-2"><span class="category-def">: </span><strong class="def-name">insertATbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">tbltype</var>, <var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tbcol</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>)</code></dt>
 <dd><p>Insert a new ASCII table after current HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_atbl function.
@@ -1963,7 +1811,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.13 matlab.io.fits.insertBTbl</h4>
 <a class="index-entry-id" id="index-insertBTbl"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertBTbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertBTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>, <var class="var">pcount</var>)</code><a class="copiable-link" href='#index-insertBTbl_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertBTbl_0028file_002c"><span class="category-def">: </span><strong class="def-name">insertBTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>, <var class="var">pcount</var>)</code></dt>
 <dd><p>Insert a new bintable extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_btbl function.
@@ -1993,7 +1841,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.14 matlab.io.fits.insertCol</h4>
 <a class="index-entry-id" id="index-insertCol"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertCol_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>, <var class="var">ttype</var>, <var class="var">tform</var>)</code><a class="copiable-link" href='#index-insertCol_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertCol_0028file_002c"><span class="category-def">: </span><strong class="def-name">insertCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>, <var class="var">ttype</var>, <var class="var">tform</var>)</code></dt>
 <dd><p>Insert a column into a table.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_col function.
@@ -2013,7 +1861,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.15 matlab.io.fits.insertRows</h4>
 <a class="index-entry-id" id="index-insertRows"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertRows_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertRows(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">firstrow</var>, <var class="var">numrows</var>)</code><a class="copiable-link" href='#index-insertRows_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertRows_0028file_002c"><span class="category-def">: </span><strong class="def-name">insertRows(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">firstrow</var>, <var class="var">numrows</var>)</code></dt>
 <dd><p>Insert rows into a table.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_rows function.
@@ -2033,7 +1881,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.16 matlab.io.fits.readATblHdr</h4>
 <a class="index-entry-id" id="index-readATblHdr"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-39"><span class="category-def">: </span><span><code class="def-type">[<var class="var">rowlen</var>,<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readATblHdr(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-39'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-39"><span class="category-def">: </span><code class="def-type">[<var class="var">rowlen</var>,<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readATblHdr(<var class="var">file</var>)</code></dt>
 <dd><p>Get ASCII table parameters.
 </p>
 <p>This is the equivalent of the cfitsio  fits_read_atablhdrll function.
@@ -2049,7 +1897,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.17 matlab.io.fits.readBTblHdr</h4>
 <a class="index-entry-id" id="index-readBTblHdr"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-40"><span class="category-def">: </span><span><code class="def-type">[<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>,<var class="var">pcount</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readBTblHdr(<var class="var">file</var>)</code><a class="copiable-link" href='#index-_003d-40'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-40"><span class="category-def">: </span><code class="def-type">[<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>,<var class="var">pcount</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readBTblHdr(<var class="var">file</var>)</code></dt>
 <dd><p>Get Binary table parameters.
 </p>
 <p>This is the equivalent of the cfitsio  fits_read_btablhdrll function.
@@ -2065,8 +1913,8 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.18 matlab.io.fits.readCol</h4>
 <a class="index-entry-id" id="index-readCol"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-_003d-41"><span class="category-def">: </span><span><code class="def-type">[<var class="var">coldata</var>, <var class="var">nullval</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readCol(<var class="var">file</var>, <var class="var">colnum</var>)</code><a class="copiable-link" href='#index-_003d-41'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-42"><span class="category-def">: </span><span><code class="def-type">[<var class="var">coldata</var>, <var class="var">nullval</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readCol(<var class="var">file</var>, <var class="var">colnum</var>, <var class="var">firstrow</var>, <var class="var">numrows</var>)</code><a class="copiable-link" href='#index-_003d-42'></a></span></dt>
+<dt class="deftypefn" id="index-_003d-41"><span class="category-def">: </span><code class="def-type">[<var class="var">coldata</var>, <var class="var">nullval</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readCol(<var class="var">file</var>, <var class="var">colnum</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn" id="index-_003d-42"><span class="category-def">: </span><code class="def-type">[<var class="var">coldata</var>, <var class="var">nullval</var>]</code> <strong class="def-name">=</strong> <code class="def-code-arguments">readCol(<var class="var">file</var>, <var class="var">colnum</var>, <var class="var">firstrow</var>, <var class="var">numrows</var>)</code></dt>
 <dd><p>Get table row data.
 </p>
 <p>This is the equivalent of the cfitsio  fits_read_col function.
@@ -2105,7 +1953,7 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 <h4 class="subsection">3.8.19 matlab.io.fits.writeCol</h4>
 <a class="index-entry-id" id="index-writeCol"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-writeCol_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">writeCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>, <var class="var">firstrow</var>, <var class="var">data</var>)</code><a class="copiable-link" href='#index-writeCol_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-writeCol_0028file_002c"><span class="category-def">: </span><strong class="def-name">writeCol(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">colnum</var>, <var class="var">firstrow</var>, <var class="var">data</var>)</code></dt>
 <dd><p>Write elements to a table.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_col function.
@@ -2126,20 +1974,13 @@ Next: <a href="#Import-functions" accesskey="n" rel="next">Import functions</a>,
 </div>
 </div>
 <div class="section-level-extent" id="Import-functions">
-<div class="nav-panel">
-<p>
-Previous: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="p" rel="prev">Low Level Binary and ASCII Tables</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Import-functions-1">3.9 Import functions</h3>
 <a class="index-entry-id" id="index-Import-functions"></a>
-<ul class="mini-toc">
-<li><a href="#import_005ffits" accesskey="1">import_fits</a></li>
-</ul>
 <div class="subsection-level-extent" id="import_005ffits">
 <h4 class="subsection">3.9.1 import_fits</h4>
 <a class="index-entry-id" id="index-import_005ffits"></a>
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-import_005ffits-1"><span class="category-def">: </span><span><strong class="def-name">import_fits</strong><a class="copiable-link" href='#index-import_005ffits-1'></a></span></dt>
+<dt class="deftypefn" id="index-import_005ffits-1"><span class="category-def">: </span><strong class="def-name">import_fits</strong></dt>
 <dd><p>Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
 </p></dd></dl>
 <hr>
@@ -2147,10 +1988,6 @@ Previous: <a href="#Low-Level-Binary-and-ASCII-Tables" accesskey="p" rel="prev">
 </div>
 </div>
 <div class="appendix-level-extent" id="Copying">
-<div class="nav-panel">
-<p>
-Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Function-Reference" accesskey="p" rel="prev">Function Reference</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="appendix" id="GNU-General-Public-License">Appendix A GNU General Public License</h2>
 <a class="index-entry-id" id="index-warranty"></a>
 <a class="index-entry-id" id="index-copyright"></a>
@@ -2810,10 +2647,6 @@ first, please read <a class="url" href="http://www.gnu.org/philosophy/why-not-lg
 <hr>
 </div>
 <div class="unnumbered-level-extent" id="Index">
-<div class="nav-panel">
-<p>
-Previous: <a href="#Copying" accesskey="p" rel="prev">GNU General Public License</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="unnumbered" id="Index-1">Index</h2>
  
 <div class="printindex cp-printindex">
@@ -2847,134 +2680,134 @@ Previous: <a href="#Copying" accesskey="p" rel="prev">GNU General Public License
  &nbsp; 
 </td></tr></table>
 <table class="cp-entries-printindex" border="0">
-<tr><td></td><th class="entries-header-printindex">Index Entry</th><td>&nbsp;</td><th class="sections-header-printindex"> Section</th></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-B">B</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Basic-Usage-Overview">Basic Usage Overview</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-C">C</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-closeFile">closeFile</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-copyHDU">copyHDU</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-copyright">copyright</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-createFile">createFile</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-createImg">createImg</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-createTbl">createTbl</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-D">D</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteCol">deleteCol</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteFile">deleteFile</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteHDU">deleteHDU</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteKey">deleteKey</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteRecord">deleteRecord</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteRows">deleteRows</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-F">F</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fileMode">fileMode</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fileName">fileName</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsdisp">fitsdisp</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsinfo">fitsinfo</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsread">fitsread</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-fitswrite">fitswrite</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Function-Reference">Function Reference</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Function-Reference">Function Reference</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-G">G</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getAColParms">getAColParms</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getBColParms">getBColParms</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getColName">getColName</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getColType">getColType</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getConstantNames">getConstantNames</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getConstantValue">getConstantValue</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getEqColType">getEqColType</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getHdrSpace">getHdrSpace</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUnum">getHDUnum</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUoff">getHDUoff</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUtype">getHDUtype</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getImgSize">getImgSize</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getImgType">getImgType</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumCols">getNumCols</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumHDUs">getNumHDUs</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumRows">getNumRows</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getOpenFiles">getOpenFiles</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getRowSize">getRowSize</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getVersion">getVersion</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-H">H</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-High-Level-File-Functions">High Level File Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-imgCompress">imgCompress</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Import-functions">Import functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Import-functions">Import functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-import_005ffits">import_fits</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Import-functions">Import functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-insertATbl">insertATbl</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-insertBTbl">insertBTbl</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-insertCol">insertCol</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-insertImg">insertImg</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-insertRows">insertRows</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Installing-and-loading">Installing and loading</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-isCompressedImg">isCompressedImg</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-L">L</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Loading">Loading</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Compression-Functions">Low Level Compression Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-File-Functions">Low Level File Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-level-functionality">Low level functionality</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-HDU-Functions">Low Level HDU Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Image-Manipulation">Low Level Image Manipulation</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Keyword-Functions">Low Level Keyword Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Utility-Functions">Low Level Utility Functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-M">M</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-movAbsHDU">movAbsHDU</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-movNamHDU">movNamHDU</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-movRelHDU">movRelHDU</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-O">O</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Off_002dline-install">Off-line install</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Online-install">Online install</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-openDiskFile">openDiskFile</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-openFile">openFile</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Overview">Overview</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-R">R</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readATblHdr">readATblHdr</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readBTblHdr">readBTblHdr</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readCard">readCard</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readCol">readCol</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readImg">readImg</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Reading-Data">Reading Data</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Reading-Information">Reading Information</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKey">readKey</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyCmplx">readKeyCmplx</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyDbl">readKeyDbl</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyLongLong">readKeyLongLong</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyLongStr">readKeyLongStr</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyUnit">readKeyUnit</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-readRecord">readRecord</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-S">S</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setBscale">setBscale</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setCompressionType">setCompressionType</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setHCompScale">setHCompScale</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setHCompSmooth">setHCompSmooth</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setTileDim">setTileDim</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setTscale">setTscale</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-U">U</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Using-the-toolkit">Using the toolkit</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-W">W</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-warranty">warranty</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Windows-install">Windows install</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeChecksum">writeChecksum</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeCol">writeCol</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeComment">writeComment</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeDate">writeDate</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeHistory">writeHistory</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeImg">writeImg</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeKey">writeKey</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-writeKeyUnit">writeKeyUnit</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
+<tr><td></td><th class="entries-header-printindex">Index Entry</th><th class="sections-header-printindex">Section</th></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-B">B</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Basic-Usage-Overview">Basic Usage Overview</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-C">C</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-closeFile">closeFile</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-copyHDU">copyHDU</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-copyright">copyright</a></td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-createFile">createFile</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-createImg">createImg</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-createTbl">createTbl</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-D">D</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteCol">deleteCol</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteFile">deleteFile</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteHDU">deleteHDU</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteKey">deleteKey</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteRecord">deleteRecord</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-deleteRows">deleteRows</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-F">F</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fileMode">fileMode</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fileName">fileName</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsdisp">fitsdisp</a></td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsinfo">fitsinfo</a></td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fitsread">fitsread</a></td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fitswrite">fitswrite</a></td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Function-Reference">Function Reference</a></td><td class="printindex-index-section"><a href="#Function-Reference">Function Reference</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-G">G</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getAColParms">getAColParms</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getBColParms">getBColParms</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getColName">getColName</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getColType">getColType</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getConstantNames">getConstantNames</a></td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getConstantValue">getConstantValue</a></td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getEqColType">getEqColType</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getHdrSpace">getHdrSpace</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUnum">getHDUnum</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUoff">getHDUoff</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getHDUtype">getHDUtype</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getImgSize">getImgSize</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getImgType">getImgType</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumCols">getNumCols</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumHDUs">getNumHDUs</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getNumRows">getNumRows</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getOpenFiles">getOpenFiles</a></td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getRowSize">getRowSize</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getVersion">getVersion</a></td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-H">H</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-High-Level-File-Functions">High Level File Functions</a></td><td class="printindex-index-section"><a href="#High-Level-File-Functions">High Level File Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-I">I</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-imgCompress">imgCompress</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Import-functions">Import functions</a></td><td class="printindex-index-section"><a href="#Import-functions">Import functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-import_005ffits">import_fits</a></td><td class="printindex-index-section"><a href="#Import-functions">Import functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-insertATbl">insertATbl</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-insertBTbl">insertBTbl</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-insertCol">insertCol</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-insertImg">insertImg</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-insertRows">insertRows</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Installing-and-loading">Installing and loading</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-isCompressedImg">isCompressedImg</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-L">L</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Loading">Loading</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Compression-Functions">Low Level Compression Functions</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-File-Functions">Low Level File Functions</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-level-functionality">Low level functionality</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-HDU-Functions">Low Level HDU Functions</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Low-Level-Utility-Functions">Low Level Utility Functions</a></td><td class="printindex-index-section"><a href="#Low-Level-Utility-Functions">Low Level Utility Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-M">M</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-movAbsHDU">movAbsHDU</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-movNamHDU">movNamHDU</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-movRelHDU">movRelHDU</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-O">O</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Off_002dline-install">Off-line install</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Online-install">Online install</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-openDiskFile">openDiskFile</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-openFile">openFile</a></td><td class="printindex-index-section"><a href="#Low-Level-File-Functions">Low Level File Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Overview">Overview</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-R">R</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readATblHdr">readATblHdr</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readBTblHdr">readBTblHdr</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readCard">readCard</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readCol">readCol</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readImg">readImg</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Reading-Data">Reading Data</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Reading-Information">Reading Information</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKey">readKey</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyCmplx">readKeyCmplx</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyDbl">readKeyDbl</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyLongLong">readKeyLongLong</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyLongStr">readKeyLongStr</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readKeyUnit">readKeyUnit</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-readRecord">readRecord</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-S">S</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setBscale">setBscale</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setCompressionType">setCompressionType</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setHCompScale">setHCompScale</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setHCompSmooth">setHCompSmooth</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setTileDim">setTileDim</a></td><td class="printindex-index-section"><a href="#Low-Level-Compression-Functions">Low Level Compression Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setTscale">setTscale</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-U">U</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Using-the-toolkit">Using the toolkit</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-W">W</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-warranty">warranty</a></td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Windows-install">Windows install</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeChecksum">writeChecksum</a></td><td class="printindex-index-section"><a href="#Low-Level-HDU-Functions">Low Level HDU Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeCol">writeCol</a></td><td class="printindex-index-section"><a href="#Low-Level-Binary-and-ASCII-Tables">Low Level Binary and ASCII Tables</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeComment">writeComment</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeDate">writeDate</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeHistory">writeHistory</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeImg">writeImg</a></td><td class="printindex-index-section"><a href="#Low-Level-Image-Manipulation">Low Level Image Manipulation</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeKey">writeKey</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-writeKeyUnit">writeKeyUnit</a></td><td class="printindex-index-section"><a href="#Low-Level-Keyword-Functions">Low Level Keyword Functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
 </table>
 <table class="cp-letters-footer-printindex"><tr><th>Jump to: &nbsp; </th><td><a class="summary-letter-printindex" href="#Index_cp_letter-B"><b>B</b></a>
  &nbsp; 

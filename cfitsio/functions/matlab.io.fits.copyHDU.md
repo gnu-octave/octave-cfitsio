@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/22_matlabiofitscopyHDU/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.copyHDU"
 category: "Low Level HDU Functions"
@@ -49,20 +49,20 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-copyHDU_0028infile_002c"><span class="category-def">: </span><span><strong class="def-name">copyHDU(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code><a class="copiable-link" href='#index-copyHDU_0028infile_002c'></a></span></dt>
+<dt class="deftypefn" id="index-copyHDU_0028infile_002c"><span class="category-def">: </span><span><strong class="def-name">copyHDU(<var class="var">infile</var>,</strong> <code class="def-code-arguments"><var class="var">outfile</var>)</code><a class="copiable-link" href="#index-copyHDU_0028infile_002c"></a></span></dt>
 <dd><p>Copy current HDU from one infile to another.
 </p>
 <p>This is the equivalent of the cfitsio fits_copy_hdu function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">filename</var> - filename to open.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p><var class="var">infile</var> - opened input file identifier.
 </p>
 <p><var class="var">outfile</var> - opened output file identifier.
 </p>
-<h4 class="subsubheading" id="Examples">Examples</h4>
+<h4 class="subsubheading" id="Examples"><span>Examples<a class="copiable-link" href="#Examples"></a></span></h4>
 <div class="example">
 <pre class="example-preformatted"> import_fits;
  

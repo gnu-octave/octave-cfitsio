@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/11_importfits/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - import_fits"
 category: "Import functions"
@@ -49,6 +49,6 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-import_005ffits"><span class="category-def">: </span><span><strong class="def-name">import_fits</strong><a class="copiable-link" href='#index-import_005ffits'></a></span></dt>
+<dt class="deftypefn" id="index-import_005ffits"><span class="category-def">: </span><span><strong class="def-name">import_fits</strong><a class="copiable-link" href="#index-import_005ffits"></a></span></dt>
 <dd><p>Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsinsertBTbl/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.insertBTbl"
 category: "Low Level Binary and ASCII Tables"
@@ -49,12 +49,12 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-insertBTbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertBTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>, <var class="var">pcount</var>)</code><a class="copiable-link" href='#index-insertBTbl_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-insertBTbl_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">insertBTbl(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">nrows</var>, <var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var>, <var class="var">extname</var>, <var class="var">pcount</var>)</code><a class="copiable-link" href="#index-insertBTbl_0028file_002c"></a></span></dt>
 <dd><p>Insert a new bintable extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_insert_btbl function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">nrows</var> - initial number of rows (normally 0)
@@ -71,6 +71,6 @@ navigation:
 </p>
 <p><var class="var">ttype</var>, <var class="var">tform</var>, <var class="var">tunit</var> are expected to be the same size.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p>None
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitscreateImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.createImg"
 category: "Low Level Image Manipulation"
@@ -49,12 +49,12 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-createImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href='#index-createImg_0028file_002c'></a></span></dt>
+<dt class="deftypefn" id="index-createImg_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code><a class="copiable-link" href="#index-createImg_0028file_002c"></a></span></dt>
 <dd><p>create a new primary image or image extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_imgll function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - file previously opened with openFile, openDiskFile
  or createFile.
 </p>
@@ -62,10 +62,10 @@ navigation:
 </p>
 <p><var class="var">naxis</var> - axis values for the image.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p>None
 </p>
-<h4 class="subsubheading" id="Examples">Examples</h4>
+<h4 class="subsubheading" id="Examples"><span>Examples<a class="copiable-link" href="#Examples"></a></span></h4>
 <div class="example">
 <pre class="example-preformatted"> import_fits;
  fd = fits.createFile(&quot;test.fits&quot;);

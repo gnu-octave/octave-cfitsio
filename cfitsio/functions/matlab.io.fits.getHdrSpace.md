@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/26_matlabiofitsgetHdrSpace/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.6"
+pkg_version: "0.0.7"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getHdrSpace"
 category: "Low Level Keyword Functions"
@@ -49,15 +49,15 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn">
-<dt class="deftypefn" id="index-getHdrSpace_0028file_0029"><span class="category-def">: </span><span><code class="def-type">[<var class="var">numkeys</var>, <var class="var">freekeys</var>] =</code> <strong class="def-name">getHdrSpace(<var class="var">file</var>)</strong><a class="copiable-link" href='#index-getHdrSpace_0028file_0029'></a></span></dt>
+<dt class="deftypefn" id="index-getHdrSpace_0028file_0029"><span class="category-def">: </span><span><code class="def-type">[<var class="var">numkeys</var>, <var class="var">freekeys</var>] =</code> <strong class="def-name">getHdrSpace(<var class="var">file</var>)</strong><a class="copiable-link" href="#index-getHdrSpace_0028file_0029"></a></span></dt>
 <dd><p>Get the number of keyword records used and available.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hdrspace function.
 </p>
-<h4 class="subsubheading" id="Inputs">Inputs</h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
-<h4 class="subsubheading" id="Outputs">Outputs</h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
 <p><var class="var">numkeys</var> - number of existing keys.
 </p>
 <p><var class="var">freekeys</var> - number of free key space.
