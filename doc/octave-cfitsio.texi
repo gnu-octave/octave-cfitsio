@@ -114,7 +114,7 @@ With an internet connection available, the package can be installed from
 octave-@value{PACKAGE} using the following command within @acronym{GNU} Octave:
 
 @example
-pkg install "https://github.com/gnu-octave/octave-/@value{PACKAGE}releases/download/v@value(VERSION)/octave-@value{PACKAGE}-@value(VERSION).tar.gz"
+pkg install "https://github.com/gnu-octave/octave-/@value{PACKAGE}releases/download/v@value{VERSION}/octave-@value{PACKAGE}-@value{VERSION}.tar.gz"
 @end example
 
 On @acronym{GNU} Octave 7 and higher, the package can be installed in the simpler form of:
