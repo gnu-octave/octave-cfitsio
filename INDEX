@@ -4,7 +4,8 @@ High Level File Functions
  fitsinfo
  fitsread
  fitswrite
-Low Level File Functions
+Low Level Functions
+#! File Functions
  matlab.io.fits.createFile
  matlab.io.fits.openFile
  matlab.io.fits.openDiskFile
@@ -12,7 +13,7 @@ Low Level File Functions
  matlab.io.fits.fileName
  matlab.io.fits.closeFile
  matlab.io.fits.deleteFile
-Low Level HDU Functions
+#! HDU Functions
  matlab.io.fits.copyHDU
  matlab.io.fits.getHDUnum
  matlab.io.fits.getHDUtype
@@ -23,7 +24,7 @@ Low Level HDU Functions
  matlab.io.fits.movNamHDU
  matlab.io.fits.deleteHDU
  matlab.io.fits.writeChecksum
-Low Level Keyword Functions
+#! Keyword Functions
  matlab.io.fits.getHdrSpace
  matlab.io.fits.readRecord
  matlab.io.fits.readCard
@@ -40,7 +41,7 @@ Low Level Keyword Functions
  matlab.io.fits.writeKeyUnit
  matlab.io.fits.deleteKey
  matlab.io.fits.deleteRecord
-Low Level Image Manipulation
+#! Image Manipulation
  matlab.io.fits.getImgSize
  matlab.io.fits.getImgType
  matlab.io.fits.readImg
@@ -49,19 +50,19 @@ Low Level Image Manipulation
  matlab.io.fits.writeImg
  matlab.io.fits.setBscale
  matlab.io.fits.setTscale
-Low Level Utility Functions
+#! Utility Functions
  matlab.io.fits.getConstantValue
  matlab.io.fits.getConstantNames
  matlab.io.fits.getVersion
  matlab.io.fits.getOpenFiles
-Low Level Compression Functions
+#! Compression Functions
  matlab.io.fits.isCompressedImg
  matlab.io.fits.setCompressionType
  matlab.io.fits.setTileDim
  matlab.io.fits.imgCompress
  matlab.io.fits.setHCompScale
  matlab.io.fits.setHCompSmooth
-Low Level Binary and ASCII Tables
+#! Binary and ASCII Tables
  matlab.io.fits.createTbl
  matlab.io.fits.insertATbl
  matlab.io.fits.insertBTbl
@@ -81,5 +82,5 @@ Low Level Binary and ASCII Tables
  matlab.io.fits.readBTblHdr
  matlab.io.fits.readCol
  matlab.io.fits.writeCol
-Import functions
+#! Import functions
  import_fits
