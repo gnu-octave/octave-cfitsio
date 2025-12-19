@@ -196,6 +196,7 @@ OF_OCTAVE_LIST_ALT_SYMS([
   [is_cellstr],
   [iscellstr],
   [[octave_value ().iscellstr ();]],
+
   [OV_ISCELLSTR],
   [],
   []
