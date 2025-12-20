@@ -11,6 +11,7 @@ maintainer: "John Donoghue <john.donoghue@ieee.org>"
 license: "GPLv3+"
 pkg_url: "https://gnu-octave.github.io/octave-cfitsio/"
 repository: "https://github.com/gnu-octave/octave-cfitsio/"
+issues: "https://gnu-octave.github.io/octave-cfitsio/"
 navigation:
 - id: "overview"
   name: "Overview"
