@@ -14,7 +14,7 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {[@var{value}, @var{comment}] = } readKeyDbl(@var{file}, @var{recname})
+## @deftypefn {} {[@var{value}, @var{comment}] = } readKeyDbl(@var{file}, @var{recname})
 ## Read the key value @var{recname} as a double.
 ##
 ## This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
