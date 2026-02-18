@@ -207,7 +207,23 @@ To read information about the content in a fits file, use the fitsinfo functions
 Where functionality is required that is not met by the high level functions, 
 most of the cfitsio functions are available in the matlab.io.fits namespace.
 
-Knowledge of the CFITSIO c library is beneficial in using the low level functions.
+Knowledge of the @url{https://heasarc.gsfc.nasa.gov/docs/software/fitsio/c/c_user/cfitsio.html, CFITSIO c library}
+is beneficial in using the low level functions.
+
+Low level functions can be accessed using thier full package name name:
+
+@example
+  fd = matlab.io.fits.openFile('tst0012.fits');
+@end example
+
+Using import_fits, functions can be used using the fits name:
+
+@example
+  import_fits;
+  fd = fits.openFile('tst0012.fits');
+@end example
+
+The following example will open a FITS file and display each HDU Type:
 
 @example
   # import the fits functions so don't have to use the full namespace each time
