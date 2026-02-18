@@ -2450,6 +2450,17 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
           return octave_value ();
         }
     }
+#ifdef TULONGLONG
+  else if (value.is_scalar_type() && value.is_uint64_type())
+    {
+      int64_t svalue = value.int64_value ();
+      if (fits_update_key(fp, TULONGLONG, key.c_str(), &svalue, commentp, &status) > 0)
+        {
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+#endif
   else if (value.is_scalar_type() && value.OV_ISINTEGER())
     {
       int svalue = value.int_value ();
