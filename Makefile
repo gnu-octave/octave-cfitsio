@@ -2,7 +2,7 @@
 ## Copyright 2015-2016 Oliver Heimlich
 ## Copyright 2017 Julien Bect <jbect@users.sf.net>
 ## Copyright 2017 Olaf Till <i7tiol@t-online.de>
-## Copyright 2018-2024 John Donoghue <john.donoghue@ieee.org>
+## Copyright 2018-2026 John Donoghue <john.donoghue@ieee.org>
 ##
 ## Copying and distribution of this file, with or without modification,
 ## are permitted in any medium without royalty provided the copyright
@@ -19,12 +19,15 @@ CUT ?= cut
 TR ?= tr
 TEXI2PDF  ?= texi2pdf -q
 MAKEINFO  ?= makeinfo
-MAKEINFO_HTML_OPTIONS := --no-headers --set-customization-variable 'COPIABLE_LINKS 0' --set-customization-variable 'COPIABLE_ANCHORS 0' --no-split 
+MAKEINFO_HTML_OPTIONS := --no-headers --no-split 
+MAKEINFO_HTML_FILTER :=  $(SED) 's|<span class="category[^"]*">: </span>||g' | $(SED) 's|<a[^>]*class=.copiable[^>]*> &para;</a>||g' | $(SED) 's|<span>\([^<]*\)</span>|\1|g'
 
 # work out a possible help generator
 ifeq ($(strip $(QHELPGENERATOR)),)
   ifneq ($(shell qhelpgenerator-qt5 -v 2>/dev/null),)
     QHELPGENERATOR = qhelpgenerator-qt5
+  else ifneq ($(shell /usr/lib64/qt6/libexec/qhelpgenerator -v 2>/dev/null),)
+    QHELPGENERATOR = /usr/lib64/qt6/libexec/qhelpgenerator
   else ifneq ($(shell qcollectiongenerator-qt5 -v 2>/dev/null),)
     QHELPGENERATOR = qcollectiongenerator-qt5
   else ifneq ($(shell qcollectiongenerator -qt5 -v 2>/dev/null),)
@@ -292,7 +295,7 @@ doc/functions.texi: $(release_dir_dep)
 	cd doc && ./mkfuncdocs.py --allowscan --src-dir=../inst/ --src-dir=../src/ ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 
 doc/$(packageprefix)$(package).html: doc/$(packageprefix)$(package).texi doc/functions.texi doc/version.texi
-	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(packageprefix)$(package).css $(MAKEINFO_HTML_OPTIONS) --output=$(packageprefix)${package}.html $(packageprefix)$(package).texi
+	cd doc && SOURCE_DATE_EPOCH=$(REPO_TIMESTAMP) $(MAKEINFO) --html --css-ref=octave.css $(MAKEINFO_HTML_OPTIONS) -o - $(packageprefix)$(package).texi | $(MAKEINFO_HTML_FILTER) > $(packageprefix)$(package).html
 
 doc/$(packageprefix)$(package).qhc: doc/$(packageprefix)$(package).html
 ifeq ($(QHELPGENERATOR),true)
