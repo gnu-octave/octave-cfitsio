@@ -38,3 +38,6 @@ function __unload_cfitsio__ ()
     # do nothing
   end_try_catch
 endfunction
+
+%!test
+%! # private unload function - no test
