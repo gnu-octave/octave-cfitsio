@@ -30,5 +30,17 @@
 ## @var{comment} - comment string
 ## @end deftypefn
 function [value, comment] = readKeyCmplx (file, recname)
-  [value, comment] = __cfitsio_readKeyCmplx__ (file, rename);
+  [value, comment] = __cfitsio_readKeyCmplx__ (file, recname);
 endfunction
+
+%!test
+%! filename = tempname();
+%! fd = matlab.io.fits.createFile(filename);
+%! assert(!isempty(fd));
+%! matlab.io.fits.createImg(fd,'int16',[10 20]);
+%! matlab.io.fits.writeKey(fd, 'VELOCITY', 10.0+1i, "Speed");
+%! [r, c] = matlab.io.fits.readKeyCmplx(fd, 'VELOCITY');
+%! assert(r, 10.0+1i);
+%! assert(c, "Speed");
+%! matlab.io.fits.closeFile(fd);
+%! delete (filename);

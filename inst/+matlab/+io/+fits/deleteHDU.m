@@ -32,3 +32,14 @@ function ret = deleteHDU (file)
   ret = __cfitsio_deleteHDU__(file);
 endfunction
 
+%!test
+%! filename = tempname();
+%! testfile = file_in_loadpath("demos/tst0012.fits");
+%! copyfile(testfile, filename);
+%! fd = matlab.io.fits.openFile(filename);
+%! assert(matlab.io.fits.getNumHDUs(fd), 5);
+%! matlab.io.fits.movAbsHDU(fd,2);
+%! matlab.io.fits.deleteHDU(fd);
+%! assert(matlab.io.fits.getNumHDUs(fd), 4);
+%! matlab.io.fits.closeFile(fd);
+%! delete (filename);

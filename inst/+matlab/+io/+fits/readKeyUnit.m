@@ -31,3 +31,16 @@ function ret = readKeyUnit (file, recname)
   ret = __cfitsio_readKeyUnit__ (file, recname);
 endfunction
 
+%!test
+%! filename = tempname();
+%! fd = matlab.io.fits.createFile(filename);
+%! assert(!isempty(fd));
+%! matlab.io.fits.createImg(fd,'int16',[10 20]);
+%! matlab.io.fits.writeKey(fd, 'VELOCITY', 10.0, "Speed");
+%! matlab.io.fits.writeKeyUnit(fd, 'VELOCITY', "m/s");
+%! assert(matlab.io.fits.readKeyUnit(fd, "VELOCITY"), "m/s");
+%! matlab.io.fits.closeFile(fd);
+%! delete (filename);
+
+%!error matlab.io.fits.readKeyUnit(1);
+%!error matlab.io.fits.readKeyUnit(1, "VELOCITY");

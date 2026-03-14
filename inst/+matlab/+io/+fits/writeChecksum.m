@@ -28,3 +28,17 @@
 function writeChecksum (file)
   __cfitsio_writeChecksum__ (file);
 endfunction
+
+%!test
+%! filename = tempname();
+%! fd = matlab.io.fits.createFile(filename);
+%! assert(!isempty(fd));
+%! matlab.io.fits.createImg(fd,'int16',[10 20]);
+%! matlab.io.fits.writeChecksum(fd);
+%! [r,c] = matlab.io.fits.readKey(fd, "DATASUM");
+%! [r,c] = matlab.io.fits.readKey(fd, "CHECKSUM");
+%! matlab.io.fits.closeFile(fd);
+%! delete (filename);
+
+%!error matlab.io.fits.writeChecksum(1);
+%!error matlab.io.fits.writeChecksum("");

@@ -1785,10 +1785,6 @@ This is the equivalent of the cfitsio fits_read_key_unit function.\n \
       error ("__cfitsio_readKeyUnit__: couldnt read key units: %s", get_fits_error(status).c_str());
       return octave_value ();
     }
-  else
-    {
-	  buffer[0] = '\0';
-    }
 
   return octave_value (buffer);
 }
@@ -2470,6 +2466,31 @@ This is the equivalent of the cfitsio fits_write_key and fits_update_key functio
           return octave_value ();
         }
     }
+  else if (value.is_complex_scalar() && value.is_double_type())
+    {
+      Complex svalue = value.complex_value ();
+      double bvalue[2];
+      bvalue[0] = svalue.real();
+      bvalue[1] = svalue.imag();
+      if (fits_update_key(fp, TDBLCOMPLEX, key.c_str(), bvalue, commentp, &status) > 0)
+        {
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+  else if (value.is_complex_scalar() && value.is_single_type())
+    {
+      FloatComplex svalue = value.float_complex_value ();
+      float bvalue[2];
+      bvalue[0] = svalue.real();
+      bvalue[1] = svalue.imag();
+      if (fits_update_key(fp, TCOMPLEX, key.c_str(), bvalue, commentp, &status) > 0)
+        {
+          error ("__cfitsio_writeKey__: couldnt write key: %s", get_fits_error(status).c_str());
+          return octave_value ();
+        }
+    }
+ 
   else if (value.is_scalar_type() && value.is_double_type())
     {
       double svalue = value.double_value ();
