@@ -16,6 +16,31 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {} import_fits
 ## Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
+##
+## @subsubheading Examples
+## @example
+## # import the fits functions so don't have to use the full namespace each time
+## import_fits;
+##
+## # open the file
+## fd = fits.openFile('tst0012.fits');
+##
+## # get number of hdus in the file
+## n = fits.getNumHDUs (fd);
+## # without using the import, we would have to use the long form
+## # of function access
+## n = matlab.io.fits.getNumHDUs (fd);
+##
+## # for each hdu, go to it, print out the type
+## for j = 1:n
+##   hdutype = fits.movAbsHDU (fd, j);
+##   printf ('HDU %d:  "%s"\n', j, hdutype);
+## endfor
+##
+## # close the file
+## fits.closeFile (fd);
+## @end example
+##
 ## @end deftypefn
 
 try
