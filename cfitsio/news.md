@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/news/"
 title: "Cfitsio Toolkit - News"
 pkg_name: "cfitsio"
-version: "0.0.7"
+version: "0.0.8"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 navigation:
 - id: "overview"
@@ -19,6 +19,18 @@ navigation:
   url: "/manual"
 ---
 <pre>
+Version 0.0.8 released 2026-03-15
+===================================
+
+ * bugfixes/feayures:
+   - writeKey: detect and write complex values
+   - readKeyUnit: fix typo in call
+   - readKey: allow read of uint64 types
+
+ * additional tests added
+
+ * minor documentation updates
+
 Version 0.0.7 released 2024-09-23
 ===================================
 

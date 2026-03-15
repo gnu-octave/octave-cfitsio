@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/29_matlabiofitsreadKeyLongStr/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.7"
+pkg_version: "0.0.8"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.readKeyLongStr"
 category: "Low Level Functions"
@@ -54,17 +54,17 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn def-block">
-<dt class="deftypefn def-line" id="index-readKeyLongStr_0028file_002c"><span class="category-def">: </span><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongStr(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code><a class="copiable-link" href="#index-readKeyLongStr_0028file_002c"></a></span></dt>
+<dt class="deftypefn def-line" id="index-readKeyLongStr_0028file_002c"><span><code class="def-type">[<var class="var">value</var>, <var class="var">comment</var>] =</code> <strong class="def-name">readKeyLongStr(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">recname</var>)</code></span></dt>
 <dd><p>Read the key value <var class="var">recname</var> as a string.
 </p>
 <p>This is the equivalent of the cfitsio fits_read_key_longstr function.
 </p>
-<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
-<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p><var class="var">value</var> - string value of record.
 </p>
 <p><var class="var">comment</var> - comment string

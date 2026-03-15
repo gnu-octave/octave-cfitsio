@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/28_matlabiofitssetHCompScale/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.7"
+pkg_version: "0.0.8"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setHCompScale"
 category: "Low Level Functions"
@@ -54,15 +54,15 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn def-block">
-<dt class="deftypefn def-line" id="index-setHCompScale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setHCompScale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">scale</var>)</code><a class="copiable-link" href="#index-setHCompScale_0028file_002c"></a></span></dt>
+<dt class="deftypefn def-line" id="index-setHCompScale_0028file_002c"><span><strong class="def-name">setHCompScale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">scale</var>)</code></span></dt>
 <dd><p>Set scale to be used with HCOMPRESS compression.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_hcomp_scale function.
 </p>
-<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">scale</var> - scale value
- </p><h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
+ </p><h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p>None
  </p></dd></dl>

@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsgetImgSize/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.7"
+pkg_version: "0.0.8"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getImgSize"
 category: "Low Level Functions"
@@ -54,14 +54,14 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn def-block">
-<dt class="deftypefn def-line" id="index-_003d"><span class="category-def">: </span><span><code class="def-type"><var class="var">size</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgSize(<var class="var">file</var>)</code><a class="copiable-link" href="#index-_003d"></a></span></dt>
+<dt class="deftypefn def-line" id="index-_003d"><span><code class="def-type"><var class="var">size</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getImgSize(<var class="var">file</var>)</code></span></dt>
 <dd><p>Return size of a Image HDU.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_img_size function.
 </p>
-<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
-<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p><var class="var">size</var> - vector containing the image dimensions.
  </p></dd></dl>

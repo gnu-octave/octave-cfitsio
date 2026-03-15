@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitssetBscale/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.7"
+pkg_version: "0.0.8"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.setBscale"
 category: "Low Level Functions"
@@ -54,18 +54,18 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn def-block">
-<dt class="deftypefn def-line" id="index-setBscale_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">setBscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bscale</var>, <var class="var">bzero</var>)</code><a class="copiable-link" href="#index-setBscale_0028file_002c"></a></span></dt>
+<dt class="deftypefn def-line" id="index-setBscale_0028file_002c"><span><strong class="def-name">setBscale(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bscale</var>, <var class="var">bzero</var>)</code></span></dt>
 <dd><p>Reset bscale and bzero to be used with reading and writing Images.
 </p>
 <p>This is the equivalent of the cfitsio fits_set_bscale function.
 </p>
-<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">bscale</var> - bscale value
 </p>
 <p><var class="var">bzero</var> - bzero value
 </p>
-<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p>None
  </p></dd></dl>

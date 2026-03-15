@@ -26,6 +26,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Octave CFITSIO Toolkit for GNU Octave
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://gnu-octave.github.io/octave-cfitsio"
+pkg: cfitsio
 twitter_username: jekyllrb
 github_username:  jekyll
 

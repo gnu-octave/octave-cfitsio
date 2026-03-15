@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitsdeleteRecord/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.7"
+pkg_version: "0.0.8"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.deleteRecord"
 category: "Low Level Functions"
@@ -54,16 +54,16 @@ navigation:
   url: "/manual"
 ---
 <dl class="first-deftypefn def-block">
-<dt class="deftypefn def-line" id="index-deleteRecord_0028file_002c"><span class="category-def">: </span><span><strong class="def-name">deleteRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">keynum</var>)</code><a class="copiable-link" href="#index-deleteRecord_0028file_002c"></a></span></dt>
+<dt class="deftypefn def-line" id="index-deleteRecord_0028file_002c"><span><strong class="def-name">deleteRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">keynum</var>)</code></span></dt>
 <dd><p>Delete a key in the fits file.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_record function.
 </p>
-<h4 class="subsubheading" id="Inputs"><span>Inputs<a class="copiable-link" href="#Inputs"></a></span></h4>
+<h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">file</var> - opened fits file.
 </p>
 <p><var class="var">keynum</var> - Record number to remove.
 </p>
-<h4 class="subsubheading" id="Outputs"><span>Outputs<a class="copiable-link" href="#Outputs"></a></span></h4>
+<h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p>None
  </p></dd></dl>
