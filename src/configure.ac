@@ -31,12 +31,6 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 # Checks for programs.
-AC_PROG_CXX
-AC_PROG_CXXCPP
-AC_LANG(C++)
-
-# check can access std c files
-AC_CHECK_HEADERS([string.h])
 
 AC_CHECK_PROG(PKG_CONFIG, pkg-config, pkg-config)
 AC_PROG_GREP
@@ -64,6 +58,22 @@ case $host_os in
     ;;
 esac
 fi
+
+# The same value of CXX as Octave was compiled with is supposed to be used.
+CXX=${CXX:-`${MKOCTFILE} -p CXX`}
+
+# The check for flags to enable C++11 is broken with a C++20 compiler (because
+# the type of u8"" literals changed) in autoconf before version 2.73.
+# Octave requires C++11 since version 4.2, so it is enabled by the CXX as
+# returned by mkoctfile. Skip broken check which would demote to C++11.
+ac_cv_prog_cxx_cxx11=""
+
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_LANG(C++)
+
+# check can access std c files
+AC_CHECK_HEADERS([string.h])
 
 # Check for Windows
 AC_MSG_CHECKING([for windows])
