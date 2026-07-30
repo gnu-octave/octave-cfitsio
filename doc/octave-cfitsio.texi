@@ -186,7 +186,7 @@ After loading the toolkit, the toolkit functions are available.
 
 @subsection Reading Data
 @cindex  Reading Data
-To read the primary image data of a fits file, use the fitsread function:
+To read the primary image data of a FITS file, use the fitsread function:
 
 
 @example
@@ -195,7 +195,7 @@ To read the primary image data of a fits file, use the fitsread function:
 
 @subsection Reading Information
 @cindex  Reading Information
-To read information about the content in a fits file, use the fitsinfo functions.
+To read information about the content in a FITS file, use the fitsinfo functions.
 
 
 @example
