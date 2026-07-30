@@ -29,7 +29,7 @@
 ## import_fits;
 ## testname = file_in_loadpath("demos/tst0012.fits");
 ## fd = fits.openFile(testname);
-## hducount = getNumHDUs(fd), 5);
+## hducount = fits.getNumHDUs(fd);
 ## fits.closeFile(fd);
 ## @end example
 ## @end deftypefn
