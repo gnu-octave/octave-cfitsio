@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/manual/"
 title: "Cfitsio Toolkit - Manual"
 pkg_name: "cfitsio"
-version: "0.0.8"
+version: "0.0.9"
 description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 navigation:
 - id: "overview"
@@ -200,7 +200,7 @@ to successfully install the <abbr class="acronym">GNU</abbr> Octave toolkit.
 octave-cfitsio using the following command within <abbr class="acronym">GNU</abbr> Octave:
 </p>
 <div class="example">
-<pre class="example-preformatted">pkg install &quot;https://github.com/gnu-octave/octave-/cfitsioreleases/download/v0.0.8/octave-cfitsio-0.0.8.tar.gz&quot;
+<pre class="example-preformatted">pkg install &quot;https://github.com/gnu-octave/octave-/cfitsioreleases/download/v0.0.9/octave-cfitsio-0.0.9.tar.gz&quot;
 </pre></div>
 <p>On <abbr class="acronym">GNU</abbr> Octave 7 and higher, the package can be installed in the simpler form of:
 </p>
@@ -217,7 +217,7 @@ octave-cfitsio using the following command within <abbr class="acronym">GNU</abb
 <abbr class="acronym">GNU</abbr> Octave, the package can be installed using the following command within <abbr class="acronym">GNU</abbr> Octave:
 </p>
 <div class="example">
-<pre class="example-preformatted">pkg install octave-cfitsio-0.0.8.tar.gz
+<pre class="example-preformatted">pkg install octave-cfitsio-0.0.9.tar.gz
 </pre></div>
 </div>
 <div class="section-level-extent" id="Loading">
@@ -272,7 +272,7 @@ is provided.
 <div class="subsection-level-extent" id="Reading-Data">
 <h4 class="subsection">2.2.1 Reading Data</h4>
 <a class="index-entry-id" id="index-Reading-Data"></a>
-<p>To read the primary image data of a fits file, use the fitsread function:
+<p>To read the primary image data of a FITS file, use the fitsread function:
 </p>
 <div class="example">
 <pre class="example-preformatted">  imagedata = fitsread(&quot;thefitsfile.fits&quot;);
@@ -281,7 +281,7 @@ is provided.
 <div class="subsection-level-extent" id="Reading-Information">
 <h4 class="subsection">2.2.2 Reading Information</h4>
 <a class="index-entry-id" id="index-Reading-Information"></a>
-<p>To read information about the content in a fits file, use the fitsinfo functions.
+<p>To read information about the content in a FITS file, use the fitsinfo functions.
 </p>
 <div class="example">
 <pre class="example-preformatted">  info = fitsinfo(&quot;thefitsfile.fits&quot;);
@@ -343,7 +343,7 @@ is beneficial in using the low level functions.
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-_003d-1"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code></span></dt>
-<dd><p>Display metadata about fits format file
+<dd><p>Display metadata about FITS format file
 </p>
 <h4 class="subsubheading" id="Inputs">Inputs</h4>
 <p><var class="var">filename</var> - filename to open.
@@ -379,13 +379,13 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-fitsinfo"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d-2"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsinfo(<var class="var">filename</var>)</code></span></dt>
-<dd><p>Read information about fits format file
+<dd><p>Read information about FITS format file
 </p><h4 class="subsubheading" id="Inputs-1">Inputs</h4>
 <p><var class="var">filename</var> - filename to open.
 </p>
 <h4 class="subsubheading" id="Outputs-1">Outputs</h4>
 <p><var class="var">info</var> - a struct containing the structure and information about
- the fits file.
+ the FITS file.
 </p>
 <h4 class="subsubheading" id="Examples-1">Examples</h4>
 <div class="example">
@@ -500,7 +500,7 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-closeFile"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-closeFile_0028file_0029"><span><strong class="def-name">closeFile(<var class="var">file</var>)</strong></span></dt>
-<dd><p>Close the opened fits file
+<dd><p>Close the opened FITS file
 </p>
 <p>This is the equivalent of the fits_close_file function.
 </p>
@@ -553,12 +553,12 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-deleteFile"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-deleteFile_0028file_0029"><span><strong class="def-name">deleteFile(<var class="var">file</var>)</strong></span></dt>
-<dd><p>Force a close and delete of a fits file.
+<dd><p>Force a close and delete of a FITS file.
 </p>
 <p>This is the equivalent of the fits_delete_file function.
 </p>
 <h4 class="subsubheading" id="Inputs-6">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-6">Outputs</h4>
 <p>None
@@ -569,12 +569,12 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-fileMode"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d-9"><span><code class="def-type"><var class="var">mode</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileMode(<var class="var">file</var>)</code></span></dt>
-<dd><p>Return the file mode of the opened fits file.
+<dd><p>Return the file mode of the opened FITS file.
 </p>
 <p>This is the equivalent of the fits_file_mode function.
 </p>
 <h4 class="subsubheading" id="Inputs-7">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-7">Outputs</h4>
 <p><var class="var">mode</var> - The mode will return as a string &rsquo;READWRITE&rsquo; or &rsquo;READONLY&rsquo;
@@ -585,15 +585,15 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-fileName"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d-10"><span><code class="def-type"><var class="var">filename</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fileName(<var class="var">file</var>)</code></span></dt>
-<dd><p>Return the file name of the opened fits file.
+<dd><p>Return the file name of the opened FITS file.
 </p>
 <p>This is the equivalent of the fits_file_name function.
 </p>
 <h4 class="subsubheading" id="Inputs-8">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-8">Outputs</h4>
-<p><var class="var">filename</var> - name of the fits file.
+<p><var class="var">filename</var> - name of the FITS file.
 </p></dd></dl>
 </div>
 <div class="subsubsection-level-extent" id="matlab_002eio_002efits_002eopenDiskFile">
@@ -706,7 +706,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_delete_hdu function.
 </p>
 <h4 class="subsubheading" id="Inputs-12">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-12">Outputs</h4>
 <p><var class="var">type</var> - string value for type of the next HDU.
@@ -722,7 +722,7 @@ is beneficial in using the low level functions.
 </p>
 <p>This is the equivalent of the cfitsio fits_get_hdu_num function.
 </p><h4 class="subsubheading" id="Inputs-13">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-13">Outputs</h4>
 <p><var class="var">num</var> - current hdu number.
@@ -739,7 +739,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_hduoff function.
 </p>
 <h4 class="subsubheading" id="Inputs-14">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-14">Outputs</h4>
 <p><var class="var">headtstart</var>, <var class="var">datastart</var>, <var class="var">dataend</var> - offset information for the current HDU.
@@ -755,7 +755,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_hdu_type function.
 </p>
 <h4 class="subsubheading" id="Inputs-15">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-15">Outputs</h4>
 <p><var class="var">type</var> - current hdu type
@@ -771,7 +771,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_num_hdus function.
 </p>
 <h4 class="subsubheading" id="Inputs-16">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-16">Outputs</h4>
 <p><var class="var">num</var> - return the number of HDUs in the file.
@@ -780,7 +780,7 @@ is beneficial in using the low level functions.
 <pre class="example-preformatted"> import_fits;
  testname = file_in_loadpath(&quot;demos/tst0012.fits&quot;);
  fd = fits.openFile(testname);
- hducount = getNumHDUs(fd), 5);
+ hducount = fits.getNumHDUs(fd);
  fits.closeFile(fd);
 </pre></div>
 </dd></dl>
@@ -797,7 +797,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_movabs_hdu function.
 </p>
 <h4 class="subsubheading" id="Inputs-17">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">hdunum</var> - HDU number to move to.
 </p>
@@ -815,7 +815,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_movnam_hdu function.
 </p>
 <h4 class="subsubheading" id="Inputs-18">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">hdutype</var> - HDU number to move to.
  Valid hdutype values are &rsquo;IMAGE_HDU&rsquo;, &rsquo;ASCII_TBL&rsquo;, &rsquo;BINARY_TBL&rsquo;, &rsquo;ANY_HDU&rsquo;.
@@ -838,7 +838,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_movrel_hdu function.
 </p>
 <h4 class="subsubheading" id="Inputs-19">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">hdunum</var> - relative HDU number to move to.
 </p>
@@ -856,7 +856,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_write_chksum function.
 </p>
 <h4 class="subsubheading" id="Inputs-20">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-20">Outputs</h4>
 <p>None
@@ -872,12 +872,12 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-deleteKey"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-deleteKey_0028file_002c"><span><strong class="def-name">deleteKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>)</code></span></dt>
-<dd><p>Delete a key in the fits file.
+<dd><p>Delete a key in the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_key function.
 </p>
 <h4 class="subsubheading" id="Inputs-21">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">key</var> - Key name to remove.
 </p>
@@ -891,12 +891,12 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-deleteRecord"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-deleteRecord_0028file_002c"><span><strong class="def-name">deleteRecord(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">keynum</var>)</code></span></dt>
-<dd><p>Delete a key in the fits file.
+<dd><p>Delete a key in the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_delete_record function.
 </p>
 <h4 class="subsubheading" id="Inputs-22">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">keynum</var> - Record number to remove.
 </p>
@@ -914,7 +914,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_hdrspace function.
 </p>
 <h4 class="subsubheading" id="Inputs-23">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-23">Outputs</h4>
 <p><var class="var">numkeys</var> - number of existing keys.
@@ -932,7 +932,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_card function.
 </p>
 <h4 class="subsubheading" id="Inputs-24">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - record name to read
 </p>
@@ -950,7 +950,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_str function.
 </p>
 <h4 class="subsubheading" id="Inputs-25">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -970,7 +970,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_dblcmp function.
 </p>
 <h4 class="subsubheading" id="Inputs-26">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -990,7 +990,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_dbl function.\n \
 </p>
 <h4 class="subsubheading" id="Inputs-27">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -1010,7 +1010,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_lnglng function.
 </p>
 <h4 class="subsubheading" id="Inputs-28">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -1030,7 +1030,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_longstr function.
 </p>
 <h4 class="subsubheading" id="Inputs-29">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -1050,7 +1050,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_key_unit function.
 </p>
 <h4 class="subsubheading" id="Inputs-30">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recname</var> - keyword name.
 </p>
@@ -1068,7 +1068,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_record function.
 </p>
 <h4 class="subsubheading" id="Inputs-31">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">recidx</var> - record number.
 </p>
@@ -1081,12 +1081,12 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-writeComment"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeComment_0028file_002c"><span><strong class="def-name">writeComment(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comment</var>)</code></span></dt>
-<dd><p>Append a comment to to the fits file.
+<dd><p>Append a comment to to the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_comment function.
 </p>
 <h4 class="subsubheading" id="Inputs-32">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">comment</var> - comment to append
 </p>
@@ -1104,7 +1104,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_write_date function.
 </p>
 <h4 class="subsubheading" id="Inputs-33">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-33">Outputs</h4>
 <p>None
@@ -1115,11 +1115,11 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-writeHistory"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeHistory_0028file_002c"><span><strong class="def-name">writeHistory(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">history</var>)</code></span></dt>
-<dd><p>Append a history to to the fits file.
+<dd><p>Append a history to to the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_history function.
 </p><h4 class="subsubheading" id="Inputs-34">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">history</var> - history string.
 </p>
@@ -1134,11 +1134,11 @@ is beneficial in using the low level functions.
 <dt class="deftypefn def-line" id="index-writeKey_0028file_002c"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeKey_0028file_002c-1"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeKey_0028file_002c-2"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>, <var class="var">decimals</var>)</code></span></dt>
-<dd><p>Append or replace a key in the fits file.
+<dd><p>Append or replace a key in the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_key and fits_update_key function.
 </p><h4 class="subsubheading" id="Inputs-35">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">key</var> - keyword name.
 </p>
@@ -1157,11 +1157,11 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-writeKeyUnit"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeKeyUnit_0028file_002c"><span><strong class="def-name">writeKeyUnit(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">unit</var>)</code></span></dt>
-<dd><p>Write a key unit to the fits file.
+<dd><p>Write a key unit to the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_key_unit function.
 </p><h4 class="subsubheading" id="Inputs-36">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">key</var> - keyword name.
 </p>
@@ -1181,7 +1181,7 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-createImg"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-createImg_0028file_002c"><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code></span></dt>
-<dd><p>create a new primary image or image extension.
+<dd><p>Create a new primary image or image extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_imgll function.
 </p>
@@ -1215,7 +1215,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_img_size function.
 </p>
 <h4 class="subsubheading" id="Inputs-38">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-38">Outputs</h4>
 <p><var class="var">size</var> - vector containing the image dimensions.
@@ -1231,7 +1231,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_img_type function.
 </p>
 <h4 class="subsubheading" id="Inputs-39">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-39">Outputs</h4>
 <p><var class="var">type</var> - datatype as a string for the image type.
@@ -1270,7 +1270,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_read_subset function.
 </p>
 <h4 class="subsubheading" id="Inputs-41">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">firstpix</var> - first pile coordinate
 </p>
@@ -1303,7 +1303,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_bscale function.
 </p>
 <h4 class="subsubheading" id="Inputs-42">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">bscale</var> - bscale value
 </p>
@@ -1323,7 +1323,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_tscale function.
 </p>
 <h4 class="subsubheading" id="Inputs-43">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">col</var> - column number
 </p>
@@ -1341,12 +1341,12 @@ is beneficial in using the low level functions.
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeImg_0028file_002c"><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeImg_0028file_002c-1"><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>, <var class="var">fpixel</var>)</code></span></dt>
-<dd><p>write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc
+<dd><p>Write imagedata to a FITS file. The row and column sizes must match the size of NAXIS, NAXIS etc
 </p>
 <p>This is the equivalent of the cfitsio fits_write_subset function.
 </p>
 <h4 class="subsubheading" id="Inputs-44">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">imagedata</var> - Image data.
 </p>
@@ -1356,7 +1356,7 @@ is beneficial in using the low level functions.
 <p>None
 </p>
 <h4 class="subsubheading" id="Examples-12">Examples</h4>
-<p>Create a fits file and write a 10x10 image in the primary and image ext:
+<p>Create a FITS file and write a 10x10 image in the primary and image ext:
 </p><div class="example">
 <pre class="example-preformatted"> import_fits;
  fd = fits.createFile(&quot;myfitsfile.fits&quot;);
@@ -1414,13 +1414,13 @@ is beneficial in using the low level functions.
 <a class="index-entry-id" id="index-getOpenFiles"></a>
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d-28"><span><code class="def-type"><var class="var">files</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getOpenFiles()</code></span></dt>
-<dd><p>Get the file handles of all open fits files.
+<dd><p>Get the file handles of all open FITS files.
 </p>
 <h4 class="subsubheading" id="Inputs-47">Inputs</h4>
 <p>None
 </p>
 <h4 class="subsubheading" id="Outputs-47">Outputs</h4>
-<p><var class="var">files</var> list of opened fits file handles.
+<p><var class="var">files</var> list of opened FITS file handles.
 </p>
 <p><strong class="strong">See also:</strong> openFile.
 </p></dd></dl>
@@ -1435,7 +1435,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_version function.
 </p>
 <h4 class="subsubheading" id="Inputs-48">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-48">Outputs</h4>
 <p><var class="var">ver</var> - version
@@ -1456,9 +1456,9 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_img_compress function.
 </p>
 <h4 class="subsubheading" id="Inputs-49">Inputs</h4>
-<p><var class="var">infile</var> - opened input fits file.
+<p><var class="var">infile</var> - opened input FITS file.
 </p>
-<p><var class="var">outfile</var> - opened writable output fits file.
+<p><var class="var">outfile</var> - opened writable output FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-49">Outputs</h4>
 <p>None
@@ -1474,7 +1474,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_is_compressed_image function.
 </p>
 <h4 class="subsubheading" id="Inputs-50">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-50">Outputs</h4>
 <p><var class="var">comp</var> - boolean for whether image is compressed or not.
@@ -1490,7 +1490,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_compression_type function.
 </p>
 <h4 class="subsubheading" id="Inputs-51">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">comptype</var> - compression type.
  Valid comptype values are: &rsquo;GZIP&rsquo;, &rsquo;GZIP2&rsquo;, &rsquo;RICE&rsquo;, &rsquo;PLIO&rsquo;, &rsquo;HCOMPRESS&rsquo; or &rsquo;NOCOMPRESS&rsquo;.
@@ -1509,7 +1509,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_hcomp_scale function.
 </p>
 <h4 class="subsubheading" id="Inputs-52">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">scale</var> - scale value
 </p><h4 class="subsubheading" id="Outputs-52">Outputs</h4>
@@ -1526,7 +1526,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_hcomp_smooth function.
 </p>
 <h4 class="subsubheading" id="Inputs-53">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">smooth</var> - smooth value
 </p>
@@ -1544,7 +1544,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_set_tile_dim function.
 </p>
 <h4 class="subsubheading" id="Inputs-54">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">tiledims</var> - tile dimensions
 </p>
@@ -1569,7 +1569,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_create_tbl function.
 </p>
 <h4 class="subsubheading" id="Inputs-55">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">tbltype</var> - table type &rsquo;binary&rsquo; or &rsquo;ascii&rsquo;.
 </p>
@@ -1610,7 +1610,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_delete_col function.
 </p>
 <h4 class="subsubheading" id="Inputs-56">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column to delete from current table.
 </p>
@@ -1628,7 +1628,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_delete_rows function.
 </p>
 <h4 class="subsubheading" id="Inputs-57">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">firstrow</var> - Start row to delete.
 </p>
@@ -1648,7 +1648,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_acolparms function.
 </p>
 <h4 class="subsubheading" id="Inputs-58">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column to retrieve.
 </p>
@@ -1667,7 +1667,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_get_bcolparms function.
 </p>
 <h4 class="subsubheading" id="Inputs-59">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column to retrieve.
 </p>
@@ -1687,7 +1687,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_colname function.
 </p>
 <h4 class="subsubheading" id="Inputs-60">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">template</var> - template string for matching column name.
 </p>
@@ -1720,7 +1720,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_get_coltypell function.
 </p>
 <h4 class="subsubheading" id="Inputs-61">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column to delete from current table.
 </p>
@@ -1738,7 +1738,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_get_eqcoltypell function.
 </p>
 <h4 class="subsubheading" id="Inputs-62">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column number.
 </p>
@@ -1756,7 +1756,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_get_num_cols function.
 </p>
 <h4 class="subsubheading" id="Inputs-63">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-63">Outputs</h4>
 <p><var class="var">ncols</var> - the number of columns in the table.
@@ -1772,7 +1772,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_get_numrowsll function.
 </p>
 <h4 class="subsubheading" id="Inputs-64">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-64">Outputs</h4>
 <p><var class="var">nrows</var> - the number of rows in in the current table.
@@ -1788,7 +1788,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_get_rowsize function.
 </p>
 <h4 class="subsubheading" id="Inputs-65">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-65">Outputs</h4>
 <p><var class="var">nrows</var> - number of rows.
@@ -1806,7 +1806,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_insert_atbl function.
 </p>
 <h4 class="subsubheading" id="Inputs-66">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">rowlen</var> - row length. If set to 0, the function will calculate size based on
  tbcol and ttype.
@@ -1838,7 +1838,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_insert_btbl function.
 </p>
 <h4 class="subsubheading" id="Inputs-67">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">nrows</var> - initial number of rows (normally 0)
 </p>
@@ -1868,7 +1868,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_insert_col function.
 </p>
 <h4 class="subsubheading" id="Inputs-68">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - Column to delete from current table.
 </p>
@@ -1888,7 +1888,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_insert_rows function.
 </p>
 <h4 class="subsubheading" id="Inputs-69">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">firstrow</var> - Start row to insert from.
 </p>
@@ -1908,7 +1908,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_read_atablhdrll function.
 </p>
 <h4 class="subsubheading" id="Inputs-70">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-70">Outputs</h4>
 <p><var class="var">rowlen</var>,<var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tbcol</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var> - table properties
@@ -1924,7 +1924,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_read_btablhdrll function.
 </p>
 <h4 class="subsubheading" id="Inputs-71">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs-71">Outputs</h4>
 <p><var class="var">nrows</var>,<var class="var">ttype</var>,<var class="var">tform</var>,<var class="var">tunit</var>,<var class="var">extname</var>,<var class="var">pcount</var>] - table properties
@@ -1941,7 +1941,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio  fits_read_col function.
 </p>
 <h4 class="subsubheading" id="Inputs-72">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">firstrow</var> - Start row
 </p>
@@ -1980,7 +1980,7 @@ is beneficial in using the low level functions.
 <p>This is the equivalent of the cfitsio fits_write_col function.
 </p>
 <h4 class="subsubheading" id="Inputs-73">Inputs</h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">colnum</var> - column number.
 </p>
@@ -2003,7 +2003,27 @@ is beneficial in using the low level functions.
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-import_005ffits-1"><span><strong class="def-name">import_fits</strong></span></dt>
 <dd><p>Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
-</p></dd></dl>
+</p>
+<h4 class="subsubheading" id="Examples-16">Examples</h4>
+<div class="example">
+<pre class="example-preformatted"> # import the fits functions so don't have to use the full namespace each time
+ import_fits;
+ # open the file
+ fd = fits.openFile('tst0012.fits');
+ # get number of hdus in the file
+ n = fits.getNumHDUs (fd);
+ # without using the import, we would have to use the long form
+ # of function access
+ n = matlab.io.fits.getNumHDUs (fd);
+ # for each hdu, go to it, print out the type
+ for j = 1:n
+   hdutype = fits.movAbsHDU (fd, j);
+   printf ('HDU %d:  &quot;%s&quot;\n', j, hdutype);
+ endfor
+ # close the file
+ fits.closeFile (fd);
+</pre></div>
+</dd></dl>
 <hr>
 </div>
 </div>

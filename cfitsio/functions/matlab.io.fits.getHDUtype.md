@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/25_matlabiofitsgetHDUtype/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getHDUtype"
 category: "Low Level Functions"
@@ -60,7 +60,7 @@ navigation:
 <p>This is the equivalent of the cfitsio fits_get_hdu_type function.
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p><var class="var">type</var> - current hdu type

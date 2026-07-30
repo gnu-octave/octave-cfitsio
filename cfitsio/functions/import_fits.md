@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/11_importfits/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - import_fits"
 category: "Low Level Functions"
@@ -56,4 +56,29 @@ navigation:
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-import_005ffits"><span><strong class="def-name">import_fits</strong></span></dt>
 <dd><p>Import the fits functions into a fits.xxxxx variable, to emulate importing the fits namespace.
- </p></dd></dl>
+</p>
+<h4 class="subsubheading" id="Examples"><span>Examples</span></h4>
+<div class="example">
+<pre class="example-preformatted"> # import the fits functions so don't have to use the full namespace each time
+ import_fits;
+
+ # open the file
+ fd = fits.openFile('tst0012.fits');
+
+ # get number of hdus in the file
+ n = fits.getNumHDUs (fd);
+ # without using the import, we would have to use the long form
+ # of function access
+ n = matlab.io.fits.getNumHDUs (fd);
+
+ # for each hdu, go to it, print out the type
+ for j = 1:n
+   hdutype = fits.movAbsHDU (fd, j);
+   printf ('HDU %d:  &quot;%s&quot;\n', j, hdutype);
+ endfor
+
+ # close the file
+ fits.closeFile (fd);
+ </pre></div>
+
+</dd></dl>

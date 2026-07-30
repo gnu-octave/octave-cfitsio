@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/8_fitsdisp/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - fitsdisp"
 category: "Low Level Functions"
@@ -56,7 +56,7 @@ navigation:
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-_003d-1"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsdisp(<var class="var">filename</var>, <var class="var">propertyname</var>, <var class="var">propertyvalue</var>)</code></span></dt>
-<dd><p>Display metadata about fits format file
+<dd><p>Display metadata about FITS format file
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">filename</var> - filename to open.

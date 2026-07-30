@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/23_matlabiofitswriteKey/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.writeKey"
 category: "Low Level Functions"
@@ -57,11 +57,11 @@ navigation:
 <dt class="deftypefn def-line" id="index-writeKey_0028file_002c"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeKey_0028file_002c-1"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeKey_0028file_002c-2"><span><strong class="def-name">writeKey(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">key</var>, <var class="var">value</var>, <var class="var">comment</var>, <var class="var">decimals</var>)</code></span></dt>
-<dd><p>Append or replace a key in the fits file.
+<dd><p>Append or replace a key in the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_key and fits_update_key function.
  </p><h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">key</var> - keyword name.
 </p>

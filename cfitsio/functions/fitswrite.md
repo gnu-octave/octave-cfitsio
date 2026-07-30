@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/9_fitswrite/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - fitswrite"
 category: "Low Level Functions"

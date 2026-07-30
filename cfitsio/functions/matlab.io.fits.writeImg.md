@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/23_matlabiofitswriteImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.writeImg"
 category: "Low Level Functions"
@@ -56,12 +56,12 @@ navigation:
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeImg_0028file_002c"><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>)</code></span></dt>
 <dt class="deftypefnx def-cmd-deftypefn def-line" id="index-writeImg_0028file_002c-1"><span><strong class="def-name">writeImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">imagedata</var>, <var class="var">fpixel</var>)</code></span></dt>
-<dd><p>write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc
+<dd><p>Write imagedata to a FITS file. The row and column sizes must match the size of NAXIS, NAXIS etc
 </p>
 <p>This is the equivalent of the cfitsio fits_write_subset function.
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">imagedata</var> - Image data.
 </p>
@@ -71,7 +71,7 @@ navigation:
 <p>None
 </p>
 <h4 class="subsubheading" id="Examples"><span>Examples</span></h4>
-<p>Create a fits file and write a 10x10 image in the primary and image ext:
+<p>Create a FITS file and write a 10x10 image in the primary and image ext:
  </p><div class="example">
 <pre class="example-preformatted"> import_fits;
  fd = fits.createFile(&quot;myfitsfile.fits&quot;);

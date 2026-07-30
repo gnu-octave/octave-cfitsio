@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitscreateImg/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.createImg"
 category: "Low Level Functions"
@@ -55,7 +55,7 @@ navigation:
 ---
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-createImg_0028file_002c"><span><strong class="def-name">createImg(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">bitpix</var>, <var class="var">naxis</var>)</code></span></dt>
-<dd><p>create a new primary image or image extension.
+<dd><p>Create a new primary image or image extension.
 </p>
 <p>This is the equivalent of the cfitsio fits_create_imgll function.
 </p>

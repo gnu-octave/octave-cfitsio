@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/26_matlabiofitsimgCompress/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.imgCompress"
 category: "Low Level Functions"
@@ -60,9 +60,9 @@ navigation:
 <p>This is the equivalent of the cfitsio fits_img_compress function.
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
-<p><var class="var">infile</var> - opened input fits file.
+<p><var class="var">infile</var> - opened input FITS file.
 </p>
-<p><var class="var">outfile</var> - opened writable output fits file.
+<p><var class="var">outfile</var> - opened writable output FITS file.
 </p>
 <h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p>None

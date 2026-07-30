@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitswriteComment/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.writeComment"
 category: "Low Level Functions"
@@ -55,12 +55,12 @@ navigation:
 ---
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-writeComment_0028file_002c"><span><strong class="def-name">writeComment(<var class="var">file</var>,</strong> <code class="def-code-arguments"><var class="var">comment</var>)</code></span></dt>
-<dd><p>Append a comment to to the fits file.
+<dd><p>Append a comment to to the FITS file.
 </p>
 <p>This is the equivalent of the cfitsio fits_write_comment function.
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
-<p><var class="var">file</var> - opened fits file.
+<p><var class="var">file</var> - opened FITS file.
 </p>
 <p><var class="var">comment</var> - comment to append
 </p>

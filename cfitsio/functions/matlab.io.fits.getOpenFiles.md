@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/27_matlabiofitsgetOpenFiles/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.getOpenFiles"
 category: "Low Level Functions"
@@ -55,11 +55,11 @@ navigation:
 ---
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d"><span><code class="def-type"><var class="var">files</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">getOpenFiles()</code></span></dt>
-<dd><p>Get the file handles of all open fits files.
+<dd><p>Get the file handles of all open FITS files.
 </p>
 <h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p>None
 </p>
 <h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
-<p><var class="var">files</var> list of opened fits file handles.
+<p><var class="var">files</var> list of opened FITS file handles.
   </p></dd></dl>

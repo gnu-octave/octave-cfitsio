@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/24_matlabiofitscloseFile/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - matlab.io.fits.closeFile"
 category: "Low Level Functions"
@@ -55,7 +55,7 @@ navigation:
 ---
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-closeFile_0028file_0029"><span><strong class="def-name">closeFile(<var class="var">file</var>)</strong></span></dt>
-<dd><p>Close the opened fits file
+<dd><p>Close the opened FITS file
 </p> 
 <p>This is the equivalent of the fits_close_file function.
 </p>

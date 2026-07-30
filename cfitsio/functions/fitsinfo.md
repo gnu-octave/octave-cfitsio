@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/8_fitsinfo/"
 pkg_name: "cfitsio"
-pkg_version: "0.0.8"
+pkg_version: "0.0.9"
 pkg_description: "octave-fitsio provides I/O routines to read and  write FITS (Flexible Image Transport System) files."
 title: "Cfitsio Toolkit - fitsinfo"
 category: "Low Level Functions"
@@ -55,13 +55,13 @@ navigation:
 ---
 <dl class="first-deftypefn def-block">
 <dt class="deftypefn def-line" id="index-_003d"><span><code class="def-type"><var class="var">info</var></code> <strong class="def-name">=</strong> <code class="def-code-arguments">fitsinfo(<var class="var">filename</var>)</code></span></dt>
-<dd><p>Read information about fits format file
+<dd><p>Read information about FITS format file
  </p><h4 class="subsubheading" id="Inputs"><span>Inputs</span></h4>
 <p><var class="var">filename</var> - filename to open.
 </p>
 <h4 class="subsubheading" id="Outputs"><span>Outputs</span></h4>
 <p><var class="var">info</var> - a struct containing the structure and information about
- the fits file.
+ the FITS file.
 </p>
 <h4 class="subsubheading" id="Examples"><span>Examples</span></h4>
 <div class="example">
