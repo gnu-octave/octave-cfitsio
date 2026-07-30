@@ -174,7 +174,18 @@ endif
 	cd "$@" && rm -rf "devel/" && rm -rf "deprecated/" 
 	# && $(RM) -f doc/mkfuncdocs.py doc/mkqhcp.py
 ##
+ifneq (,$(wildcard doc/mkdoccache.m))
+	$(MAKE) -C "$@" doc-cache
+endif
 	${FIX_PERMISSIONS} "$@"
+
+# Doc cache
+.PHONY: doc-cache clean-doc-cache
+doc-cache:
+	cd doc && ./mkdoccache.m ../inst
+
+clean-doc-cache:
+	$(RM) -f inst/doc-cache src/doc-cache
 
 run_in_place = $(OCTAVE) --eval ' pkg ("local_list", "$(package_list)"); ' \
                          --eval ' pkg ("load", "$(package)"); '
@@ -311,7 +322,7 @@ endif
 
 .PHONY: clean
 
-clean: clean-tarballs clean-unpacked-release clean-install clean-docs
+clean: clean-tarballs clean-unpacked-release clean-install clean-docs clean-doc-cache
 	test -e inst/test && rmdir inst/test || true
 	test -e $(target_dir)/fntests.log && rm -f $(target_dir)/fntests.log || true
 	@echo "## Removing target directory (if empty)..."
