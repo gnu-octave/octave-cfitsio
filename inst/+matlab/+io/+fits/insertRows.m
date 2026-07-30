@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_insert_rows function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{firstrow} - Start row to insert from.
 ##

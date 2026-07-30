@@ -16,7 +16,7 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{info}} = fitsdisp(@var{filename})
 ## @deftypefnx {} {@var{info}} = fitsdisp(@var{filename}, @var{propertyname}, @var{propertyvalue})
-## Display metadata about fits format file
+## Display metadata about FITS format file
 ##
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.

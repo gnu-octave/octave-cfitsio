@@ -15,12 +15,12 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} deleteRecord(@var{file}, @var{keynum})
-## Delete a key in the fits file.
+## Delete a key in the FITS file.
 ##
 ## This is the equivalent of the cfitsio fits_delete_record function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{keynum} - Record number to remove.
 ##

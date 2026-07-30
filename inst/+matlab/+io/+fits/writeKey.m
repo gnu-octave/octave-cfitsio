@@ -17,11 +17,11 @@
 ## @deftypefn {} {} writeKey(@var{file}, @var{key}, @var{value})
 ## @deftypefnx {} {} writeKey(@var{file}, @var{key}, @var{value}, @var{comment})
 ## @deftypefnx {} {} writeKey(@var{file}, @var{key}, @var{value}, @var{comment}, @var{decimals})
-## Append or replace a key in the fits file.
+## Append or replace a key in the FITS file.
 ##
 ## This is the equivalent of the cfitsio fits_write_key and fits_update_key function.
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{key} - keyword name.
 ##

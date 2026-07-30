@@ -22,7 +22,7 @@
 ## This is the equivalent of the cfitsio fits_read_subset function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{firstpix} - first pile coordinate
 ##

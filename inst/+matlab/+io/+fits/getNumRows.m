@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_get_numrowsll function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{nrows} - the number of rows in in the current table.

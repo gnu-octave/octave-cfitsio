@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_set_compression_type function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{comptype} - compression type.
 ## Valid comptype values are: 'GZIP', 'GZIP2', 'RICE', 'PLIO', 'HCOMPRESS' or 'NOCOMPRESS'.

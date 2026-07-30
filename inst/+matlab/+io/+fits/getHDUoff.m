@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_get_hduoff function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{headtstart}, @var{datastart}, @var{dataend} - offset information for the current HDU.

@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_get_hdrspace function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{numkeys} - number of existing keys.

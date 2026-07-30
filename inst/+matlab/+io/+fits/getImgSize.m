@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_get_img_size function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{size} - vector containing the image dimensions.

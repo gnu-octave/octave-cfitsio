@@ -22,7 +22,7 @@
 ## This is the equivalent of the cfitsio fits_insert_atbl function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{rowlen} - row length. If set to 0, the function will calculate size based on 
 ## tbcol and ttype.

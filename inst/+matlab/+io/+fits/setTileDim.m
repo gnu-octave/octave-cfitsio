@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_set_tile_dim function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{tiledims} - tile dimensions
 ##

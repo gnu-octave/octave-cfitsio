@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_is_compressed_image function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{comp} - boolean for whether image is compressed or not. 

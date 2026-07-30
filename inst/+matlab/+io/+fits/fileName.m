@@ -15,15 +15,15 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{filename}} = fileName(@var{file})
-## Return the file name of the opened fits file.
+## Return the file name of the opened FITS file.
 ##
 ## This is the equivalent of the fits_file_name function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
-## @var{filename} - name of the fits file.
+## @var{filename} - name of the FITS file.
 ## @end deftypefn
 function ret = fileName (file)
   ret = __cfitsio_fileName__ (file);

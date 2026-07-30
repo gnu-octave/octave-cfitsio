@@ -15,13 +15,13 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{files}} = getOpenFiles()
-## Get the file handles of all open fits files.
+## Get the file handles of all open FITS files.
 ##
 ## @subsubheading Inputs
 ## None
 ##
 ## @subsubheading Outputs
-## @var{files} list of opened fits file handles.
+## @var{files} list of opened FITS file handles.
 ## @seealso {openFile}
 ## @end deftypefn
 function ret = getOpenFiles ()

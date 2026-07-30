@@ -16,12 +16,12 @@
 ## -*- texinfo -*-
 ## @deftypefn {} {} writeImg(@var{file}, @var{imagedata})
 ## @deftypefnx {} {} writeImg(@var{file}, @var{imagedata}, @var{fpixel})
-## write imagedata to a FITS file. The rows and column size must match the size of NAXIS, NAXIS etc
+## Write imagedata to a FITS file. The row and column sizes must match the size of NAXIS, NAXIS etc
 ##
 ## This is the equivalent of the cfitsio fits_write_subset function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{imagedata} - Image data.
 ##
@@ -31,7 +31,7 @@
 ## None
 ##
 ## @subsubheading Examples
-## Create a fits file and write a 10x10 image in the primary and image ext:
+## Create a FITS file and write a 10x10 image in the primary and image ext:
 ## @example
 ## import_fits;
 ## fd = fits.createFile("myfitsfile.fits");

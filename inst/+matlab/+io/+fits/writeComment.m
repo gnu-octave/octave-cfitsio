@@ -15,12 +15,12 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} writeComment(@var{file}, @var{comment})
-## Append a comment to to the fits file.
+## Append a comment to to the FITS file.
 ##
 ## This is the equivalent of the cfitsio fits_write_comment function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{comment} - comment to append
 ##

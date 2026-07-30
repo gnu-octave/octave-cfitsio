@@ -15,13 +15,13 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{info}} = fitsinfo(@var{filename})
-## Read information about fits format file
+## Read information about FITS format file
 ## @subsubheading Inputs
 ## @var{filename} - filename to open.
 ##
 ## @subsubheading Outputs
 ## @var{info} - a struct containing the structure and information about
-## the fits file.
+## the FITS file.
 ##
 ## @subsubheading Examples
 ## @example

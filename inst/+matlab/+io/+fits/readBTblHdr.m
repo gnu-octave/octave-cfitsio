@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio  fits_read_btablhdrll function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{nrows},@var{ttype},@var{tform},@var{tunit},@var{extname},@var{pcount}] - table properties

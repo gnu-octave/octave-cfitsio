@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} closeFile(@var{file})
-## Close the opened fits file
+## Close the opened FITS file
 ## 
 ## This is the equivalent of the fits_close_file function.
 ##

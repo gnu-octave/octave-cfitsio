@@ -19,7 +19,7 @@
 ##
 ## This is the equivalent of the cfitsio fits_get_hdu_num function.
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{num} - current hdu number.

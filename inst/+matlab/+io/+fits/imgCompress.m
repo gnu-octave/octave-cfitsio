@@ -20,9 +20,9 @@
 ## This is the equivalent of the cfitsio fits_img_compress function.
 ##
 ## @subsubheading Inputs
-## @var{infile} - opened input fits file.
+## @var{infile} - opened input FITS file.
 ##
-## @var{outfile} - opened writable output fits file.
+## @var{outfile} - opened writable output FITS file.
 ##
 ## @subsubheading Outputs
 ## None

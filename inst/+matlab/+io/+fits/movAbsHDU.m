@@ -22,7 +22,7 @@
 ## This is the equivalent of the cfitsio fits_movabs_hdu function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{hdunum} - HDU number to move to.
 ##

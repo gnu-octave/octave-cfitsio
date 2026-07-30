@@ -22,7 +22,7 @@
 ## This is the equivalent of the cfitsio fits_create_tbl function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{tbltype} - table type 'binary' or 'ascii'.
 ##

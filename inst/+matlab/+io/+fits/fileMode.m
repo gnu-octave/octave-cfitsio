@@ -15,12 +15,12 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {@var{mode}} = fileMode(@var{file})
-## Return the file mode of the opened fits file.
+## Return the file mode of the opened FITS file.
 ##
 ## This is the equivalent of the fits_file_mode function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## @var{mode} - The mode will return as a string 'READWRITE' or 'READONLY'

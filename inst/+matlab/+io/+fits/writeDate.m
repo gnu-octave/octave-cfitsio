@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_write_date function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## None

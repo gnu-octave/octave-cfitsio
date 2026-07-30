@@ -15,11 +15,11 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} writeKeyUnit(@var{file}, @var{key}, @var{unit})
-## Write a key unit to the fits file.
+## Write a key unit to the FITS file.
 ##
 ## This is the equivalent of the cfitsio fits_write_key_unit function.
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{key} - keyword name.
 ##

@@ -20,7 +20,7 @@
 ## This is the equivalent of the cfitsio fits_insert_btbl function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{nrows} - initial number of rows (normally 0)
 ##

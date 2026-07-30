@@ -15,11 +15,11 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} writeHistory(@var{file}, @var{history})
-## Append a history to to the fits file.
+## Append a history to to the FITS file.
 ##
 ## This is the equivalent of the cfitsio fits_write_history function.
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @var{history} - history string.
 ##

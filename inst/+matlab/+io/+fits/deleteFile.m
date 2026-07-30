@@ -15,12 +15,12 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {} {} deleteFile(@var{file})
-## Force a close and delete of a fits file.
+## Force a close and delete of a FITS file.
 ##
 ## This is the equivalent of the fits_delete_file function.
 ##
 ## @subsubheading Inputs
-## @var{file} - opened fits file.
+## @var{file} - opened FITS file.
 ##
 ## @subsubheading Outputs
 ## None
